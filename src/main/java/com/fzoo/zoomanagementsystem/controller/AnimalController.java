@@ -1,4 +1,4 @@
 package com.fzoo.zoomanagementsystem.controller;
 
-public class Animal {
+public class AnimalController {
 }
