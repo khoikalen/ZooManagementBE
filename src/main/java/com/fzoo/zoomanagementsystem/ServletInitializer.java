@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 public class ServletInitializer extends SpringBootServletInitializer {
 
-	public ResponseEntity
-	@Override
+
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(ZooManagementSystemApplication.class);
 	}
