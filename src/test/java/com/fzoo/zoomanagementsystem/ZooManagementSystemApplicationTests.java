@@ -1,4 +1,4 @@
-package com.fzoo.zoomanagementsystem.zoomanagementsystem;
+package com.fzoo.zoomanagementsystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

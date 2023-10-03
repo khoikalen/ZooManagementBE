@@ -1,4 +1,4 @@
-package com.fzoo.zoomanagementsystem.zoomanagementsystem;
+package com.fzoo.zoomanagementsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
