@@ -1,7 +1,6 @@
 package com.fzoo.zoomanagementsystem.repository;
 
 import com.fzoo.zoomanagementsystem.model.Cage;
-import com.fzoo.zoomanagementsystem.model.Staff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,9 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface StaffRepository {
-        boolean existsByEmail(String email);
+public interface CageRepository extends JpaRepository<Cage, Integer> {
 
-        boolean existsByPhoneNumber(String phoneNumber);
-
-    }
+    @Query("SELECT c FROM Cage c WHERE c.staffId = ?1")
+    List<Cage> findByStaffId(int staffId);
+}
