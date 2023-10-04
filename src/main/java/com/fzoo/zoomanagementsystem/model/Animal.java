@@ -2,32 +2,25 @@ package com.fzoo.zoomanagementsystem.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-
-@Entity
-@Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Staff")
-public class Staff {
+@Data
+@Entity
+@Table(name = "Animal")
+public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    private String firstName;
-
-    private String lastName;
-
+    private String name;
+    private LocalDate dob;
+    private LocalDate dez;
     private String sex;
+    private String specie;
+    private String status;
+    private int cageId;
 
-    private LocalDate startDay;
-
-    private String email;
-
-    private String phoneNumber;
 }
