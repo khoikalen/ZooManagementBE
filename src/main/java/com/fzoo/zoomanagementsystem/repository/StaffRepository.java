@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface StaffRepository extends JpaRepository<Staff, Integer> {
     boolean existsByEmail(String email);
@@ -18,4 +19,5 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
 
     @Query("SELECT s FROM Staff s WHERE s.firstName LIKE %?1% OR s.lastName LIKE %?1%")
     List<Staff> findStaffByName(String search);
+
 }
