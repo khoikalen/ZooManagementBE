@@ -26,4 +26,9 @@ public class AnimalService {
         animalRepository.save(animal);
     }
 
+    public List<Animal> searchAnimal(String animalName) {
+        List<Animal> animals = animalRepository.findByname(animalName);
+        return animals;
+    }
+
 }

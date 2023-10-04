@@ -21,5 +21,9 @@ public class AnimalController {
     public void createNewAnimal(@RequestBody Animal animal){
         animalService.createNewAnimal(animal);
     }
+    @GetMapping("v1/animal/{animalName}")
+    public List<Animal> searchAnimal(@PathVariable("animalName") String animalName){
+        return animalService.searchAnimal(animalName);
+    }
 
 }
