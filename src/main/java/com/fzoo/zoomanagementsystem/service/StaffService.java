@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,5 +61,30 @@ public class StaffService {
             throw new IllegalStateException("Staff with email " + email + "does not exist!!!");
         }
         accountRepository.deleteAccountByEmail(email);
+    }
+
+
+    public void updateStaff(int staffId, String firstName, String lastName, String sex, LocalDate startDay, String phoneNumber) {
+        Staff staff = staffRepository.findStaffById(staffId).orElseThrow(() -> new IllegalStateException("Staff with email " + staffId + "does not exist!"));
+        if (firstName!= null) {
+            staff.setFirstName(firstName);
+        }
+        if (lastName != null) {
+            staff.setLastName(lastName);
+        }
+        if (sex != null) {
+            staff.setSex(sex);
+        }
+        if (startDay != null) {
+            staff.setStartDay(startDay);
+        }
+        if (phoneNumber != null) {
+            staff.setPhoneNumber(phoneNumber);
+        }
+        staffRepository.save(staff);
+    }
+
+    public List<Staff> searchStaffbyName(String name) {
+        return staffRepository.findStaffByName(name);
     }
 }

@@ -1,24 +1,16 @@
-package com.fzoo.zoomanagementsystem.model;
+package com.fzoo.zoomanagementsystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Staff")
-public class Staff {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class UpdatedStaff {
 
     private String firstName;
 
@@ -29,7 +21,6 @@ public class Staff {
     @JsonFormat(pattern = "MM-dd-yyyy")
     private LocalDate startDay;
 
-    private String email;
-
     private String phoneNumber;
+
 }

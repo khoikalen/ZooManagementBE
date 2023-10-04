@@ -3,6 +3,7 @@ package com.fzoo.zoomanagementsystem.controller;
 import com.fzoo.zoomanagementsystem.auth.AuthenticationResponse;
 import com.fzoo.zoomanagementsystem.auth.AuthenticationService;
 import com.fzoo.zoomanagementsystem.dto.StaffAccount;
+import com.fzoo.zoomanagementsystem.dto.UpdatedStaff;
 import com.fzoo.zoomanagementsystem.model.Staff;
 import com.fzoo.zoomanagementsystem.service.StaffService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,11 @@ public class StaffController {
         return staffService.getAllStaffs();
     }
 
+    @GetMapping("{staffName}")
+    public List<Staff> searchStaffs(@PathVariable("staffName") String name) {
+        return staffService.searchStaffbyName(name);
+    }
+
     @PostMapping
     public ResponseEntity<AuthenticationResponse> registerNewStaff(@RequestBody StaffAccount request) {
         return ResponseEntity.ok(authService.registerNewStaff(request));
@@ -33,4 +39,12 @@ public class StaffController {
     public void deleteStaff(@PathVariable("staffId") int staffId) {
         staffService.deleteStaff(staffId);
     }
+
+    @PutMapping(path="{staffId}")
+    public void updateStaff(@PathVariable("staffId") int staffId,
+                            @RequestBody UpdatedStaff request) {
+        staffService.updateStaff(staffId, request.getFirstName(), request.getLastName(), request.getSex(), request.getStartDay(), request.getPhoneNumber());
+    }
+
+
 }
