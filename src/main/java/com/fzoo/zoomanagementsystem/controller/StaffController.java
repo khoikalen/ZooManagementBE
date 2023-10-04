@@ -28,4 +28,9 @@ public class StaffController {
     public ResponseEntity<AuthenticationResponse> registerNewStaff(@RequestBody StaffAccount request) {
         return ResponseEntity.ok(authService.registerNewStaff(request));
     }
+
+    @DeleteMapping(path = "{staffId}")
+    public void deleteStaff(@PathVariable("staffId") int staffId) {
+        staffService.deleteStaff(staffId);
+    }
 }
