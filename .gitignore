@@ -34,3 +34,6 @@ build/
 ### VS Code ###
 .vscode/
 src/main/resources/application.properties
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
