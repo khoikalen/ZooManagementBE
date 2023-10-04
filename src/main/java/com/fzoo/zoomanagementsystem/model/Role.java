@@ -1,4 +1,4 @@
-package com.fzoo.zoomanagementsystem.auth;
+package com.fzoo.zoomanagementsystem.model;
 
 public enum Role {
     USER,

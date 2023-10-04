@@ -1,6 +1,5 @@
 package com.fzoo.zoomanagementsystem.model;
 
-import com.fzoo.zoomanagementsystem.auth.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,7 +1,7 @@
 package com.fzoo.zoomanagementsystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fzoo.zoomanagementsystem.auth.Role;
+import com.fzoo.zoomanagementsystem.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
