@@ -1,6 +1,7 @@
-package com.fzoo.zoomanagementsystem.model;
+package com.fzoo.zoomanagementsystem.dto;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fzoo.zoomanagementsystem.auth.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,27 +9,25 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Staff")
-public class Staff {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+public class StaffAccount {
     private String firstName;
 
     private String lastName;
 
     private String sex;
 
+    @JsonFormat(pattern = "MM-dd-yyyy")
     private LocalDate startDay;
 
     private String email;
 
     private String phoneNumber;
+
+    private String password;
+
+    private Role role;
 }

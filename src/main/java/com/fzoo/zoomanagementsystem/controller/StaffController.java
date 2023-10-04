@@ -1,11 +1,13 @@
 package com.fzoo.zoomanagementsystem.controller;
 
+import com.fzoo.zoomanagementsystem.auth.AuthenticationResponse;
+import com.fzoo.zoomanagementsystem.auth.AuthenticationService;
+import com.fzoo.zoomanagementsystem.dto.StaffAccount;
 import com.fzoo.zoomanagementsystem.model.Staff;
 import com.fzoo.zoomanagementsystem.service.StaffService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,9 +17,15 @@ import java.util.List;
 public class StaffController {
 
     private final StaffService staffService;
+    private final AuthenticationService authService;
 
     @GetMapping
     public List<Staff> getAllStaffs() {
         return staffService.getAllStaffs();
+    }
+
+    @PostMapping
+    public ResponseEntity<AuthenticationResponse> registerNewStaff(@RequestBody StaffAccount request) {
+        return ResponseEntity.ok(authService.registerNewStaff(request));
     }
 }
