@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +27,19 @@ public class Cage {
 
     private String cageType;
 
+    @Column(name = "area_id")
     private int areaId;
 
+    @Column(name = "staff_id")
     private int staffId;
+
+    @ManyToOne
+    @JoinColumn(name = "staff_id",referencedColumnName = "id", updatable = false ,insertable = false)
+    @JsonBackReference
+    private Staff staff;
+
+    @ManyToOne
+    @JoinColumn(name = "area_id", referencedColumnName = "id", updatable = false ,insertable = false)
+    @JsonBackReference
+    private Area area;
 }

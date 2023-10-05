@@ -5,29 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.Set;
+
+@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Entity
-@Table(name = "Animal")
-public class Animal {
+public class Area {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    private LocalDate dob;
-
-    private LocalDate dez;
-
-    private String sex;
-
-    private String specie;
-
-    private String status;
-
-    private int cageId;
-
+    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
+    private Set<Cage> cage;
 }

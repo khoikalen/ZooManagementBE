@@ -1,11 +1,10 @@
 package com.fzoo.zoomanagementsystem.controller;
 
+import com.fzoo.zoomanagementsystem.dto.CageAreaStaff;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.service.CageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,10 @@ public class CageController {
     @GetMapping
     public List<Cage> getAllCages() {
         return cageService.getAllCages();
+    }
+
+    @PostMapping
+    public void createNewCage(@RequestBody CageAreaStaff cage) {
+        cageService.addNewCage(cage);
     }
 }
