@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -42,4 +44,8 @@ public class Cage {
     @JoinColumn(name = "area_id", referencedColumnName = "id", updatable = false ,insertable = false)
     @JsonBackReference
     private Area area;
+
+    @OneToMany(mappedBy = "cage", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<Animal> animal;
 }

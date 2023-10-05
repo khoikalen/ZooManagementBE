@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,11 @@ public class Animal {
 
     private String status;
 
+    @Column(name = "cage_id")
     private int cageId;
 
+    @ManyToOne
+    @JoinColumn(name = "cage_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonBackReference
+    private Cage cage;
 }
