@@ -3,6 +3,7 @@ package com.fzoo.zoomanagementsystem.service;
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AnimalService {
     private final AnimalRepository animalRepository;
 
@@ -24,7 +25,7 @@ public class AnimalService {
     public void createNewAnimal(Animal animal) {
         List<Animal> cageId = animalRepository.findBycageId(animal.getCageId());
         animal.setDez(LocalDate.now());
-        if (!cageId.isEmpty())
+        if (!cageId.isEmpty() )
             animalRepository.save(animal);
         else{
             throw new IllegalStateException("Cage not found");
