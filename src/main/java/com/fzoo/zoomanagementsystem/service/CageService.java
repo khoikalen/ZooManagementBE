@@ -28,7 +28,7 @@ public class CageService {
 
     public void addNewCage(CageAreaStaff request) {
         Area area = areaRepository.findAreaByName(request.getAreaName());
-        Optional<Staff> staff = staffRepository.findStaffById(1);
+        Staff staff = staffRepository.findStaffById(1);
         Cage cage = new Cage();
         cage.setName(request.getCageName());
         cage.setQuantity(0);
@@ -36,9 +36,9 @@ public class CageService {
         cage.setCageStatus(request.getCageStatus());
         cage.setCageType(request.getCageType());
         cage.setAreaId(area.getId());
-        cage.setStaffId(staff.get().getId());
+        cage.setStaffId(staff.getId());
         cage.setArea(area);
-        cage.setStaff(staff.get());
+        cage.setStaff(staff);
         cageRepository.save(cage);
     }
 }

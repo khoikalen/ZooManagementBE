@@ -15,7 +15,9 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    Optional<Staff> findStaffById(int staffId);
+
+
+    Staff findStaffById(int staffId);
 
     @Query("SELECT s FROM Staff s WHERE s.firstName LIKE %?1% OR s.lastName LIKE %?1%")
     List<Staff> findStaffByName(String search);
