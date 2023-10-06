@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,13 +9,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Staff")
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +33,8 @@ public class Staff {
     private String email;
 
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<Cage> cage;
 }

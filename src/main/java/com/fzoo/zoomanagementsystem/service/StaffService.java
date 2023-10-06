@@ -65,26 +65,34 @@ public class StaffService {
 
 
     public void updateStaff(int staffId, String firstName, String lastName, String sex, LocalDate startDay, String phoneNumber) {
-        Staff staff = staffRepository.findStaffById(staffId).orElseThrow(() -> new IllegalStateException("Staff with email " + staffId + "does not exist!"));
-        if (firstName!= null) {
-            staff.setFirstName(firstName);
+        Staff staff = staffRepository.findStaffById(staffId);
+        if (staff != null) {
+            if (firstName!= null) {
+                staff.setFirstName(firstName);
+            }
+            if (lastName != null) {
+                staff.setLastName(lastName);
+            }
+            if (sex != null) {
+                staff.setSex(sex);
+            }
+            if (startDay != null) {
+                staff.setStartDay(startDay);
+            }
+            if (phoneNumber != null) {
+                staff.setPhoneNumber(phoneNumber);
+            }
+            staffRepository.save(staff);
+        } else {
+            throw  new IllegalStateException("Staff with email " + staffId + "does not exist!");
         }
-        if (lastName != null) {
-            staff.setLastName(lastName);
-        }
-        if (sex != null) {
-            staff.setSex(sex);
-        }
-        if (startDay != null) {
-            staff.setStartDay(startDay);
-        }
-        if (phoneNumber != null) {
-            staff.setPhoneNumber(phoneNumber);
-        }
-        staffRepository.save(staff);
     }
 
     public List<Staff> searchStaffbyName(String name) {
         return staffRepository.findStaffByName(name);
+    }
+
+    public Staff getStaffById(int staffId) {
+        return staffRepository.findStaffById(staffId);
     }
 }

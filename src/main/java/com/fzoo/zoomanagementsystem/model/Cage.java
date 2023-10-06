@@ -29,9 +29,21 @@ public class Cage {
 
     private String cageType;
 
+    @Column(name = "area_id")
     private int areaId;
 
+    @Column(name = "staff_id")
     private int staffId;
+
+    @ManyToOne
+    @JoinColumn(name = "staff_id",referencedColumnName = "id", updatable = false ,insertable = false)
+    @JsonBackReference
+    private Staff staff;
+
+    @ManyToOne
+    @JoinColumn(name = "area_id", referencedColumnName = "id", updatable = false ,insertable = false)
+    @JsonBackReference
+    private Area area;
 
     @OneToMany(mappedBy = "cage", cascade = CascadeType.ALL)
     @JsonBackReference
