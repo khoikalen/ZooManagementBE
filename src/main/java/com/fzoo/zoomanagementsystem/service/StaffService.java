@@ -41,7 +41,7 @@ public class StaffService {
             deleteStaffAccount(staffId);
             staffRepository.deleteById(staffId);
         } else {
-            throw new IllegalStateException("Id" + staffId + "does not exist!!");
+            throw new IllegalStateException("Id" + staffId + " does not exist!!");
         }
     }
 
@@ -58,7 +58,7 @@ public class StaffService {
         if (staff.isPresent()) {
             email = staff.get().getEmail();
         } else {
-            throw new IllegalStateException("Staff with email " + email + "does not exist!!!");
+            throw new IllegalStateException("Staff with email " + email + " does not exist!!!");
         }
         accountRepository.deleteAccountByEmail(email);
     }
@@ -84,7 +84,7 @@ public class StaffService {
             }
             staffRepository.save(staff);
         } else {
-            throw  new IllegalStateException("Staff with email " + staffId + "does not exist!");
+            throw  new IllegalStateException("Staff with email " + staffId + " does not exist!");
         }
     }
 

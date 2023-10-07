@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class Area {
     private String name;
 
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Set<Cage> cage;
 }

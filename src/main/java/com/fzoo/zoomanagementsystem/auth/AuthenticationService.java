@@ -1,6 +1,6 @@
 package com.fzoo.zoomanagementsystem.auth;
 
-import com.fzoo.zoomanagementsystem.dto.StaffAccount;
+import com.fzoo.zoomanagementsystem.dto.StaffAccountRequest;
 import com.fzoo.zoomanagementsystem.model.Account;
 import com.fzoo.zoomanagementsystem.model.Role;
 import com.fzoo.zoomanagementsystem.model.Staff;
@@ -19,7 +19,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public AuthenticationResponse registerNewStaff(StaffAccount request) {
+    public AuthenticationResponse registerNewStaff(StaffAccountRequest request) {
         if (request.getRole().equals(Role.STAFF)) {
             boolean checkEmail = staffRepository.existsByEmail(request.getEmail());
             boolean checkPhoneNumber = staffRepository.existsByPhoneNumber(request.getPhoneNumber());

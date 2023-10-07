@@ -19,6 +19,8 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
 
     Staff findStaffById(int staffId);
 
+    Staff findStaffByEmail(String email);
+
     @Query("SELECT s FROM Staff s WHERE s.firstName LIKE %?1% OR s.lastName LIKE %?1%")
     List<Staff> findStaffByName(String search);
 

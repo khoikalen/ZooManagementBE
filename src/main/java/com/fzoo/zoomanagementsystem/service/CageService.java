@@ -1,6 +1,8 @@
 package com.fzoo.zoomanagementsystem.service;
 
-import com.fzoo.zoomanagementsystem.dto.CageAreaStaff;
+import com.fzoo.zoomanagementsystem.dto.CageRequest;
+import com.fzoo.zoomanagementsystem.dto.CageViewDTO;
+import com.fzoo.zoomanagementsystem.exception.UserNotFoundException;
 import com.fzoo.zoomanagementsystem.model.Area;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.Staff;
@@ -11,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +24,33 @@ public class CageService {
     private final AreaRepository areaRepository;
     private final StaffRepository staffRepository;
 
-    public List<Cage> getAllCages() {
-        return cageRepository.findAll(Sort.by(Sort.Direction.ASC, "areaId"));
+    public List<CageViewDTO> getAllCages() {
+        List<Cage> cageList = cageRepository.findAll(Sort.by(Sort.Direction.ASC, "areaId"));
+        List<CageViewDTO> listCageView = new ArrayList<>();
+        for (Cage cage : cageList) {
+            listCageView.add(new CageViewDTO(
+                    cage.getId(),
+                    cage.getName(),
+                    cage.getQuantity(),
+                    cage.getCageStatus(),
+                    cage.getCageType(),
+                    cage.getArea().getName(),
+                    cage.getStaff().getEmail()));
+        }
+        return listCageView;
     }
 
-    public void addNewCage(CageAreaStaff request) {
+    public void addNewCage(CageRequest request) throws UserNotFoundException {
         Area area = areaRepository.findAreaByName(request.getAreaName());
-        Staff staff = staffRepository.findStaffById(1);
+        Staff staff;
+        if (request.getStaffEmail().isBlank()) {
+            staff = staffRepository.findStaffById(1);
+        } else {
+            staff = staffRepository.findStaffByEmail(request.getStaffEmail());
+            if (staff == null) {
+                throw new UserNotFoundException("Staff with email " + request.getStaffEmail() + " does not exist!");
+            }
+        }
         Cage cage = new Cage();
         cage.setName(request.getCageName());
         cage.setQuantity(0);
@@ -41,4 +63,10 @@ public class CageService {
         cage.setStaff(staff);
         cageRepository.save(cage);
     }
+
+    public Cage getCageById(int cageId) {
+        return cageRepository.findCageById(cageId);
+    }
+
+
 }

@@ -17,15 +17,15 @@ import java.time.LocalDate;
 public class UpdatedStaff {
 
     @NotBlank(message = "First name should not be empty")
-    @Pattern(regexp = "^[a-zA-Z]{2,15}$", message = "First name should be word only and from 2 to 15 characters")
+    @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "First name should be word only and from 2 to 15 characters")
     private String firstName;
 
     @NotBlank(message = "Last name should not be empty")
-    @Pattern(regexp = "^[a-zA-Z]{2,15}$", message = "Last name should be word only and from 2 to 15 characters")
+    @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "Last name should be word only and from 2 to 15 characters")
     private String lastName;
 
     @NotBlank(message = "Sex should not be empty")
-    @Pattern(regexp = "^[a-zA-Z]{2,15}$", message = "Sex should be word only and from 2 to 15 characters")
+    @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "Sex should be word only and from 2 to 15 characters")
     private String sex;
 
     @JsonFormat(pattern = "MM-dd-yyyy")
