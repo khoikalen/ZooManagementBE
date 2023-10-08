@@ -58,7 +58,6 @@ public class MealService {
 
     @Transactional
     public void update(int id, String name, float weight) {
-//        Optional<Food> food = foodRepository.findById(id);
         Food food = foodRepository.findById(id).orElseThrow(() ->
                 new IllegalStateException("food with "+ id+ " does not exits"));
         FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->

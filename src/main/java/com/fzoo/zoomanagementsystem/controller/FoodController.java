@@ -46,6 +46,10 @@ public class FoodController {
         service.updateFood(food.getName(),food.getWeight());
     }
 
+    @PostMapping("/delete")
+    public void deleteFood(@RequestBody Food food){
+        service.deleteFood(food.getName());
+    }
 
 
 }

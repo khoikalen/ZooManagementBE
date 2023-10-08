@@ -54,4 +54,13 @@ public class FoodService {
             }
         }
     }
+
+    public void deleteFood(String name) {
+        for (Food food:setFood
+        ) {
+            if(food.getName().equals(name)){
+                setFood.remove(food);
+            }
+        }
+    }
 }
