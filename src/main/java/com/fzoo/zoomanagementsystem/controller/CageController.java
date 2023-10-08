@@ -33,7 +33,7 @@ public class CageController {
             description = "Find and response specific cage by the ID"
     )
     @GetMapping("/v1/cage/{cageId}")
-    public Cage getCage(@PathVariable("cageId") int cageId) {
+    public Cage getCage(@PathVariable("cageId") int cageId) throws UserNotFoundException {
         return cageService.getCageById(cageId);
     }
 
@@ -48,11 +48,20 @@ public class CageController {
     }
 
     @Operation(
-            summary ="Update the cage",
+            summary ="Update a cage by ID",
             description = "Update the cage with validation"
     )
     @PutMapping("/v1/cage/{cageId}")
     public void updateCage(@PathVariable("cageId") int cageId ,@RequestBody @Valid CageRequest request) throws UserNotFoundException {
         cageService.updateCage(cageId, request);
+    }
+
+    @Operation(
+            summary = "Delete a cage by ID",
+            description = "Delete a cage by ID if that cage is empty"
+    )
+    @DeleteMapping("/v1/cage/{cageId}")
+    public void deleteCage(@PathVariable("cageId") int cageId) {
+        cageService.deleteCage(cageId);
     }
 }

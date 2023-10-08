@@ -66,8 +66,12 @@ public class CageService {
         cageRepository.save(cage);
     }
 
-    public Cage getCageById(int cageId) {
-        return cageRepository.findCageById(cageId);
+    public Cage getCageById(int cageId) throws UserNotFoundException {
+        Cage cage = cageRepository.findCageById(cageId);
+        if (cage == null) {
+            throw new UserNotFoundException("Cage with id " + cageId + " does not exist");
+        }
+        return cage;
     }
 
 
@@ -79,9 +83,14 @@ public class CageService {
                 throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
             }
         }
-        Staff staff = staffRepository.findStaffByEmail(request.getStaffEmail());
-        if (staff == null) {
-            throw new UserNotFoundException("Staff with email " + request.getStaffEmail() + " does not exist!");
+        Staff staff;
+        if (request.getStaffEmail().isBlank()) {
+            staff = staffRepository.findStaffById(1);
+        } else {
+            staff = staffRepository.findStaffByEmail(request.getStaffEmail());
+            if (staff == null) {
+                throw new UserNotFoundException("Staff with email " + request.getStaffEmail() + " does not exist!");
+            }
         }
         Area area = areaRepository.findAreaByName(request.getAreaName());
         cage.setName(request.getCageName());
@@ -94,4 +103,12 @@ public class CageService {
         cageRepository.save(cage);
     }
 
+    public void deleteCage(int cageId) {
+        Cage cage = cageRepository.findCageById(cageId);
+        if (cage.getQuantity() == 0) {
+            cageRepository.deleteById(cageId);
+        } else {
+            throw new IllegalStateException("Can not delete Cage because there are animals in cage");
+        }
+    }
 }
