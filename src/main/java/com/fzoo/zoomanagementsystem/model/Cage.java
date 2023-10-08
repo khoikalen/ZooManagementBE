@@ -22,9 +22,6 @@ public class Cage {
 
     private int quantity;
 
-    @Lob
-    private byte[] image;
-
     private String cageStatus;
 
     private String cageType;

@@ -3,9 +3,11 @@ package com.fzoo.zoomanagementsystem.service;
 import com.fzoo.zoomanagementsystem.dto.CageRequest;
 import com.fzoo.zoomanagementsystem.dto.CageViewDTO;
 import com.fzoo.zoomanagementsystem.exception.UserNotFoundException;
+import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.Area;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.Staff;
+import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
 import com.fzoo.zoomanagementsystem.repository.AreaRepository;
 import com.fzoo.zoomanagementsystem.repository.CageRepository;
 import com.fzoo.zoomanagementsystem.repository.StaffRepository;
@@ -23,6 +25,7 @@ public class CageService {
     private final CageRepository cageRepository;
     private final AreaRepository areaRepository;
     private final StaffRepository staffRepository;
+    private final AnimalRepository animalRepository;
 
     public List<CageViewDTO> getAllCages() {
         List<Cage> cageList = cageRepository.findAll(Sort.by(Sort.Direction.ASC, "areaId"));
@@ -54,7 +57,6 @@ public class CageService {
         Cage cage = new Cage();
         cage.setName(request.getCageName());
         cage.setQuantity(0);
-        cage.setImage(request.getImage());
         cage.setCageStatus(request.getCageStatus());
         cage.setCageType(request.getCageType());
         cage.setAreaId(area.getId());
@@ -68,5 +70,28 @@ public class CageService {
         return cageRepository.findCageById(cageId);
     }
 
+
+    public void updateCage(int cageId, CageRequest request) throws UserNotFoundException {
+        Cage cage = cageRepository.findCageById(cageId);
+        if (request.getCageStatus().equals("Empty")) {
+            List<Animal> animalList = animalRepository.findBycageId(cageId);
+            if (!animalList.isEmpty()) {
+                throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
+            }
+        }
+        Staff staff = staffRepository.findStaffByEmail(request.getStaffEmail());
+        if (staff == null) {
+            throw new UserNotFoundException("Staff with email " + request.getStaffEmail() + " does not exist!");
+        }
+        Area area = areaRepository.findAreaByName(request.getAreaName());
+        cage.setName(request.getCageName());
+        cage.setCageStatus(request.getCageStatus());
+        cage.setCageType(request.getCageType());
+        cage.setArea(area);
+        cage.setAreaId(area.getId());
+        cage.setStaff(staff);
+        cage.setStaffId(staff.getId());
+        cageRepository.save(cage);
+    }
 
 }
