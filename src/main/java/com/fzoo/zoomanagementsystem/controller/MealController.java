@@ -1,9 +1,11 @@
 package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.model.Cage;
+import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.model.Meal;
 import com.fzoo.zoomanagementsystem.service.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +25,16 @@ public class MealController {
     public void checkMeal(){
          service.saveMeal();
     }
+
+
+    @PutMapping(path = "{foodID}")
+    public void updateMeal(
+            @PathVariable("foodID") int id,
+            @RequestBody Food food){
+        service.update(id,food.getName(),food.getWeight());
+    }
+
+
 
 
 

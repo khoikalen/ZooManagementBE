@@ -10,4 +10,6 @@ public interface FoodStorageRepository extends JpaRepository<FoodStorage,Integer
     List<FoodStorage> findByType(String type);
 
     Optional<FoodStorage> findAvailableByName(String name);
+
+    Optional<FoodStorage> findByName(String name);
 }

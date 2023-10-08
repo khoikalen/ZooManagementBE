@@ -23,7 +23,7 @@ public class Meal {
 
     @OneToOne
     @JoinColumn(name = "cage_id", referencedColumnName = "id")
-    @JsonBackReference
+//    @JsonBackReference
     private Cage cageInfo;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

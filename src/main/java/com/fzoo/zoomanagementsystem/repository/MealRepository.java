@@ -9,4 +9,9 @@ import java.util.Optional;
 public interface MealRepository extends JpaRepository<Meal,Integer> {
     @Query(value = "SELECT m FROM Meal m WHERE m.name LIKE %:name% ")
     Optional<Meal> findByName(String name);
+
+    @Query(value = "SELECT m.id FROM Meal m WHERE m.name LIKE %:name% ")
+    int findIdByName(String name);
+
+
 }

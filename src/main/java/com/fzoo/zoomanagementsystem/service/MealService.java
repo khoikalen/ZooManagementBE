@@ -3,14 +3,14 @@ package com.fzoo.zoomanagementsystem.service;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.model.FoodStorage;
 import com.fzoo.zoomanagementsystem.model.Meal;
-import com.fzoo.zoomanagementsystem.repository.CageRepository;
-import com.fzoo.zoomanagementsystem.repository.FoodStorageRepository;
-import com.fzoo.zoomanagementsystem.repository.MealRepository;
+import com.fzoo.zoomanagementsystem.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 @Service
 public class MealService {
@@ -22,6 +22,10 @@ public class MealService {
     private FoodService foodService;
     @Autowired
     private FoodStorageRepository foodStorageRepository;
+    @Autowired
+    private FoodInMealRepository foodInMealRepository;
+    @Autowired
+    private FoodRepository foodRepository;
     public Meal currentMeal;
     public void createMeal(String name) {
 
@@ -50,10 +54,21 @@ public class MealService {
         currentMeal.setHaveFood(foodService.getListFood());
         mealRepository.save(currentMeal);
         foodService.clear();
-
     }
 
-
+    @Transactional
+    public void update(int id, String name, float weight) {
+//        Optional<Food> food = foodRepository.findById(id);
+        Food food = foodRepository.findById(id).orElseThrow(() ->
+                new IllegalStateException("food with "+ id+ " does not exits"));
+        FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->
+                new IllegalStateException("foodStorage with "+ name+ " does not exits"));
+        if(weight>foodStorage.getAvailable()){
+            throw new IllegalStateException("does not have enough food");
+        }
+        food.setWeight(weight);
+        foodRepository.save(food);
+    }
 
 
 }
