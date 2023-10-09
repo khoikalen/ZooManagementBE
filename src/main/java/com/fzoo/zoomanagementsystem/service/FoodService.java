@@ -1,11 +1,14 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.Food;
+import com.fzoo.zoomanagementsystem.repository.CageRepository;
 import com.fzoo.zoomanagementsystem.repository.FoodRepository;
 import com.fzoo.zoomanagementsystem.repository.MealRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +21,8 @@ public class FoodService {
     private FoodRepository foodRepository;
     @Autowired
     private MealRepository mealRepository;
+    @Autowired
+    private CageRepository cageRepository;
 
     Set<Food> setFood;
     public void addFood(Food food) {
@@ -39,9 +44,10 @@ public class FoodService {
     }
 
 
-        public List<Food> getFoodInMeal(String name) {
-        int id = mealRepository.findIdByName(name);
-        List<Food> foodList = foodRepository.findFoodByMealId(id);
+        public List<Food> getFoodInMeal(int id) {
+        Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
+        int mealId = mealRepository.findIdByName(cage.getName());
+        List<Food> foodList = foodRepository.findFoodByMealId(mealId);
         return foodList;
     }
 
@@ -62,5 +68,11 @@ public class FoodService {
                 setFood.remove(food);
             }
         }
+    }
+
+    @PostMapping
+    public void deleteFoodInMeal(){
+
+
     }
 }

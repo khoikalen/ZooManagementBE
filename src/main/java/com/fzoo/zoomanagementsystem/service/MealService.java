@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.model.FoodStorage;
 import com.fzoo.zoomanagementsystem.model.Meal;
@@ -27,16 +28,17 @@ public class MealService {
     @Autowired
     private FoodRepository foodRepository;
     public Meal currentMeal;
-    public void createMeal(String name) {
+    public void createMeal(int id) {
 
-        Optional<Meal> optionalMeal = mealRepository.findByName(name);
+        Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
+        Optional<Meal> optionalMeal = mealRepository.findByName(cage.getName());
         if(optionalMeal.isPresent()){
             throw new IllegalStateException("Meal was created");
         }
         Meal meal = Meal
                 .builder()
-                .cageInfo(cageRepository.findByName(name).get())
-                .name(name + " meal")
+                .cageInfo(cageRepository.findByName(cage.getName()).get())
+                .name(cage.getName() + " meal")
                 .build();
         currentMeal = meal;
     }

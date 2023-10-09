@@ -16,13 +16,14 @@ public class MealController {
     @Autowired
     private MealService service;
 
-    @PostMapping()
-    public void createMeal(@RequestBody Cage cage){
-        service.createMeal(cage.getName());
+    @PostMapping(path = "{cageID}")
+    public void createMeal(
+            @PathVariable("cageID") int id){
+        service.createMeal(id);
     }
 
     @GetMapping
-    public void checkMeal(){
+    public void saveMeal(){
          service.saveMeal();
     }
 

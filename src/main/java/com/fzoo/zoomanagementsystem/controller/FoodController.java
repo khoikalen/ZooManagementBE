@@ -29,9 +29,9 @@ public class FoodController {
         return ResponseEntity.ok(service.getListFood());
     }
 
-    @GetMapping(path = "/meal")
-    public List<Food> getFoodInMeal(@RequestBody Cage cage){
-        return service.getFoodInMeal(cage.getName());
+    @GetMapping(path = "/meal/{cageID}")
+    public List<Food> getFoodInMeal(@PathVariable("cageID") int id){
+        return service.getFoodInMeal(id);
     }
 
     @PostMapping(path = "/clear")
