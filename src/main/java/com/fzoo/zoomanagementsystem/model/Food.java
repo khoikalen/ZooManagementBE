@@ -3,28 +3,29 @@ package com.fzoo.zoomanagementsystem.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
-
+@Data
+@Builder
+@Table(name = "food")
+public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
+    private float weight;
 
-    @OneToOne(mappedBy = "area")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "haveFood")
     @JsonBackReference
-    private Expert expert;
+    private Set<Meal> havedMeal;
 
-    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Set<Cage> cage;
+
 }
+

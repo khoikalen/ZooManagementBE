@@ -30,4 +30,12 @@ public class ApplicationExceptionHandler {
         errorMap.put("errorMessage", "The format should be mm-dd-yyyy and the day should be valid");
         return errorMap;
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserNotFoundException.class)
+    public Map<String, String> handleUserNotFoundException(UserNotFoundException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", ex.getMessage());
+        return errorMap;
+    }
 }

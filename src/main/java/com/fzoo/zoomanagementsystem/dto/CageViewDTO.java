@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CageAreaStaff {
+public class CageViewDTO {
 
-    private String cageName;
+    private int id;
 
-    private byte[] image;
+    private String name;
+
+    private int quantity;
 
     private String cageStatus;
 
@@ -19,4 +21,5 @@ public class CageAreaStaff {
 
     private String areaName;
 
+    private String staffEmail;
 }
