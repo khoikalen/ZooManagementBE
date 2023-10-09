@@ -58,7 +58,7 @@ public class StaffService {
         if (staff.isPresent()) {
             email = staff.get().getEmail();
         } else {
-            throw new IllegalStateException("Staff with email " + email + " does not exist!!!");
+            throw new IllegalStateException("Staff with id " + staffId + " does not exist!!!");
         }
         accountRepository.deleteAccountByEmail(email);
     }

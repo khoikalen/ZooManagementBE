@@ -29,7 +29,7 @@ public class AuthenticationService {
             boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(request.getPhoneNumber());
             boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(request.getPhoneNumber());
             if (!checkEmailInStaff && !checkEmailInAccount) {
-                if (!checkPhoneNumberInStaff && !checkPhoneNumberInExpert) {
+                if (!checkPhoneNumberInStaff  && !checkPhoneNumberInExpert) {
                     var staff = Staff.builder()
                             .firstName(request.getFirstName())
                             .lastName(request.getLastName())

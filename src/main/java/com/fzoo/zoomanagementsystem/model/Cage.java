@@ -43,4 +43,7 @@ public class Cage {
     @OneToMany(mappedBy = "cage", cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Animal> animal;
+
+    @OneToOne(mappedBy = "cageInfo")
+    private Meal meal;
 }

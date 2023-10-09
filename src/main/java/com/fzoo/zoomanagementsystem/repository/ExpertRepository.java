@@ -12,4 +12,6 @@ public interface ExpertRepository extends JpaRepository<Expert, Integer> {
     boolean existsByPhoneNumber(String phoneNumber);
 
     Expert findExpertById(int expertId);
+
+
 }

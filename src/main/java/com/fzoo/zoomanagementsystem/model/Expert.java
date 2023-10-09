@@ -38,5 +38,6 @@ public class Expert {
 
     @OneToOne
     @JoinColumn(name = "area_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonBackReference
     private Area area;
 }
