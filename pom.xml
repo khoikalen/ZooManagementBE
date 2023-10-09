@@ -11,7 +11,7 @@
 	<groupId>com.fzoo.zoomanagementsystem</groupId>
 	<artifactId>ZooManagementSystem</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>ZooManagementSystem</name>
 	<description>ZooManagementSystem</description>
 	<properties>
