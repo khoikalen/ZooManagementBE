@@ -55,7 +55,11 @@ public class CageService {
             }
         }
         Cage cage = new Cage();
-        cage.setName(request.getCageName());
+        if (request.getCageType().equals("Empty")) {
+            cage.setName("Empty cage");
+        } else {
+            cage.setName(request.getCageName());
+        }
         cage.setQuantity(0);
         cage.setCageStatus(request.getCageStatus());
         cage.setCageType(request.getCageType());
@@ -81,7 +85,13 @@ public class CageService {
             List<Animal> animalList = animalRepository.findBycageId(cageId);
             if (!animalList.isEmpty()) {
                 throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
+            } /*else {
+                List<AnimalSpecie> animalSpecieList = animalSpieceRepository.findBycageId(cageId);
+                if (!animalSpecieList.isEmpty()) {
+                    throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
+                }
             }
+            */
         }
         Staff staff;
         if (request.getStaffEmail().isBlank()) {
@@ -92,12 +102,8 @@ public class CageService {
                 throw new UserNotFoundException("Staff with email " + request.getStaffEmail() + " does not exist!");
             }
         }
-        Area area = areaRepository.findAreaByName(request.getAreaName());
         cage.setName(request.getCageName());
         cage.setCageStatus(request.getCageStatus());
-        cage.setCageType(request.getCageType());
-        cage.setArea(area);
-        cage.setAreaId(area.getId());
         cage.setStaff(staff);
         cage.setStaffId(staff.getId());
         cageRepository.save(cage);
