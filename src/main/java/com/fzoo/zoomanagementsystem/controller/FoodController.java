@@ -1,7 +1,7 @@
 package com.fzoo.zoomanagementsystem.controller;
 
-import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.Food;
+import com.fzoo.zoomanagementsystem.model.Meal;
 import com.fzoo.zoomanagementsystem.service.FoodService;
 import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class FoodController {
     @Autowired
     private FoodService service;
 
-    @PostMapping()
+    @PostMapping
     public void addFood(@RequestBody Food food){
         service.addFood(food);
 
@@ -29,17 +29,20 @@ public class FoodController {
         return ResponseEntity.ok(service.getListFood());
     }
 
-    @GetMapping(path = "/meal/{cageID}")
-    public List<Food> getFoodInMeal(@PathVariable("cageID") int id){
-        return service.getFoodInMeal(id);
+    @GetMapping(path = "/daily-meal/{cageID}")
+    public List<Food> getFoodInDailyMeal(@PathVariable("cageID") int id){
+        return service.getFoodInDailyMeal(id);
+    }
+
+    @GetMapping(path = "/sick-meal/{animalID}")
+    public List<Food> getFoodInSickMeal(@PathVariable("animalID") int id){
+        return service.getFoodInSickMeal(id);
     }
 
     @PostMapping(path = "/clear")
     public void clear(){
         service.clear();
     }
-
-
 
     @PutMapping()
     public void updateFood(@RequestBody Food food){
@@ -50,6 +53,5 @@ public class FoodController {
     public void deleteFood(@RequestBody Food food){
         service.deleteFood(food.getName());
     }
-
 
 }

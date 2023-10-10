@@ -20,11 +20,9 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private int cage_id;
 
-    @OneToOne
-    @JoinColumn(name = "cage_id", referencedColumnName = "id")
-//    @JsonBackReference
-    private Cage cageInfo;
+
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "food_in_meal",
