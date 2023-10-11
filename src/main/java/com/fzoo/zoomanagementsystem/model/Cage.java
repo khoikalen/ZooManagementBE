@@ -44,6 +44,5 @@ public class Cage {
     @JsonBackReference
     private Set<Animal> animal;
 
-    @OneToOne(mappedBy = "cageInfo")
-    private Meal meal;
+
 }
