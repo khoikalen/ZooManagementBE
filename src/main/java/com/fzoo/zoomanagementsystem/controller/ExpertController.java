@@ -58,6 +58,10 @@ public class ExpertController {
         expertService.deleteExpertById(expertId);
     }
 
+    @Operation(
+            summary = "Update an expert by ID",
+            description = "Update an specific expert with validation"
+    )
     @PutMapping("/v1/expert/{expertId}")
     public void updateExpert(@PathVariable("expertId") int expertId, @RequestBody @Valid ExpertRequest request) {
         expertService.updateExpert(expertId, request);
