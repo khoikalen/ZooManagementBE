@@ -3,6 +3,7 @@ package com.fzoo.zoomanagementsystem.controller;
 import com.fzoo.zoomanagementsystem.auth.AuthenticationResponse;
 import com.fzoo.zoomanagementsystem.auth.AuthenticationService;
 import com.fzoo.zoomanagementsystem.dto.ExpertAccountRequest;
+import com.fzoo.zoomanagementsystem.dto.ExpertRequest;
 import com.fzoo.zoomanagementsystem.model.Expert;
 import com.fzoo.zoomanagementsystem.service.ExpertService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class ExpertController {
             description = "List all the experts from the database"
     )
     @GetMapping("/v1/expert")
-    public List<Expert> getAllExperts() {
+    public List<ExpertRequest> getAllExperts() {
         return expertService.getAllExperts();
     }
 
@@ -48,4 +49,17 @@ public class ExpertController {
         return ResponseEntity.ok(authService.registerNewExpert(request));
     }
 
+    @Operation(
+            summary = "Delete an expert by ID",
+            description = "Delete an expert and an expert account"
+    )
+    @DeleteMapping("/v1/expert/{expertId}")
+    public void deleteExpert(@PathVariable("expertId") int expertId) {
+        expertService.deleteExpertById(expertId);
+    }
+
+    @PutMapping("/v1/expert/{expertId}")
+    public void updateExpert(@PathVariable("expertId") int expertId, @RequestBody @Valid ExpertRequest request) {
+        expertService.updateExpert(expertId, request);
+    }
 }
