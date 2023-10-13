@@ -27,7 +27,7 @@ public class Staff {
 
     private String sex;
 
-    @JsonFormat(pattern = "MM-dd-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate startDay;
 
     private String email;

@@ -2,6 +2,8 @@ package com.fzoo.zoomanagementsystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fzoo.zoomanagementsystem.model.Role;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +33,7 @@ public class StaffAccountRequest {
     @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "Sex should be word only and from 2 to 15 characters")
     private String sex;
 
-    @JsonFormat(pattern = "MM-dd-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     @NotNull(message = "Start day should not be empty")
     private LocalDate startDay;
 

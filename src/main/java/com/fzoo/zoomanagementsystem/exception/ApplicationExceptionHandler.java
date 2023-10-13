@@ -20,14 +20,14 @@ public class ApplicationExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error -> {
             errorMap.put(error.getField(), error.getDefaultMessage());
         });
-        return  errorMap;
+        return errorMap;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DateTimeParseException.class)
     public Map<String, String> handleInvalidDateException(DateTimeParseException ex) {
         Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("errorMessage", "The format should be mm-dd-yyyy and the day should be valid");
+        errorMap.put("errorMessage", "The format should be MM/dd/yyyy and the day should be valid");
         return errorMap;
     }
 
