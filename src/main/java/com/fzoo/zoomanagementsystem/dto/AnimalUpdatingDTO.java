@@ -17,5 +17,6 @@ public class AnimalUpdatingDTO {
     private String sex;
     private String specie;
     private String status;
-    private int cageId;
+    private String cageName;
+
 }

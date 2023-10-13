@@ -2,7 +2,9 @@ package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
+import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
+import com.fzoo.zoomanagementsystem.repository.CageRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -17,6 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AnimalService {
     private final AnimalRepository animalRepository;
+    private final CageRepository cageRepository;
 
     public List<Animal> getAllAnimals() {
         return animalRepository.findAll(Sort.by(Sort.Direction.ASC, "cageId"));
@@ -25,9 +28,9 @@ public class AnimalService {
     public void createNewAnimal(Animal animal) {
         List<Animal> cageId = animalRepository.findBycageId(animal.getCageId());
         animal.setDez(LocalDate.now());
-        if (!cageId.isEmpty() )
+        if (!cageId.isEmpty())
             animalRepository.save(animal);
-        else{
+        else {
             throw new IllegalStateException("Cage not found");
         }
     }
@@ -39,12 +42,15 @@ public class AnimalService {
 
     public void updateAnimalInformation(int id, AnimalUpdatingDTO request) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new IllegalStateException("Animal with " + id + " is not found"));
-        if (request.getName() != null) animal.setName(request.getName());
-        if (request.getDob() != null) animal.setDob(request.getDob());
-        if (request.getSex() != null) animal.setSex(request.getSex());
-        if (request.getSpecie() != null) animal.setSpecie(request.getSpecie());
-        if (request.getStatus() != null) animal.setStatus(request.getStatus());
-        if (request.getCageId() != 0) animal.setCageId(request.getCageId());
+        Cage cage = cageRepository.findCageByName(request.getCageName());
+        if (cage != null) {
+            animal.setCage(cage);
+            if (request.getName() != null) animal.setName(request.getName());
+            if (request.getDob() != null) animal.setDob(request.getDob());
+            if (request.getSex() != null) animal.setSex(request.getSex());
+            if (request.getSpecie() != null) animal.setSpecie(request.getSpecie());
+            if (request.getStatus() != null) animal.setStatus(request.getStatus());
+        }
         animalRepository.save(animal);
     }
 }

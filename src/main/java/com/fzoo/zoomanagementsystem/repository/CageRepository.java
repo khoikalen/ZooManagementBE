@@ -18,4 +18,6 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
     Cage findCageById(int cageId);
 
     Optional<Cage> findByName(String name);
+
+    Cage findCageByName(String cageName);
 }
