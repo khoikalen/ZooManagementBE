@@ -3,28 +3,26 @@ package com.fzoo.zoomanagementsystem.service;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 @Service
+@RequiredArgsConstructor
 public class MealService {
-    @Autowired
-    private MealRepository mealRepository;
-    @Autowired
-    private CageRepository cageRepository;
-    @Autowired
-    private FoodService foodService;
-    @Autowired
-    private FoodStorageRepository foodStorageRepository;
 
-    @Autowired
-    private AnimalRepository animalRepository;
-    @Autowired
-    private FoodRepository foodRepository;
+    private final MealRepository mealRepository;
+
+    private final CageRepository cageRepository;
+
+    private final FoodService foodService;
+
+    private final FoodStorageRepository foodStorageRepository;
+    private final FoodInMealRepository foodInMealRepository;
+    private final AnimalRepository animalRepository;
+    private final FoodRepository foodRepository;
     public Meal currentMeal;
     public void createMeal(int id) {
 
@@ -50,7 +48,6 @@ public class MealService {
         }
         Meal meal = Meal
                 .builder()
-//                .cageInfo(cageRepository.findByName(animal.getName()).get())
                 .name(animal.getName() + " sick meal")
                 .cage_id(id)
                 .build();
@@ -91,20 +88,17 @@ public class MealService {
     }
 
 
-//    public void delete() {
-//
-//    }
-//
-//
-//    @Transactional
-//    public void deleteFood(int id) {
-//       boolean exist = foodRepository.existsById(id);
-//       if(!exist){
-//           throw new IllegalStateException("does not have food");
-//       }
-//        foodRepository.deleteById(id);
-//
-//    }
+
+    @Transactional
+    public void deleteFood(int id) {
+       boolean exist = foodRepository.existsById(id);
+       if(!exist){
+           throw new IllegalStateException("does not have food");
+       }
+        foodInMealRepository.deleteByFoodId(id);
+        foodRepository.deleteById(id);
+
+    }
 
     public void createAllMeal() {
         List<Food> listFood = foodRepository.findAll();
@@ -112,5 +106,21 @@ public class MealService {
              ) {
             update(food.getId(),food.getName(),food.getWeight());
         }
+    }
+
+    public void deleteMeal(int id) {
+        boolean exist = mealRepository.existsById(id);
+        if(!exist){
+            throw new IllegalStateException("does not have food");
+        }
+        List<Integer> listFoodId = foodInMealRepository.findIdByMealId(id);
+        foodInMealRepository.deleteByMealId(id);
+
+        for (int foodId: listFoodId
+             ) {
+            foodInMealRepository.deleteByFoodId(foodId);
+        }
+
+        mealRepository.deleteById(id);
     }
 }

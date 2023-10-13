@@ -42,18 +42,18 @@ public class MealController {
             service.createSickMeal(id);
     }
 
-//    @DeleteMapping()
-//    public void deleteMeal(){
-//        service.delete();
-//    }
-//
-//
-//    @DeleteMapping("{foodID}")
-//    public void deleteFoodInMeal(
-//            @PathVariable("foodID") int id
-//    ){
-//        service.deleteFood(id);
-//    }
+    @DeleteMapping(path = "{mealID}")
+    public void deleteMeal(@PathVariable ("mealID") int id){
+        service.deleteMeal(id);
+    }
+
+
+    @DeleteMapping("/food/{foodID}")
+    public void deleteFoodInMeal(
+            @PathVariable("foodID") int id
+    ){
+        service.deleteFood(id);
+    }
 
     @PostMapping(path = "/all")
     public void createAllMeal(){

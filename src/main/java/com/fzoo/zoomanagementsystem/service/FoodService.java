@@ -50,15 +50,15 @@ public class FoodService {
         public List<Food> getFoodInDailyMeal(int id) {
         Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
         int mealId = mealRepository.findIdByName(cage.getName());
-        List<Food> foodList = foodRepository.findFoodByMealId(mealId);
-        return foodList;
+            return foodRepository.findFoodByMealId(mealId);
+
     }
 
     public List<Food> getFoodInSickMeal(int id) {
         Animal animal = animalRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have animal"));
         int mealId = mealRepository.findIdByName(animal.getName());
-        List<Food> foodList = foodRepository.findFoodByMealId(mealId);
-        return foodList;
+       return  foodRepository.findFoodByMealId(mealId);
+
     }
 
     @Transactional
