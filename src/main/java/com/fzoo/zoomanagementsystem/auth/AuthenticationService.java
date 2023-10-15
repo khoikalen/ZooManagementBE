@@ -1,15 +1,13 @@
 package com.fzoo.zoomanagementsystem.auth;
 
-import com.fzoo.zoomanagementsystem.dto.AuthenticateRequest;
-import com.fzoo.zoomanagementsystem.dto.ExpertAccountRequest;
-import com.fzoo.zoomanagementsystem.dto.RegisterRequest;
-import com.fzoo.zoomanagementsystem.dto.StaffAccountRequest;
+import com.fzoo.zoomanagementsystem.dto.*;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.AccountRepository;
 import com.fzoo.zoomanagementsystem.repository.AreaRepository;
 import com.fzoo.zoomanagementsystem.repository.ExpertRepository;
 import com.fzoo.zoomanagementsystem.repository.StaffRepository;
 import com.fzoo.zoomanagementsystem.service.JwtService;
+import com.fzoo.zoomanagementsystem.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +27,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
 
 
     public AuthenticationResponse registerNewStaff(StaffAccountRequest request) {
@@ -113,8 +112,10 @@ public class AuthenticationService {
                 .build();
         accountRepository.save(account);
         var jwtToken = jwtService.generateToken(account);
+        var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
+                .refreshToken(refreshToken.getToken())
                 .build();
 
     }
@@ -129,9 +130,24 @@ public class AuthenticationService {
 
         var account = accountRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(account);
+        var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
         return  AuthenticationResponse.builder()
                 .accessToken(jwtToken)
+                .refreshToken(refreshToken.getToken())
                 .build();
     }
 
+    public AuthenticationResponse refreshToken(RefreshTokenRequest request) {
+            return refreshTokenService.findByToken(request.getToken())
+                    .map(refreshTokenService::verifyExpiration)
+                    .map(RefreshToken::getAccountInfo)
+                    .map(accountInfo->{
+                        var account = accountRepository.findByEmail(accountInfo.getEmail()).orElseThrow();
+                        var accessToken = jwtService.generateToken(account);
+                        return AuthenticationResponse.builder()
+                                .accessToken(accessToken)
+                                .refreshToken(request.getToken())
+                                .build();
+                    }).orElseThrow(()-> new RuntimeException("Refresh token is not in database"));
+    }
 }
