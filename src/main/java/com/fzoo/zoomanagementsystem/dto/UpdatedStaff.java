@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class UpdatedStaff {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     @NotNull(message = "Start day should not be empty")
-    private LocalDate startDay;
+    private Date startDay;
 
     @Pattern(regexp = "^\\d{10}$", message = "Phone number is invalid")
     private String phoneNumber;
