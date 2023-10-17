@@ -8,6 +8,7 @@ import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +72,18 @@ public class MealService {
         foodRepository.save(food);
     }
 
+    @Transactional
+    public void delete(int id) {
+//        boolean exist = foodRepository.existsById(id);
+//        if(!exist){
+//            throw new IllegalStateException("does not have Food");
+//        }
+        Meal meal =  mealRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have meal"));
+        for (Food food:meal.getHaveFood()
+             ) {
+            meal.removeFood(food);
+        }
 
+
+    }
 }

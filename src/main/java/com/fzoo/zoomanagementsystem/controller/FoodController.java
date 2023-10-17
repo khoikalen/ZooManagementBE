@@ -34,10 +34,10 @@ public class FoodController {
         return service.getFoodInMeal(id);
     }
 
-    @PostMapping(path = "/clear")
-    public void clear(){
-        service.clear();
-    }
+//    @PostMapping(path = "/clean")
+//    public void clear(){
+//        service.clear();
+//    }
 
 
 
@@ -46,7 +46,7 @@ public class FoodController {
         service.updateFood(food.getName(),food.getWeight());
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping()
     public void deleteFood(@RequestBody Food food){
         service.deleteFood(food.getName());
     }

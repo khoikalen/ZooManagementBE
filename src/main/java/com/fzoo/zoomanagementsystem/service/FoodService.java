@@ -70,9 +70,5 @@ public class FoodService {
         }
     }
 
-    @PostMapping
-    public void deleteFoodInMeal(){
 
-
-    }
 }

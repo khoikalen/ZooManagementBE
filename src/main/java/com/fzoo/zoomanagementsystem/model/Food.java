@@ -23,8 +23,8 @@ public class Food {
     private float weight;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "haveFood")
-    @JsonBackReference
-    private Set<Meal> havedMeal;
+//    @JsonBackReference
+    private Set<Meal> meals;
 
 
 }

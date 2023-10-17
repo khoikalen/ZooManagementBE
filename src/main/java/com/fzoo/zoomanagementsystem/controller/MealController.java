@@ -36,7 +36,11 @@ public class MealController {
     }
 
 
+    @PostMapping("/food/{foodID}")
+    public void deleteFoodInMeal(@PathVariable("foodID") int id){
+        service.delete(id);
 
+    }
 
 
 }
