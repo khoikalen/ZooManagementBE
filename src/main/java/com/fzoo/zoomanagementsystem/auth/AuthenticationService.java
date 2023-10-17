@@ -1,15 +1,20 @@
 package com.fzoo.zoomanagementsystem.auth;
 
-import com.fzoo.zoomanagementsystem.dto.ExpertAccountRequest;
-import com.fzoo.zoomanagementsystem.dto.StaffAccountRequest;
+import com.fzoo.zoomanagementsystem.dto.*;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.AccountRepository;
 import com.fzoo.zoomanagementsystem.repository.AreaRepository;
 import com.fzoo.zoomanagementsystem.repository.ExpertRepository;
 import com.fzoo.zoomanagementsystem.repository.StaffRepository;
+import com.fzoo.zoomanagementsystem.service.JwtService;
+import com.fzoo.zoomanagementsystem.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +25,9 @@ public class AuthenticationService {
     private final ExpertRepository expertRepository;
     private final AreaRepository areaRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
 
 
     public AuthenticationResponse registerNewStaff(StaffAccountRequest request) {
@@ -90,5 +97,57 @@ public class AuthenticationService {
             throw new IllegalStateException("Email "+ request.getEmail()+" is already existed!");
         }
         return AuthenticationResponse.builder().build();
+    }
+
+
+    public AuthenticationResponse register(RegisterRequest request){
+        Optional<Account> byEmail = accountRepository.findByEmail(request.getEmail());
+        if(byEmail.isPresent()){
+            throw new IllegalStateException("Email taken");
+        }
+        var account = Account.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()) )
+                .role(Role.valueOf(request.getRole()))
+                .build();
+        accountRepository.save(account);
+        var jwtToken = jwtService.generateToken(account);
+        var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken.getToken())
+                .build();
+
+    }
+
+    public AuthenticationResponse authenticate(AuthenticateRequest request){
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        var account = accountRepository.findByEmail(request.getEmail()).orElseThrow();
+        var jwtToken = jwtService.generateToken(account);
+        var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
+        return  AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken.getToken())
+                .build();
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest request) {
+            return refreshTokenService.findByToken(request.getToken())
+                    .map(refreshTokenService::verifyExpiration)
+                    .map(RefreshToken::getAccountInfo)
+                    .map(accountInfo->{
+                        var account = accountRepository.findByEmail(accountInfo.getEmail()).orElseThrow();
+                        var accessToken = jwtService.generateToken(account);
+                        return AuthenticationResponse.builder()
+                                .accessToken(accessToken)
+                                .refreshToken(request.getToken())
+                                .build();
+                    }).orElseThrow(()-> new RuntimeException("Refresh token is not in database"));
     }
 }

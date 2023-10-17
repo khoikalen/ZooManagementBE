@@ -1,7 +1,6 @@
 package com.fzoo.zoomanagementsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,12 +20,9 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private int cage_id;
 
-    @OneToOne
-    @JoinColumn(name = "cage_id", referencedColumnName = "id")
-//    @JsonBackReference
 
-    private Cage cageInfo;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "food_in_meal",
@@ -34,13 +30,7 @@ public class Meal {
             inverseJoinColumns = @JoinColumn(name = "food_id", referencedColumnName = "id")
     )
 //    @JsonBackReference
-//    @JsonIgnore
     private Set<Food> haveFood;
 
-
-    public void removeFood(Food food){
-        this.haveFood.remove(food);
-        food.getMeals().remove(this);
-    }
 
 }

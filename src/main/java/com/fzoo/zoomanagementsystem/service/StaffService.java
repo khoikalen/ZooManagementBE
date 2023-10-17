@@ -4,6 +4,7 @@ import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.Staff;
 import com.fzoo.zoomanagementsystem.repository.AccountRepository;
 import com.fzoo.zoomanagementsystem.repository.CageRepository;
+import com.fzoo.zoomanagementsystem.repository.ExpertRepository;
 import com.fzoo.zoomanagementsystem.repository.StaffRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class StaffService {
     private final StaffRepository staffRepository;
     private final AccountRepository accountRepository;
     private final CageRepository cageRepository;
+    private final ExpertRepository expertRepository;
 
     public List<Staff> getAllStaffs() {
         List<Staff> staffPrint = new ArrayList<>();
@@ -41,7 +43,7 @@ public class StaffService {
             deleteStaffAccount(staffId);
             staffRepository.deleteById(staffId);
         } else {
-            throw new IllegalStateException("Id" + staffId + " does not exist!!");
+            throw new IllegalStateException("Id " + staffId + " does not exist!!");
         }
     }
 
@@ -66,23 +68,19 @@ public class StaffService {
 
     public void updateStaff(int staffId, String firstName, String lastName, String sex, LocalDate startDay, String phoneNumber) {
         Staff staff = staffRepository.findStaffById(staffId);
+        boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(phoneNumber);
+        boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(phoneNumber);
         if (staff != null) {
-            if (firstName!= null) {
+            if ((!checkPhoneNumberInStaff && !checkPhoneNumberInExpert) || staff.getPhoneNumber().equals(phoneNumber) ) {
                 staff.setFirstName(firstName);
-            }
-            if (lastName != null) {
                 staff.setLastName(lastName);
-            }
-            if (sex != null) {
                 staff.setSex(sex);
-            }
-            if (startDay != null) {
                 staff.setStartDay(startDay);
-            }
-            if (phoneNumber != null) {
                 staff.setPhoneNumber(phoneNumber);
+                staffRepository.save(staff);
+            } else {
+                throw new IllegalStateException("Phone number " + phoneNumber + " is already existed");
             }
-            staffRepository.save(staff);
         } else {
             throw  new IllegalStateException("Staff with email " + staffId + " does not exist!");
         }
