@@ -1,4 +1,4 @@
-package com.fzoo.zoomanagementsystem.auth;
+package com.fzoo.zoomanagementsystem.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

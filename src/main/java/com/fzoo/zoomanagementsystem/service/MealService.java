@@ -54,12 +54,7 @@ public class MealService {
         currentMeal = meal;
     }
 
-
-
-
-
     public void saveMeal() {
-
         for (Food food:foodService.getListFood()
              ) {
             Optional<FoodStorage> foodStorage = foodStorageRepository.findAvailableByName(food.getName());
@@ -119,6 +114,7 @@ public class MealService {
         for (int foodId: listFoodId
              ) {
             foodInMealRepository.deleteByFoodId(foodId);
+            foodRepository.deleteById(id);
         }
 
         mealRepository.deleteById(id);

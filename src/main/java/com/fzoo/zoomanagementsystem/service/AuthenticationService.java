@@ -1,13 +1,12 @@
-package com.fzoo.zoomanagementsystem.auth;
+package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.dto.AuthenticationResponse;
 import com.fzoo.zoomanagementsystem.dto.*;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.AccountRepository;
 import com.fzoo.zoomanagementsystem.repository.AreaRepository;
 import com.fzoo.zoomanagementsystem.repository.ExpertRepository;
 import com.fzoo.zoomanagementsystem.repository.StaffRepository;
-import com.fzoo.zoomanagementsystem.service.JwtService;
-import com.fzoo.zoomanagementsystem.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,7 +48,7 @@ public class AuthenticationService {
                     var account = Account.builder()
                             .email(request.getEmail())
                             .password(passwordEncoder.encode(request.getPassword()))
-                            .role(request.getRole())
+                            .role(Role.STAFF)
                             .build();
                     accountRepository.save(account);
                 } else {
@@ -84,7 +83,7 @@ public class AuthenticationService {
                     var account = Account.builder()
                             .email(request.getEmail())
                             .password(passwordEncoder.encode(request.getPassword()))
-                            .role(request.getRole())
+                            .role(Role.EXPERT)
                             .build();
                     accountRepository.save(account);
                 } else {

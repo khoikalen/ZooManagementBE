@@ -1,17 +1,16 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.Staff;
-import com.fzoo.zoomanagementsystem.repository.AccountRepository;
-import com.fzoo.zoomanagementsystem.repository.CageRepository;
-import com.fzoo.zoomanagementsystem.repository.ExpertRepository;
-import com.fzoo.zoomanagementsystem.repository.StaffRepository;
+import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,9 +48,7 @@ public class StaffService {
 
     public void setNoOne(int staffId) {
         List<Cage> cages = cageRepository.findByStaffId(staffId);
-        for (Cage cage : cages) {
-            cage.setStaffId(1);
-        }
+        cages.forEach(cage -> cage.setStaffId(1));
     }
 
     public void deleteStaffAccount(int staffId) {
@@ -66,7 +63,7 @@ public class StaffService {
     }
 
 
-    public void updateStaff(int staffId, String firstName, String lastName, String sex, LocalDate startDay, String phoneNumber) {
+    public void updateStaff(int staffId, String firstName, String lastName, String sex, Date startDay, String phoneNumber) {
         Staff staff = staffRepository.findStaffById(staffId);
         boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(phoneNumber);
         boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(phoneNumber);
