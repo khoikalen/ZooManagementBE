@@ -1,7 +1,7 @@
 package com.fzoo.zoomanagementsystem.controller;
 
-import com.fzoo.zoomanagementsystem.auth.AuthenticationResponse;
-import com.fzoo.zoomanagementsystem.auth.AuthenticationService;
+import com.fzoo.zoomanagementsystem.dto.AuthenticationResponse;
+import com.fzoo.zoomanagementsystem.service.AuthenticationService;
 import com.fzoo.zoomanagementsystem.dto.AuthenticateRequest;
 import com.fzoo.zoomanagementsystem.dto.RefreshTokenRequest;
 import com.fzoo.zoomanagementsystem.dto.RegisterRequest;

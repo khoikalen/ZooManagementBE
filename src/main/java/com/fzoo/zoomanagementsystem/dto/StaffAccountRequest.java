@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @Builder
@@ -35,7 +36,7 @@ public class StaffAccountRequest {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     @NotNull(message = "Start day should not be empty")
-    private LocalDate startDay;
+    private Date startDay;
 
     @Email(message = "Email is invalid")
     private String email;
