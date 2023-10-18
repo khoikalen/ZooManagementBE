@@ -14,8 +14,8 @@ public interface MealRepository extends JpaRepository<Meal,Integer> {
     @Query(value = "SELECT m.id FROM Meal m WHERE m.name LIKE %:name% ")
     int findIdByName(String name);
 
-     @Query(value = "SELECT m.id FROM Meal m WHERE m.cage_id = :id ")
-    int findIdByCageId(int id);
+//    @Query(value = "SELECT m.id FROM Meal m WHERE m.cage_id = :id ")
+//    int findIdByCageId(int id);
 
 
 
