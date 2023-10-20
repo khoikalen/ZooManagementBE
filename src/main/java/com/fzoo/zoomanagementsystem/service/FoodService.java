@@ -35,6 +35,9 @@ public class FoodService {
         if(setFood==null){
             setFood=new HashSet<>();
         }
+        if(food.getWeight()<0){
+            throw new IllegalStateException("Can not input negative value");
+        }
         setFood.add(food);
 
 

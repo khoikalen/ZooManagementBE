@@ -6,22 +6,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "food_in_meal")
-public class FoodInMeal {
+@Table(name = "log")
+public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "meal_id")
-    private int mealId;
-
-    @Column(name = "food_id")
-    private int foodId;
+    private String type;
+    private LocalDateTime dateTime;
+    private String shortDescription;
+    @Column(name = "animal_id")
+    private int animalId;
 
 
 }

@@ -13,14 +13,14 @@ import java.util.List;
 public interface FoodInMealRepository extends JpaRepository<FoodInMeal,Integer> {
     @Modifying
     @Transactional
-    @Query("DELETE FROM FoodInMeal e WHERE e.food_id = :id")
+//    @Query("DELETE FROM FoodInMeal e WHERE e.food_id = :id")
     void deleteByFoodId(@Param("id") int id);
     @Modifying
     @Transactional
-    @Query("DELETE FROM FoodInMeal e WHERE e.meal_id = :id")
+//    @Query("DELETE FROM FoodInMeal e WHERE e.meal_id = :id")
     void deleteByMealId(int id);
 
-    @Query("select e.food_id FROM FoodInMeal e WHERE e.meal_id = :id")
+    @Query("select e.foodId FROM FoodInMeal e WHERE e.mealId = :id")
     List<Integer> findIdByMealId(int id);
 
 

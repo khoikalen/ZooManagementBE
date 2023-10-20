@@ -117,4 +117,21 @@ public class CageService {
             throw new IllegalStateException("Can not delete Cage because there are animals in cage");
         }
     }
+
+    public List<CageViewDTO> getCagesByExpertEmail(String expertEmail) {
+        List<Cage> cageList = cageRepository.findCagesByExpertEmail(expertEmail);
+        List<CageViewDTO> cageListView = new ArrayList<>();
+        for (Cage cage : cageList) {
+            cageListView.add(new CageViewDTO(
+                    cage.getId(),
+                    cage.getName(),
+                    cage.getQuantity(),
+                    cage.getCageStatus(),
+                    cage.getCageType(),
+                    cage.getArea().getName(),
+                    cage.getStaff().getEmail()
+            ));
+        }
+        return cageListView;
+    }
 }

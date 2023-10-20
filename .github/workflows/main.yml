@@ -57,5 +57,5 @@ jobs:
       - name: Delete old container
         run: docker rm -f zoomanagement-container
       - name: Run docker container
-        run: docker run -d -p 8080:8080 --name zoomanagement-container kanatsumi2003/zoomanagement
+        run: docker run -d -p 8082:8080 --name zoomanagement-container kanatsumi2003/zoomanagement
 
