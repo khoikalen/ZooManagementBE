@@ -1,9 +1,6 @@
 package com.fzoo.zoomanagementsystem.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "animal_specie")
 public class AnimalSpecies {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String Name;
     private int quantity;
+    private int cageId;
 }

@@ -1,18 +1,30 @@
 package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.model.AnimalSpecies;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.fzoo.zoomanagementsystem.service.AnimalSpeciesService;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/")
+@AllArgsConstructor
+@RequestMapping("api")
 public class AnimalSpeciesController {
-//    private final an
-//    @GetMapping
-//    public List<AnimalSpecies> getAllAnimalSpecie(){
-//        return List.of();
-//    }
+    private final AnimalSpeciesService animalSpeciesService;
+    @GetMapping("v1/species")
+    public List<AnimalSpecies> getAllAnimalSpecie(){
+        return animalSpeciesService.getAllAnimalSpecies();
+    }
+
+    @GetMapping("v1/species/{animalspecieID}")
+        public Optional<AnimalSpecies> getAnimalById(@PathVariable("animalspecieID") int animalSpecieID){
+            return animalSpeciesService.getAnimalSpeciesByID(animalSpecieID);
+        }
+    @GetMapping("v2/species/{animalspecieName}")
+    public List<AnimalSpecies> getAnimalByName(@PathVariable("animalspecieName") String animalSpecieName){
+        return animalSpeciesService.getAnimalSpeciesByName(animalSpecieName);
+    }
+
 }
