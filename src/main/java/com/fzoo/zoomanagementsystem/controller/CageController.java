@@ -37,6 +37,23 @@ public class CageController {
         return cageService.getCageById(cageId);
     }
 
+    @Operation(
+            summary = "Get all cages by expert email",
+            description = "Get all cages that the specific expert manage"
+    )
+    @GetMapping("/v2/cage/{expertEmail}")
+    public List<CageViewDTO> getCagesOfExpert(@PathVariable("expertEmail") String expertEmail) {
+        return cageService.getCagesByExpertEmail(expertEmail);
+    }
+
+    @Operation(
+            summary = "Get all cages by staff email",
+            description = "Get all cages that the specific staff manage"
+    )
+    @GetMapping("/v3/cage/{staffEmail}")
+    public List<CageViewDTO> GetCagesOfStaff(@PathVariable("staffEmail") String staffEmail) {
+        return cageService.getCagesByStaffEmail(staffEmail);
+    }
 
     @Operation(
             summary ="Create a new cage",
