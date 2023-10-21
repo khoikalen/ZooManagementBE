@@ -1,14 +1,9 @@
 package com.fzoo.zoomanagementsystem.service;
 
-import com.fzoo.zoomanagementsystem.model.Animal;
-import com.fzoo.zoomanagementsystem.model.Cage;
-import com.fzoo.zoomanagementsystem.model.Food;
-import com.fzoo.zoomanagementsystem.model.Meal;
-import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
-import com.fzoo.zoomanagementsystem.repository.CageRepository;
-import com.fzoo.zoomanagementsystem.repository.FoodRepository;
-import com.fzoo.zoomanagementsystem.repository.MealRepository;
+import com.fzoo.zoomanagementsystem.model.*;
+import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,16 +13,16 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class FoodService {
 
-    @Autowired
-    private FoodRepository foodRepository;
-    @Autowired
-    private MealRepository mealRepository;
-    @Autowired
-    private CageRepository cageRepository;
-    @Autowired
-    private AnimalRepository animalRepository;
+
+    private final FoodRepository foodRepository;
+    private final MealRepository mealRepository;
+    private final CageRepository cageRepository;
+    private final AnimalRepository animalRepository;
+
+    private final FoodStorageRepository foodStorageRepository;
 
     Set<Food> setFood;
     public void addFood(Food food) {
@@ -35,8 +30,12 @@ public class FoodService {
         if(setFood==null){
             setFood=new HashSet<>();
         }
+        FoodStorage foodStorage = foodStorageRepository.findByName(food.getName())
+                .orElseThrow(()-> new IllegalStateException("Does not have food"));
         if(food.getWeight()<0){
             throw new IllegalStateException("Can not input negative value");
+        }else if(food.getWeight()>foodStorage.getAvailable()){
+            throw new IllegalStateException("Does not have enough food");
         }
         setFood.add(food);
 
@@ -50,18 +49,23 @@ public class FoodService {
     public void clear(){
         setFood.clear();
     }
-        public List<Food> getFoodInDailyMeal(int id) {
-        Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
-        int mealId = mealRepository.findIdByName(cage.getName());
-            return foodRepository.findFoodByMealId(mealId);
 
+    public List<Food> getFoodInDailyMeal(int id) {
+        Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
+        Integer mealId = mealRepository.findIdByName(cage.getName());
+        if(mealId==null){
+            throw new IllegalStateException("Not have food in this meal");
+        }
+        return foodRepository.findFoodByMealId(mealId);
     }
 
     public List<Food> getFoodInSickMeal(int id) {
         Animal animal = animalRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have animal"));
-        int mealId = mealRepository.findIdByName(animal.getName());
-       return  foodRepository.findFoodByMealId(mealId);
-
+        Integer mealId = mealRepository.findIdByName(animal.getName());
+        if(mealId==null){
+            throw new IllegalStateException("Not have food in this meal");
+        }
+        return foodRepository.findFoodByMealId(mealId);
     }
 
     @Transactional
