@@ -134,4 +134,21 @@ public class CageService {
         }
         return cageListView;
     }
+
+    public List<CageViewDTO> getCagesByStaffEmail(String staffEmail) {
+        List<Cage> cageList = cageRepository.findCagesByStaffEmail(staffEmail);
+        List<CageViewDTO> cageListView = new ArrayList<>();
+        for (Cage cage : cageList) {
+            cageListView.add(new CageViewDTO(
+                    cage.getId(),
+                    cage.getName(),
+                    cage.getQuantity(),
+                    cage.getCageStatus(),
+                    cage.getCageType(),
+                    cage.getArea().getName(),
+                    cage.getStaff().getEmail()
+            ));
+        }
+        return cageListView;
+    }
 }
