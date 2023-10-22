@@ -12,4 +12,6 @@ public interface FoodRepository extends JpaRepository<Food,Integer> {
             "INNER JOIN FoodInMeal B ON B.foodId = A.id " +
             "WHERE B.mealId = :id")
     List<Food> findFoodByMealId(int id);
+@Query("select e FROM Food e WHERE e.id in :foodId")
+    List<Food> findById(List<Integer> foodId);
 }

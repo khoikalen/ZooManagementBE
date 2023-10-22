@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public class MealService {
     private final AnimalRepository animalRepository;
     private final FoodRepository foodRepository;
     public Meal currentMeal;
-    public void createMeal(int id) {
+    public void createDailyMeal(int id) {
 
         Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
         Optional<Meal> optionalMeal = mealRepository.findByName(cage.getName());
@@ -35,7 +36,7 @@ public class MealService {
                 .builder()
 //                .cageInfo(cageRepository.findByName(cage.getName()).get())
                 .name(cage.getName() + " meal")
-                .cage_id(id)
+                .cageId(id)
                 .build();
         currentMeal = meal;
     }
@@ -49,7 +50,7 @@ public class MealService {
         Meal meal = Meal
                 .builder()
                 .name(animal.getName() + " sick meal")
-                .cage_id(id)
+                .cageId(id)
                 .build();
         currentMeal = meal;
     }
@@ -59,7 +60,7 @@ public class MealService {
              ) {
             Optional<FoodStorage> foodStorage = foodStorageRepository.findAvailableByName(food.getName());
             if(food.getWeight()>foodStorage.get().getAvailable()){
-                throw new IllegalStateException("does not have enough quantity");
+                throw new IllegalStateException("Does not have enough quantity");
             }
             foodStorage.get().setAvailable(foodStorage.get().getAvailable() - food.getWeight());
         }
@@ -75,7 +76,9 @@ public class MealService {
         FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->
                 new IllegalStateException("foodStorage with "+ name+ " does not exits"));
         if(weight>foodStorage.getAvailable()){
-            throw new IllegalStateException("does not have enough food");
+            throw new IllegalStateException("Does not have enough food");
+        }if(weight < 0){
+            throw new IllegalStateException("Does not input negative value");
         }
         food.setWeight(weight);
         foodStorage.setAvailable(foodStorage.getAvailable()-food.getWeight());
@@ -95,8 +98,25 @@ public class MealService {
 
     }
 
-    public void createAllMeal() {
-        List<Food> listFood = foodRepository.findAll();
+    public void createAllMeal(String email) {
+        List<Cage> listCage = cageRepository.findCagesByExpertEmail(email);
+        List<Integer> mealId = new ArrayList<>();
+        List<Integer> foodId = new ArrayList<>();
+
+        for (Cage cage: listCage
+             ) {
+            int id = cage.getId();
+            Integer meal = mealRepository.findIdByCageId(id);
+            if(meal!=null){
+                mealId.add(meal);
+            }
+        }
+        for (int id:mealId
+             ) {
+            foodId.addAll(foodInMealRepository.findIdByMealId(id));
+        }
+
+        List<Food> listFood = foodRepository.findById(foodId);
         for (Food food:listFood
              ) {
             update(food.getId(),food.getName(),food.getWeight());

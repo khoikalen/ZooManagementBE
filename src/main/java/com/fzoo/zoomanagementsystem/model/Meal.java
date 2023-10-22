@@ -20,7 +20,8 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private int cage_id;
+    @Column(name = "cage_id")
+    private int cageId;
 
 
 
