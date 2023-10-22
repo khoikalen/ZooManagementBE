@@ -26,5 +26,4 @@ public class Log {
     @Column(name = "animal_id")
     private int animalId;
 
-
 }
