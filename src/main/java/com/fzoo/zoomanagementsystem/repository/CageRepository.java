@@ -27,5 +27,9 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
 
     Cage findCageByName(String cageName);
 
+    @Query("SELECT c.id from Cage c where c.name = ?1")
+    int findCageIdByCageName(String cageName);
 
+    @Query("select c.name from Cage c where c.id = ?1")
+    String findCageNameByCageId(int cageId);
 }

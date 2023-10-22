@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,9 +18,11 @@ public class Animal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate dob;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate dez;
-    private String sex;
+    private String gender;
     private String specie;
     private String status;
 
@@ -30,5 +33,6 @@ public class Animal {
     @JoinColumn(name = "cage_id", referencedColumnName = "id", updatable = false, insertable = false)
     @JsonBackReference
     private Cage cage;
+    private String cageName;
 }
 

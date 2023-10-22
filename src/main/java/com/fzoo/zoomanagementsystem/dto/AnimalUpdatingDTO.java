@@ -14,7 +14,8 @@ import java.time.LocalDate;
 public class AnimalUpdatingDTO {
     private String name;
     private LocalDate dob;
-    private String sex;
+    private LocalDate dez;
+    private String gender;
     private String specie;
     private String status;
     private String cageName;

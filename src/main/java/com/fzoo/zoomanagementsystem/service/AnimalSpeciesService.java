@@ -12,8 +12,9 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class AnimalSpeciesService {
-    AnimalSpeciesRepository animalSpeciesRepository;
+    private final AnimalSpeciesRepository animalSpeciesRepository;
     public List<AnimalSpecies> getAllAnimalSpecies(){
+
         return animalSpeciesRepository.findAll(Sort.by(Sort.Direction.ASC, "cageId"));
     }
     public Optional<AnimalSpecies> getAnimalSpeciesByID(int id){
@@ -21,5 +22,12 @@ public class AnimalSpeciesService {
     }
     public List<AnimalSpecies> getAnimalSpeciesByName(String animalSpecieName){
         return animalSpeciesRepository.findByName(animalSpecieName);
+    }
+    public void UpdateAnimalSpecies(int animalSpecieID, AnimalSpecies request){
+        AnimalSpecies animalSpecies = animalSpeciesRepository.findById(animalSpecieID).orElseThrow(() -> new IllegalStateException("Animal specie with " + animalSpecieID + " is not found"));
+        if(request.getName() != null) animalSpecies.setName(request.getName());
+        animalSpecies.setQuantity(request.getQuantity());
+        animalSpecies.setCageId(request.getCageId());
+        animalSpeciesRepository.save(animalSpecies);
     }
 }

@@ -26,5 +26,8 @@ public class AnimalSpeciesController {
     public List<AnimalSpecies> getAnimalByName(@PathVariable("animalspecieName") String animalSpecieName){
         return animalSpeciesService.getAnimalSpeciesByName(animalSpecieName);
     }
-
+    @PutMapping("v1/species/{animalspecieID}")
+    public void updateAnimalSpecie(@PathVariable("animalspecieID") int animalspecieID, @RequestBody AnimalSpecies request){
+        animalSpeciesService.UpdateAnimalSpecies(animalspecieID, request);
+    }
 }
