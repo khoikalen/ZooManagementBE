@@ -53,14 +53,13 @@ public class AnimalService {
         return animalList;
     }
     public void createNewAnimal(Animal animal) {
-        List<Animal> animalInCageId = animalRepository.findBycageId(animal.getCageId());
         Cage cage = cageRepository.findCageById(animal.getCageId());
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
-        if (!animalInCageId.isEmpty()) {
+        if (cage != null) {
             animalRepository.save(animal);
             for (Animal animalInCage : animalRepository.findBycageId(animal.getCageId())) {
-                if (!animalInCage.getStatus().equals("Death")) {
+                if (!animalInCage.getStatus().equals("Dead")) {
                     cageQuantity++;
                 }
             }
@@ -81,7 +80,7 @@ public class AnimalService {
             if (request.getDob() != null) animal.setDob(request.getDob());
             if (request.getDez() != null) animal.setDez(request.getDez());
             if (request.getGender() != null) animal.setGender(request.getGender());
-            if (request.getSpecie() != null && !request.getSpecie().equals("Death"))
+            if (request.getSpecie() != null && !request.getSpecie().equals("Dead"))
                 animal.setSpecie(request.getSpecie());
             if (request.getStatus() != null) throw new IllegalStateException("Can not update Animal Status !");
             animal.setCageId(cageRepository.findCageIdByCageName(request.getCageName()));

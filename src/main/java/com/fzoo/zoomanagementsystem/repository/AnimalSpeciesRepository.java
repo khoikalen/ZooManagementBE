@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface AnimalSpeciesRepository extends JpaRepository<AnimalSpecies, Integer> {
     @Query("select c from AnimalSpecies c where c.Name like %?1% order by c.cageId")
     List<AnimalSpecies> findByName(String animalSpecieName);
+
+    @Query("select c from AnimalSpecies c where c.cageId = ?1")
+    List<AnimalSpecies> findByCageId(int cageId);
 }

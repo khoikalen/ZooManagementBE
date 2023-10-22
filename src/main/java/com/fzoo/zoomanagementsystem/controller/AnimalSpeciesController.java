@@ -2,6 +2,7 @@ package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.model.AnimalSpecies;
 import com.fzoo.zoomanagementsystem.service.AnimalSpeciesService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,21 +14,66 @@ import java.util.Optional;
 @RequestMapping("api")
 public class AnimalSpeciesController {
     private final AnimalSpeciesService animalSpeciesService;
+    @Operation(
+            summary = "Get all Animal Species",
+            description = "Get all Animal Species in Database"
+    )
     @GetMapping("v1/species")
-    public List<AnimalSpecies> getAllAnimalSpecie(){
+    public List<AnimalSpecies> getAllAnimalSpecies(){
         return animalSpeciesService.getAllAnimalSpecies();
     }
 
+    @Operation(
+            summary = "Get Animal Species by ID",
+            description = "Search Animal Species using ID"
+    )
     @GetMapping("v1/species/{animalspecieID}")
-        public Optional<AnimalSpecies> getAnimalById(@PathVariable("animalspecieID") int animalSpecieID){
+        public AnimalSpecies getAnimalSpeciesById(@PathVariable("animalspecieID") int animalSpecieID){
             return animalSpeciesService.getAnimalSpeciesByID(animalSpecieID);
         }
+
+    @Operation(
+            summary = "Get Animal Species by name",
+            description = "Search Animal Species using Name"
+    )
     @GetMapping("v2/species/{animalspecieName}")
-    public List<AnimalSpecies> getAnimalByName(@PathVariable("animalspecieName") String animalSpecieName){
+    public List<AnimalSpecies> getAnimalSpeicesByName(@PathVariable("animalspecieName") String animalSpecieName){
         return animalSpeciesService.getAnimalSpeciesByName(animalSpecieName);
     }
+
+    @Operation(
+            summary = "Get Animal Species by Cage ID",
+            description = "Get list of Animal Species using Cage ID"
+    )
+    @GetMapping("v3/species/{cageID}")
+    public List<AnimalSpecies> getAnimalSpeciesByCageID(@PathVariable("cageID") int cageID){
+        return animalSpeciesService.getAnimalSpeciesByCageID(cageID);
+    }
+
+    @Operation(
+            summary = "Create Animal Species",
+            description = "Create Animal Species base on inputted value"
+    )
+    @PostMapping("v1/species")
+    public void createAnimalSpecies(@RequestBody AnimalSpecies animalSpecies){
+        animalSpeciesService.CreateAnimalSpecies(animalSpecies);
+    }
+
+    @Operation(
+            summary = "Update Animal Species",
+            description = "Input value to change Animal Species information"
+    )
     @PutMapping("v1/species/{animalspecieID}")
-    public void updateAnimalSpecie(@PathVariable("animalspecieID") int animalspecieID, @RequestBody AnimalSpecies request){
-        animalSpeciesService.UpdateAnimalSpecies(animalspecieID, request);
+    public void updateAnimalSpecies(@PathVariable("animalspecieID") int animalSpecieID, @RequestBody AnimalSpecies request){
+        animalSpeciesService.UpdateAnimalSpecies(animalSpecieID, request);
+    }
+
+    @Operation(
+            summary = "Delete Animal Species",
+            description = "Delete Animals Species using ID"
+    )
+    @DeleteMapping("/v1/species/{animalspecieID}")
+    public void deleteAnimalSpecies(@PathVariable("animalspecieID") int animalSpecieID){
+        animalSpeciesService.deleteAnimalSpecies(animalSpecieID);
     }
 }
