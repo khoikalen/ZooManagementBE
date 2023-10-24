@@ -82,7 +82,7 @@ public class CageService {
     public void updateCage(int cageId, CageRequest request) throws UserNotFoundException {
         Cage cage = cageRepository.findCageById(cageId);
         if (request.getCageStatus().equals("Empty")) {
-            List<Animal> animalList = animalRepository.findByCageId(cageId);
+            List<Animal> animalList = animalRepository.findBycageId(cageId);
             if (!animalList.isEmpty()) {
                 throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
             } /*else {
