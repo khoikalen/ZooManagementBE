@@ -10,6 +10,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/v1/meal")
@@ -84,5 +85,14 @@ public class MealController {
     public void createAllMeal(@PathVariable("emailExpert") String email){
         service.createAllMeal(email);
     }
+
+
+
+
+//    @GetMapping(path = "/3")
+//    public Meal getMeal(){
+//        return service.getMeal();
+//    }
+
 
 }

@@ -3,6 +3,7 @@ package com.fzoo.zoomanagementsystem.controller;
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.service.AnimalService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +35,13 @@ public class AnimalController {
         animalService.updateAnimalInformation(id, request);
     }
 
+    @Operation(
+            summary = "List sick animal",
+            description = "List sick animal that expert manage "
+    )
+    @GetMapping("v2/animal/{expertEmail}")
+    public List<Animal> getSickAnimal(@PathVariable("expertEmail") String email) {
+        return animalService.getSickAnimal(email);
+    }
 
 }

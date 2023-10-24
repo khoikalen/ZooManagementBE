@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,8 @@ public class MealService {
     private final AnimalRepository animalRepository;
     private final FoodRepository foodRepository;
     public Meal currentMeal;
+
+
     public void createDailyMeal(int id) {
 
         Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
@@ -32,13 +35,15 @@ public class MealService {
         if(optionalMeal.isPresent()){
             throw new IllegalStateException("Meal was created");
         }
-        Meal meal = Meal
-                .builder()
-//                .cageInfo(cageRepository.findByName(cage.getName()).get())
-                .name(cage.getName() + " meal")
-                .cageId(id)
-                .build();
-        currentMeal = meal;
+
+            Meal meal = Meal
+                    .builder()
+                    .name(cage.getName() + " meal")
+                    .cageId(id)
+                    .build();
+            currentMeal = meal;
+
+
     }
 
     public void createSickMeal(int id) {
@@ -51,12 +56,13 @@ public class MealService {
                 .builder()
                 .name(animal.getName() + " sick meal")
                 .cageId(id)
+                .haveFood(foodService.setFood())
                 .build();
         currentMeal = meal;
     }
 
     public void saveMeal() {
-        for (Food food:foodService.getListFood()
+        for (Food food:foodService.getSetFood()
              ) {
             Optional<FoodStorage> foodStorage = foodStorageRepository.findAvailableByName(food.getName());
             if(food.getWeight()>foodStorage.get().getAvailable()){
@@ -64,7 +70,7 @@ public class MealService {
             }
             foodStorage.get().setAvailable(foodStorage.get().getAvailable() - food.getWeight());
         }
-        currentMeal.setHaveFood(foodService.getListFood());
+        currentMeal.setHaveFood(foodService.getSetFood());
         mealRepository.save(currentMeal);
         foodService.clear();
     }
@@ -100,18 +106,18 @@ public class MealService {
 
     public void createAllMeal(String email) {
         List<Cage> listCage = cageRepository.findCagesByExpertEmail(email);
-        List<Integer> mealId = new ArrayList<>();
+        List<Integer> listMealId = new ArrayList<>();
         List<Integer> foodId = new ArrayList<>();
 
         for (Cage cage: listCage
              ) {
             int id = cage.getId();
-            Integer meal = mealRepository.findIdByCageId(id);
-            if(meal!=null){
-                mealId.add(meal);
+            Integer mealId = mealRepository.findIdByCageIdAndNameNotContaining(id);
+            if(mealId!=null){
+                listMealId.add(mealId);
             }
         }
-        for (int id:mealId
+        for (int id:listMealId
              ) {
             foodId.addAll(foodInMealRepository.findIdByMealId(id));
         }
@@ -139,4 +145,9 @@ public class MealService {
 
         mealRepository.deleteById(id);
     }
+
+//    public Meal getMeal() {
+//        currentMeal.setHaveFood(foodService.getListFood());
+//        return currentMeal;
+//    }
 }

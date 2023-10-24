@@ -22,8 +22,7 @@ public class Food {
     private String name;
     private float weight;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "haveFood")
-//    @JsonBackReference
+    @ManyToMany( fetch = FetchType.LAZY  ,cascade = CascadeType.ALL,mappedBy = "haveFood")
     private Set<Meal> meals;
 
 
