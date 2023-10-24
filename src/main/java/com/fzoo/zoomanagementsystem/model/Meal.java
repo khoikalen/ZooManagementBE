@@ -25,12 +25,11 @@ public class Meal {
 
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
     @JoinTable(name = "food_in_meal",
             joinColumns = @JoinColumn(name = "meal_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "food_id", referencedColumnName = "id")
     )
-//    @JsonBackReference
     private Set<Food> haveFood;
 
 

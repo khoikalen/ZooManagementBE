@@ -35,7 +35,7 @@ public class FoodController {
     )
     @GetMapping()
     public ResponseEntity<Set<Food>> getListFood(){
-        return ResponseEntity.ok(service.getListFood());
+        return ResponseEntity.ok(service.getSetFood());
     }
 
     @Operation(
@@ -55,6 +55,15 @@ public class FoodController {
     public List<Food> getFoodInSickMeal(@PathVariable("animalID") int id){
         return service.getFoodInSickMeal(id);
     }
+
+//    @Operation(
+//            summary = "List all foods",
+//            description = "List all  foods from the database"
+//    )
+//    @GetMapping(path = "/all/{cageID}")
+//    public List<Food> getAllFood(@PathVariable("cageID") int id){
+//        return service.getAllFoodInMealCage(id);
+//    }
 
     @Operation(
             summary = "Update food",

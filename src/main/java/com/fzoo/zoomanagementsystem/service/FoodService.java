@@ -24,7 +24,13 @@ public class FoodService {
 
     private final FoodStorageRepository foodStorageRepository;
 
-    Set<Food> setFood;
+    public static Set<Food> setFood;
+
+    public Set<Food> setFood(){
+        return setFood;
+    }
+
+
     public void addFood(Food food) {
 
         if(setFood==null){
@@ -42,13 +48,14 @@ public class FoodService {
 
     }
 
-    public Set<Food> getListFood(){
+    public Set<Food> getSetFood(){
         return setFood;
     }
 
     public void clear(){
         setFood.clear();
     }
+
 
     public List<Food> getFoodInDailyMeal(int id) {
         Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
@@ -67,6 +74,15 @@ public class FoodService {
         }
         return foodRepository.findFoodByMealId(mealId);
     }
+
+
+//    public List<Food> getAllFoodInMealCage(int id){
+//        List<Food>foodList = getFoodInDailyMeal(id);
+//        List<Integer> animalId = animalRepository.findIdBycageId(id);
+//
+//
+//        return foodList;
+//    }
 
     @Transactional
     public void updateFood(String name, float weight) {

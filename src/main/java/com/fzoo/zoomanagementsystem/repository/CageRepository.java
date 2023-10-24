@@ -1,6 +1,5 @@
 package com.fzoo.zoomanagementsystem.repository;
 
-import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.data.jpa.repository.JpaRepository;

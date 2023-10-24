@@ -52,19 +52,7 @@ public class AnimalController {
         return animalService.searchAnimalByID(animalID);
     }
 
-    @Operation(
-            summary = "Search Animal in Cage",
-            description = "Return a list of animals using CageID"
-    )
-    @GetMapping("v3/animal/{cageID}")
-    public List<Animal> searchAnimalByCageID(@PathVariable("cageID") int cageID){
-        return animalService.searchAnimalByCageId(cageID);
-    }
 
-    @GetMapping("v4/animal/{cageName}")
-    public List<Animal> searchAnimalByCageName(@PathVariable("cageName") String cageName){
-        return animalService.searchAnimalByCageName(cageName);
-    }
     @Operation(
             summary = "Create an Animal",
             description = "Create an new Animal with following Input values"
@@ -80,10 +68,18 @@ public class AnimalController {
             description = "Input AnimalID and values to update an existed Animal"
     )
     @PutMapping("v1/animal/{animalID}")
-    public void updateAnimalInformation(@PathVariable("animalID") int id, @RequestBody AnimalUpdatingDTO request) {
+    public void updateAnimalInfomation(@PathVariable("animalID") int id, @RequestBody AnimalUpdatingDTO request) {
         animalService.updateAnimalInformation(id, request);
     }
 
+    @Operation(
+            summary = "List sick animal",
+            description = "List sick animal that expert manage "
+    )
+    @GetMapping("v3/animal/{expertEmail}")
+    public List<Animal> getSickAnimal(@PathVariable("expertEmail") String email) {
+        return animalService.getSickAnimal(email);
+    }
 
     @Operation(
             summary = "Delete Animal information",
@@ -95,3 +91,4 @@ public class AnimalController {
     }
 
 }
+

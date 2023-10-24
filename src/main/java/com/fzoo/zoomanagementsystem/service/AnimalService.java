@@ -4,8 +4,10 @@ import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.AnimalSpecies;
 import com.fzoo.zoomanagementsystem.model.Cage;
+import com.fzoo.zoomanagementsystem.model.Log;
 import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
 import com.fzoo.zoomanagementsystem.repository.CageRepository;
+import com.fzoo.zoomanagementsystem.repository.LogRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +24,7 @@ import java.util.Optional;
 public class AnimalService {
     private final AnimalRepository animalRepository;
     private final CageRepository cageRepository;
+    private final LogRepository logRepository;
 
     public List<Animal> getAnimalCageName(List<Animal> animalList){
         for(Animal animal : animalList){
@@ -34,6 +38,7 @@ public class AnimalService {
         animalList = getAnimalCageName(animalList);
         return animalList;
     }
+
     public List<Animal> getAllDeadAnimal() {
         List<Animal> animalList = animalRepository.findAllDeadAnimal();
         if (animalList.isEmpty()) throw new IllegalStateException("There are no animals");
@@ -46,32 +51,18 @@ public class AnimalService {
         return animal;
     }
     public List<Animal> searchAnimalByName(String animalName) {
-        List<Animal> animalList = animalRepository.findByName(animalName);
+        List<Animal> animalList = animalRepository.findByname(animalName);
         if (animalList.isEmpty()) throw new IllegalStateException("There are no animals");
         animalList = getAnimalCageName(animalList);
         return animalList;
     }
-    public List<Animal> searchAnimalByCageId(int cageID){
-        List<Animal> animalList = animalRepository.findByCageId(cageID);
-        if(animalList.isEmpty()) throw new IllegalStateException("There are no animals in this cage !");
-        animalList = getAnimalCageName(animalList);
-        return animalList;
-    }
-    public List<Animal> searchAnimalByCageName(String cageName) {
-        List<Animal> animalList = animalRepository.findByCageName(cageName);
-        if(animalList.isEmpty()) throw new IllegalStateException("Search result return empty !");
-        animalList = getAnimalCageName(animalList);
-        return animalList;
-    }
-
-
     public void createNewAnimal(Animal animal) {
         Cage cage = cageRepository.findCageById(animal.getCageId());
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
         if (cage != null) {
             animalRepository.save(animal);
-            for (Animal animalInCage : animalRepository.findByCageId(animal.getCageId())) {
+            for (Animal animalInCage : animalRepository.findBycageId(animal.getCageId())) {
                 if (!animalInCage.getStatus().equals("Dead")) {
                     cageQuantity++;
                 }
@@ -112,6 +103,30 @@ public class AnimalService {
             cageRepository.save(cage);
         }
     }
+
+
+
+    public List<Animal> getSickAnimal(String email) {
+        String type = "Health";
+        List<Animal>animals = new ArrayList<>();
+        List<Integer>animalId = new ArrayList<>();
+
+        List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
+        for (Cage cage : cages
+        ) {
+            animalId.addAll(animalRepository.findIdByCageId(cage.getId()));
+        }
+        for (Integer id : animalId
+        ) {
+            if(!logRepository.findByAnimalIdAndTypeContaining(id, type).isEmpty()){
+                animals.add(animalRepository.findById(id).orElseThrow());
+            }
+        }
+        animals = getAnimalCageName(animals);
+        return animals;
+
+    }
+
 
 }
 
