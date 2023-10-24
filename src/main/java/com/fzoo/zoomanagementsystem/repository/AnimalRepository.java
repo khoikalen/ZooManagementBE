@@ -1,6 +1,8 @@
 package com.fzoo.zoomanagementsystem.repository;
 
 import com.fzoo.zoomanagementsystem.model.Animal;
+import com.fzoo.zoomanagementsystem.model.Cage;
+import jakarta.persistence.JoinColumn;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,10 +12,10 @@ import java.util.List;
 
 public interface AnimalRepository extends JpaRepository<Animal, Integer> {
 
-    List<Animal> findBycageId(int cageId);
+    List<Animal> findByCageId(int cageId);
 
     @Query("Select c from Animal c where c.name like %?1% and c.status != 'Dead' order by c.cageId")
-    List<Animal> findByname(String animalName);
+    List<Animal> findByName(String animalName);
 
     @Query("Select c from Animal c where c.status != 'Dead'")
     List<Animal> findAllAlive(Sort cageId);
@@ -23,4 +25,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Integer> {
     @Query("select c from Animal c where c.status != 'Dead' and c.cageId = ?1")
     Collection<Object> findAllAliveInCage(int cageId);
 
+    @Query("SELECT c from Animal c join Cage d on c.cageId = d.id where d.name like %?1%")
+    List<Animal> findByCageName(String cageName);
 }

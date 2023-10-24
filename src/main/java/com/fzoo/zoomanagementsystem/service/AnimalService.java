@@ -34,7 +34,6 @@ public class AnimalService {
         animalList = getAnimalCageName(animalList);
         return animalList;
     }
-
     public List<Animal> getAllDeadAnimal() {
         List<Animal> animalList = animalRepository.findAllDeadAnimal();
         if (animalList.isEmpty()) throw new IllegalStateException("There are no animals");
@@ -47,18 +46,32 @@ public class AnimalService {
         return animal;
     }
     public List<Animal> searchAnimalByName(String animalName) {
-        List<Animal> animalList = animalRepository.findByname(animalName);
+        List<Animal> animalList = animalRepository.findByName(animalName);
         if (animalList.isEmpty()) throw new IllegalStateException("There are no animals");
         animalList = getAnimalCageName(animalList);
         return animalList;
     }
+    public List<Animal> searchAnimalByCageId(int cageID){
+        List<Animal> animalList = animalRepository.findByCageId(cageID);
+        if(animalList.isEmpty()) throw new IllegalStateException("There are no animals in this cage !");
+        animalList = getAnimalCageName(animalList);
+        return animalList;
+    }
+    public List<Animal> searchAnimalByCageName(String cageName) {
+        List<Animal> animalList = animalRepository.findByCageName(cageName);
+        if(animalList.isEmpty()) throw new IllegalStateException("Search result return empty !");
+        animalList = getAnimalCageName(animalList);
+        return animalList;
+    }
+
+
     public void createNewAnimal(Animal animal) {
         Cage cage = cageRepository.findCageById(animal.getCageId());
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
         if (cage != null) {
             animalRepository.save(animal);
-            for (Animal animalInCage : animalRepository.findBycageId(animal.getCageId())) {
+            for (Animal animalInCage : animalRepository.findByCageId(animal.getCageId())) {
                 if (!animalInCage.getStatus().equals("Dead")) {
                     cageQuantity++;
                 }
@@ -99,5 +112,6 @@ public class AnimalService {
             cageRepository.save(cage);
         }
     }
+
 }
 
