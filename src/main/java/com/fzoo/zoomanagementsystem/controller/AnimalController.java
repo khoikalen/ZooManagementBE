@@ -54,6 +54,24 @@ public class AnimalController {
 
 
     @Operation(
+            summary = "Search Animals by CageID",
+            description = "Show list of Animals using CageID"
+    )
+    @GetMapping("v4/animal/{cageID}")
+    public List<Animal> searchAnimalByCageID(@PathVariable("cageID") int cageID){
+        return animalService.searchAnimalByCageID(cageID);
+    }
+
+    @Operation(
+            summary = "Search Animals by CageName",
+            description = "Show list of Animals using CageName"
+    )
+    @GetMapping("v5/animal/{cageName}")
+    public List<Animal> searchAnimalByCageName(@PathVariable("cageName") String cageName){
+        return animalService.searchAnimalByCageName(cageName);
+    }
+
+    @Operation(
             summary = "Create an Animal",
             description = "Create an new Animal with following Input values"
     )

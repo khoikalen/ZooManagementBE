@@ -25,4 +25,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Integer> {
 
     @Query("Select c.id from Animal c where c.cageId = :id")
     List<Integer> findIdByCageId(int id);
+
+    @Query("SELECT c from Animal c join Cage d on c.cageId = d.id where d.name like %?1%")
+    List<Animal> findByCageName(String cageName);
 }

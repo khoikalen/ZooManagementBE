@@ -15,11 +15,20 @@ public class TicketService {
 
     public void ticketCheckout(Ticket request) {
         Ticket ticket = ticketRepository.findByPriceAndTypeAndDate(request.getPrice(), request.getType(), request.getDate());
-        if(ticket != null){
+        if (ticket != null) {
+            if (request.getDate().isBefore(ticket.getDate())) {
+                throw new IllegalStateException("There are some mismatch, please contact admin!");
+            }
             ticket.setQuantity(ticket.getQuantity() + request.getQuantity());
             ticketRepository.save(ticket);
         } else {
             ticketRepository.save(request);
         }
+    }
+
+    public List<Ticket> getAllTicket() {
+        List<Ticket> ticket = ticketRepository.findAll();
+        if (ticket.isEmpty()) throw new IllegalStateException("There are no tickets !");
+        return ticket;
     }
 }

@@ -127,6 +127,18 @@ public class AnimalService {
 
     }
 
+    public List<Animal> searchAnimalByCageID(int cageID) {
+        List<Animal> animalList = animalRepository.findBycageId(cageID);
+        if(animalList.isEmpty()) throw new IllegalStateException("Search result returns null values !");
+        animalList = getAnimalCageName(animalList);
+        return animalList;
+    }
 
+    public List<Animal> searchAnimalByCageName(String cageName) {
+        List<Animal> animalList = animalRepository.findByCageName(cageName);
+        if(animalList.isEmpty()) throw new IllegalStateException("Search result returns null values !");
+        animalList = getAnimalCageName(animalList);
+        return animalList;
+    }
 }
 
