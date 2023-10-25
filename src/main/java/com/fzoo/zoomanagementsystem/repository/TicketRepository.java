@@ -12,4 +12,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     Ticket findByPriceAndTypeAndDate(int price, String type, LocalDate date);
 
 
+    Ticket findByTypeAndDate(String type, LocalDate date);
 }

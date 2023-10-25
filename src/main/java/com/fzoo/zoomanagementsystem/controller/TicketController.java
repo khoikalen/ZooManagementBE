@@ -32,4 +32,9 @@ public class TicketController {
     public void checkoutTicket(@RequestBody Ticket request){
         ticketService.ticketCheckout(request);
     }
+
+    @PostMapping("v2/ticket")
+    public void checkoutTicketV2(@RequestBody Ticket request) {
+        ticketService.ticketCheckoutV2(request);
+    }
 }
