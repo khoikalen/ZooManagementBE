@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.controller;
 
+import com.fzoo.zoomanagementsystem.dto.TicketRequestDTO;
 import com.fzoo.zoomanagementsystem.model.Ticket;
 import com.fzoo.zoomanagementsystem.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,5 +37,10 @@ public class TicketController {
     @PostMapping("v2/ticket")
     public void checkoutTicketV2(@RequestBody Ticket request) {
         ticketService.ticketCheckoutV2(request);
+    }
+
+    @PostMapping("v3/ticket")
+    public void checkoutTicketV3(@RequestBody TicketRequestDTO request){
+        ticketService.ticketCheckoutV3(request);
     }
 }

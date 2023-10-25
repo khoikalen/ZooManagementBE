@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.dto.TicketRequestDTO;
 import com.fzoo.zoomanagementsystem.model.Ticket;
 import com.fzoo.zoomanagementsystem.repository.TicketRepository;
 import lombok.AllArgsConstructor;
@@ -55,9 +56,47 @@ public class TicketService {
         }
         if (ticket != null) {
             ticket.setQuantity(ticket.getQuantity() + request.getQuantity());
+            ticket.setTotal(ticket.getPrice() * ticket.getQuantity());
             ticketRepository.save(ticket);
         } else {
+            request.setTotal(request.getQuantity() * request.getPrice());
             ticketRepository.save(request);
+        }
+    }
+
+    public void ticketCheckoutV3(TicketRequestDTO request) {
+        Ticket ticketTypeChild = ticketRepository.findByTypeAndDate(CHILD, request.getDate());
+        Ticket ticketTypeAdult = ticketRepository.findByTypeAndDate(ADULT, request.getDate());
+        LocalDate date = LocalDate.now();
+        String ticketDate = request.getDate().getDayOfWeek().toString();
+        if (request.getDate().isBefore(date)) {
+            throw new IllegalStateException("There are some mismatch, please contact admin!");
+        }
+
+        if (ticketDate.equals(SATURDAY) || ticketDate.equals(SUNDAY)) {
+            request.setPriceOfAdult(70000);
+            request.setPriceOfChild(40000);
+        } else {
+            request.setPriceOfAdult(50000);
+            request.setPriceOfChild(30000);
+        }
+
+        if (ticketTypeAdult != null) {
+            ticketTypeAdult.setQuantity(ticketTypeAdult.getQuantity() + request.getQuantityOfAdult());
+            ticketTypeAdult.setTotal(ticketTypeAdult.getPrice() * ticketTypeAdult.getQuantity());
+            ticketRepository.save(ticketTypeAdult);
+        } else {
+            ticketTypeAdult = new Ticket(1, ADULT, request.getPriceOfAdult(), request.getQuantityOfAdult(), request.getDate(), request.getQuantityOfAdult() * request.getPriceOfAdult());
+            ticketRepository.save(ticketTypeAdult);
+        }
+
+        if (ticketTypeChild != null) {
+            ticketTypeChild.setQuantity(ticketTypeChild.getQuantity() + request.getQuantityOfChild());
+            ticketTypeChild.setTotal(ticketTypeChild.getPrice() * ticketTypeChild.getQuantity());
+            ticketRepository.save(ticketTypeChild);
+        } else {
+            ticketTypeChild = new Ticket(1, CHILD, request.getPriceOfChild(), request.getQuantityOfChild(), request.getDate(), request.getQuantityOfChild() * request.getPriceOfChild());
+            ticketRepository.save(ticketTypeChild);
         }
     }
 
@@ -67,4 +106,5 @@ public class TicketService {
         if (ticket.isEmpty()) throw new IllegalStateException("There are no tickets !");
         return ticket;
     }
+
 }
