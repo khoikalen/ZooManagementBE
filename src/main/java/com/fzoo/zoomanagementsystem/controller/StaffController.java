@@ -74,7 +74,7 @@ public class StaffController {
     @PutMapping(path="/v1/staff/{staffId}")
     public void updateStaff(@PathVariable("staffId") int staffId,
                             @RequestBody @Valid UpdatedStaff request) {
-        staffService.updateStaff(staffId, request.getFirstName(), request.getLastName(), request.getSex(), request.getStartDay(), request.getPhoneNumber());
+        staffService.updateStaff(staffId, request.getFirstName(), request.getLastName(), request.getGender(), request.getStartDay(), request.getPhoneNumber());
     }
 
 

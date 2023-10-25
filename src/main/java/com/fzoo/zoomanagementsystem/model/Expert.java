@@ -22,7 +22,7 @@ public class Expert {
 
     private String lastName;
 
-    private String sex;
+    private String gender;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate startDay;
