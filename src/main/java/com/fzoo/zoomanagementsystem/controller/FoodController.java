@@ -1,10 +1,9 @@
 package com.fzoo.zoomanagementsystem.controller;
 
+import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.model.Food;
-import com.fzoo.zoomanagementsystem.model.Meal;
 import com.fzoo.zoomanagementsystem.service.FoodService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +42,7 @@ public class FoodController {
             description = "List all daily foods from the database"
     )
     @GetMapping(path = "/daily-meal/{cageID}")
-    public List<Food> getFoodInDailyMeal(@PathVariable("cageID") int id){
+    public FoodInMealResponse getFoodInDailyMeal(@PathVariable("cageID") int id){
         return service.getFoodInDailyMeal(id);
     }
 
@@ -52,7 +51,7 @@ public class FoodController {
             description = "List all sick foods from the database"
     )
     @GetMapping(path = "/sick-meal/{animalID}")
-    public List<Food> getFoodInSickMeal(@PathVariable("animalID") int id){
+    public FoodInMealResponse getFoodInSickMeal(@PathVariable("animalID") int id){
         return service.getFoodInSickMeal(id);
     }
 

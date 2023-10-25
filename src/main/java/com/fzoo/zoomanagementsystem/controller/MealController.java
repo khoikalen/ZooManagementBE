@@ -1,16 +1,12 @@
 package com.fzoo.zoomanagementsystem.controller;
 
-import com.fzoo.zoomanagementsystem.model.Cage;
+import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.model.Food;
-import com.fzoo.zoomanagementsystem.model.Meal;
 import com.fzoo.zoomanagementsystem.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/v1/meal")
@@ -88,11 +84,18 @@ public class MealController {
 
 
 
+    @Operation(
+            summary = "Add new food to meal",
+            description = "Add new food to meal "
+    )
+    @PostMapping(path = "/new/{mealId}")
+    public void addMoreFood(@PathVariable("mealId") int id,
+                            @RequestBody Food food
+                            ){
+        service.addMoreFood(id,food);
+    }
 
-//    @GetMapping(path = "/3")
-//    public Meal getMeal(){
-//        return service.getMeal();
-//    }
+
 
 
 }

@@ -1,12 +1,11 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.HashSet;
 import java.util.List;
@@ -57,22 +56,37 @@ public class FoodService {
     }
 
 
-    public List<Food> getFoodInDailyMeal(int id) {
+
+    public FoodInMealResponse getFoodInDailyMeal(int id) {
         Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
         Integer mealId = mealRepository.findIdByName(cage.getName());
         if(mealId==null){
             throw new IllegalStateException("Not have food in this meal");
         }
-        return foodRepository.findFoodByMealId(mealId);
+        List<Food>foodList = foodRepository.findFoodByMealId(mealId);
+        FoodInMealResponse mealResponse = FoodInMealResponse.builder()
+                .id(mealId)
+                .name(cage.getName()+" meal")
+                .cageId(cage.getId())
+                .haveFood(foodList)
+                .build();
+        return mealResponse;
     }
 
-    public List<Food> getFoodInSickMeal(int id) {
+    public FoodInMealResponse getFoodInSickMeal(int id) {
         Animal animal = animalRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have animal"));
         Integer mealId = mealRepository.findIdByName(animal.getName());
         if(mealId==null){
             throw new IllegalStateException("Not have food in this meal");
         }
-        return foodRepository.findFoodByMealId(mealId);
+        List<Food>foodList = foodRepository.findFoodByMealId(mealId);
+        FoodInMealResponse mealResponse = FoodInMealResponse.builder()
+                .id(mealId)
+                .name(animal.getName()+" meal")
+                .cageId(animal.getId())
+                .haveFood(foodList)
+                .build();
+        return mealResponse;
     }
 
 

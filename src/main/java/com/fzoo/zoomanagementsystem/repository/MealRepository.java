@@ -18,4 +18,5 @@ public interface MealRepository extends JpaRepository<Meal,Integer> {
     Integer findIdByCageIdAndNameNotContaining(int id);
 
 
+    List<Meal> findByCageId(int id);
 }
