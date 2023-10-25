@@ -71,7 +71,7 @@ public class StaffService {
             if ((!checkPhoneNumberInStaff && !checkPhoneNumberInExpert) || staff.getPhoneNumber().equals(phoneNumber) ) {
                 staff.setFirstName(firstName);
                 staff.setLastName(lastName);
-                staff.setSex(sex);
+                staff.setGender(sex);
                 staff.setStartDay(startDay);
                 staff.setPhoneNumber(phoneNumber);
                 staffRepository.save(staff);

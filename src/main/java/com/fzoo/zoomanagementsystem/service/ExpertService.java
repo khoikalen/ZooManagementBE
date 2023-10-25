@@ -34,7 +34,7 @@ public class ExpertService {
                     expert.getId(),
                     expert.getFirstName(),
                     expert.getLastName(),
-                    expert.getSex(),
+                    expert.getGender(),
                     expert.getStartDay(),
                     expert.getEmail(),
                     expert.getPhoneNumber(),
@@ -85,7 +85,7 @@ public class ExpertService {
             if ((!checkPhoneNumberInExpert && !checkPhoneNumberInStaff) || expert.getPhoneNumber().equals(request.getPhoneNumber())) {
                 expert.setFirstName(request.getFirstName());
                 expert.setLastName(request.getLastName());
-                expert.setSex(request.getSex());
+                expert.setGender(request.getGender());
                 expert.setStartDay(request.getStartDay());
                 expert.setPhoneNumber(request.getPhoneNumber());
                 expert.setArea(area);

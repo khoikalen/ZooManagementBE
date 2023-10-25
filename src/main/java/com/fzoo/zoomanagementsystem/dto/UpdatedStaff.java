@@ -25,9 +25,9 @@ public class UpdatedStaff {
     @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "Last name should be word only and from 2 to 15 characters")
     private String lastName;
 
-    @NotBlank(message = "Sex should not be empty")
-    @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "Sex should be word only and from 2 to 15 characters")
-    private String sex;
+    @NotBlank(message = "Gender should not be empty")
+    @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "Gender should be word only and from 2 to 15 characters")
+    private String gender;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     @NotNull(message = "Start day should not be empty")
