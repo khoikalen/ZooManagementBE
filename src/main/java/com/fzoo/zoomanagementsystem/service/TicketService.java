@@ -3,6 +3,7 @@ package com.fzoo.zoomanagementsystem.service;
 import com.fzoo.zoomanagementsystem.model.Ticket;
 import com.fzoo.zoomanagementsystem.repository.TicketRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -49,7 +50,7 @@ public class TicketService {
             if (request.getType().equals(ADULT)) {
                 request.setPrice(50000);
             } else if (request.getType().equals(CHILD)) {
-                request.setPrice(3000);
+                request.setPrice(30000);
             }
         }
         if (ticket != null) {
@@ -62,7 +63,7 @@ public class TicketService {
 
 
     public List<Ticket> getAllTicket() {
-        List<Ticket> ticket = ticketRepository.findAll();
+        List<Ticket> ticket = ticketRepository.findAll(Sort.by(Sort.Direction.ASC, "date"));
         if (ticket.isEmpty()) throw new IllegalStateException("There are no tickets !");
         return ticket;
     }
