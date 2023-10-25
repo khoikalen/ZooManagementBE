@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class MealService {
     private final AnimalRepository animalRepository;
     private final FoodRepository foodRepository;
     public Meal currentMeal;
+    boolean create = false;
 
 
     public void createDailyMeal(int id) {
@@ -66,9 +67,9 @@ public class MealService {
              ) {
             Optional<FoodStorage> foodStorage = foodStorageRepository.findAvailableByName(food.getName());
             if(food.getWeight()>foodStorage.get().getAvailable()){
-                throw new IllegalStateException("Does not have enough quantity");
+                throw new IllegalStateException("Does not have enough "+food.getName());
             }
-            foodStorage.get().setAvailable(foodStorage.get().getAvailable() - food.getWeight());
+//            foodStorage.get().setAvailable(foodStorage.get().getAvailable() - food.getWeight());
         }
         currentMeal.setHaveFood(foodService.getSetFood());
         mealRepository.save(currentMeal);
@@ -78,16 +79,19 @@ public class MealService {
     @Transactional
     public void update(int id, String name, float weight) {
         Food food = foodRepository.findById(id).orElseThrow(() ->
-                new IllegalStateException("food with "+ id+ " does not exits"));
+                new IllegalStateException("food with does not exits"));
         FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->
                 new IllegalStateException("foodStorage with "+ name+ " does not exits"));
         if(weight>foodStorage.getAvailable()){
-            throw new IllegalStateException("Does not have enough food");
+            throw new IllegalStateException("Does not have enough food " +name);
         }if(weight < 0){
             throw new IllegalStateException("Does not input negative value");
         }
+
         food.setWeight(weight);
-        foodStorage.setAvailable(foodStorage.getAvailable()-food.getWeight());
+        if(create){
+            foodStorage.setAvailable(foodStorage.getAvailable()-food.getWeight());
+        }
         foodRepository.save(food);
     }
 
@@ -126,6 +130,7 @@ public class MealService {
         for (Food food:listFood
              ) {
             update(food.getId(),food.getName(),food.getWeight());
+            create =true;
         }
     }
 
@@ -146,8 +151,23 @@ public class MealService {
         mealRepository.deleteById(id);
     }
 
-//    public Meal getMeal() {
-//        currentMeal.setHaveFood(foodService.getListFood());
-//        return currentMeal;
-//    }
+
+    public void addMoreFood(int id, Food food) {
+        FoodStorage foodStorage = foodStorageRepository.findByName(food.getName()).orElseThrow(() ->
+                new IllegalStateException("foodStorage with "+ food.getName()+ " does not exits"));
+        if(food.getWeight()>foodStorage.getAvailable()){
+            throw new IllegalStateException("Does not have enough "+food.getName());
+        }if(food.getWeight() < 0){
+            throw new IllegalStateException("Does not input negative value");
+        }
+        Meal meal = mealRepository.findById(id).orElseThrow();
+        mealRepository.save(meal);
+        foodRepository.save(food);
+        FoodInMeal foodInMeal = FoodInMeal.builder()
+                .mealId(meal.getId())
+                .foodId(food.getId())
+                .build();
+        foodInMealRepository.save(foodInMeal);
+
+    }
 }
