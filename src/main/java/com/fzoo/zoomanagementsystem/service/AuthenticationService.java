@@ -107,7 +107,7 @@ public class AuthenticationService {
         var account = Account.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()) )
-                .role(Role.valueOf(request.getRole()))
+                .role(Role.USER)
                 .build();
         accountRepository.save(account);
         var jwtToken = jwtService.generateToken(account);
