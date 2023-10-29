@@ -56,6 +56,15 @@ public class CageController {
     }
 
     @Operation(
+            summary = "Get all empty cage by animal ID",
+            description = "Get all empty cage by animal ID for changing cage of specific animal business"
+    )
+    @GetMapping("/v4/cage/{animalId}")
+    public List<CageViewDTO> GetEmptyCageByAreaId(@PathVariable("animalId") int animalId) {
+        return cageService.getEmptyCageByAreaId(animalId);
+    }
+
+    @Operation(
             summary ="Create a new cage",
             description = "Create an empty cage and an owned cage"
     )

@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.repository;
 
+import com.fzoo.zoomanagementsystem.dto.CageViewDTO;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +33,7 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
 
     @Query("select c.name from Cage c where c.id = ?1")
     String findCageNameByCageId(int cageId);
+
+    @Query("select c from Cage c where c.areaId = ?1 and c.cageStatus = 'Empty'")
+    List<Cage> findEmptyCageByAreaId(int areaId);
 }
