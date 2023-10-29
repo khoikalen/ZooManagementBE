@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class AnimalSpeciesService {
+public class UnidentifiedAnimalService {
     private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
     private final CageRepository cageRepository;
 
