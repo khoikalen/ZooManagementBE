@@ -20,4 +20,5 @@ public class FoodStorage {
     private String type;
     private float available;
 
+
 }

@@ -29,14 +29,14 @@ public class FoodController {
 
     }
 
-    @Operation(
-            summary = "List all foods",
-            description = "List all foods from the collection"
-    )
-    @GetMapping()
-    public ResponseEntity<Set<Food>> getListFood(){
-        return ResponseEntity.ok(service.getSetFood());
-    }
+//    @Operation(
+//            summary = "List all foods",
+//            description = "List all foods from the collection"
+//    )
+//    @GetMapping()
+//    public ResponseEntity<Set<Food>> getListFood(){
+//        return ResponseEntity.ok(service.getSetFood());
+//    }
 
     @Operation(
             summary = "List all daily foods",
@@ -56,32 +56,32 @@ public class FoodController {
         return service.getFoodInSickMeal(id);
     }
 
-    @Operation(
-            summary = "List all foods",
-            description = "List all  foods from the database"
-    )
-    @GetMapping(path = "/all/{cageID}")
-    public MealInCageResponse getAllFood(@PathVariable("cageID") int id){
-        return service.getAllFoodInMealCage(id);
-    }
+//    @Operation(
+//            summary = "List all foods",
+//            description = "List all foods from the database"
+//    )
+//    @GetMapping(path = "/all/{cageID}")
+//    public MealInCageResponse getAllFood(@PathVariable("cageID") int id){
+//        return service.getAllFoodInMealCage(id);
+//    }
 
-    @Operation(
-            summary = "Update food",
-            description = "Update food from collection"
-    )
-
-    @PutMapping()
-    public void updateFood(@RequestBody Food food){
-        service.updateFood(food.getName(),food.getWeight());
-    }
-
-    @Operation(
-            summary = "Delete food",
-            description = "Delete food from collection"
-    )
-    @DeleteMapping()
-    public void deleteFood(@RequestBody Food food){
-        service.deleteFood(food.getName());
-    }
+//    @Operation(
+//            summary = "Update food",
+//            description = "Update food from collection"
+//    )
+//
+//    @PutMapping()
+//    public void updateFood(@RequestBody Food food){
+//        service.updateFood(food.getName(),food.getWeight());
+//    }
+//
+//    @Operation(
+//            summary = "Delete food",
+//            description = "Delete food from collection"
+//    )
+//    @DeleteMapping()
+//    public void deleteFood(@RequestBody Food food){
+//        service.deleteFood(food.getName());
+//    }
 
 }

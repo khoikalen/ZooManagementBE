@@ -43,7 +43,7 @@ public class MealService {
                     .cageId(id)
                     .build();
             currentMeal = meal;
-
+            create=false;
 
     }
 
@@ -60,6 +60,7 @@ public class MealService {
                 .haveFood(foodService.setFood())
                 .build();
         currentMeal = meal;
+        create = true;
     }
 
     public void saveMeal() {
@@ -69,7 +70,9 @@ public class MealService {
             if(food.getWeight()>foodStorage.get().getAvailable()){
                 throw new IllegalStateException("Does not have enough "+food.getName());
             }
-//            foodStorage.get().setAvailable(foodStorage.get().getAvailable() - food.getWeight());
+            if(create){
+            foodStorage.get().setAvailable(foodStorage.get().getAvailable() - food.getWeight());
+            }
         }
         currentMeal.setHaveFood(foodService.getSetFood());
         mealRepository.save(currentMeal);
