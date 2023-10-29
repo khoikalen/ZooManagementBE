@@ -1,13 +1,12 @@
 package com.fzoo.zoomanagementsystem.controller;
 
-import com.fzoo.zoomanagementsystem.model.AnimalSpecies;
+import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
 import com.fzoo.zoomanagementsystem.service.AnimalSpeciesService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class AnimalSpeciesController {
             description = "Get all Animal Species in Database"
     )
     @GetMapping("v1/species")
-    public List<AnimalSpecies> getAllAnimalSpecies(){
+    public List<UnidentifiedAnimal> getAllAnimalSpecies(){
         return animalSpeciesService.getAllAnimalSpecies();
     }
 
@@ -28,7 +27,7 @@ public class AnimalSpeciesController {
             description = "Search Animal Species using ID"
     )
     @GetMapping("v1/species/{animalspecieID}")
-        public AnimalSpecies getAnimalSpeciesById(@PathVariable("animalspecieID") int animalSpecieID){
+        public UnidentifiedAnimal getAnimalSpeciesById(@PathVariable("animalspecieID") int animalSpecieID){
             return animalSpeciesService.getAnimalSpeciesByID(animalSpecieID);
         }
 
@@ -37,7 +36,7 @@ public class AnimalSpeciesController {
             description = "Search Animal Species using Name"
     )
     @GetMapping("v2/species/{animalspecieName}")
-    public List<AnimalSpecies> getAnimalSpeicesByName(@PathVariable("animalspecieName") String animalSpecieName){
+    public List<UnidentifiedAnimal> getAnimalSpeicesByName(@PathVariable("animalspecieName") String animalSpecieName){
         return animalSpeciesService.getAnimalSpeciesByName(animalSpecieName);
     }
 
@@ -46,7 +45,7 @@ public class AnimalSpeciesController {
             description = "Get list of Animal Species using Cage ID"
     )
     @GetMapping("v3/species/{cageID}")
-    public List<AnimalSpecies> getAnimalSpeciesByCageID(@PathVariable("cageID") int cageID){
+    public List<UnidentifiedAnimal> getAnimalSpeciesByCageID(@PathVariable("cageID") int cageID){
         return animalSpeciesService.getAnimalSpeciesByCageID(cageID);
     }
 
@@ -55,8 +54,8 @@ public class AnimalSpeciesController {
             description = "Create Animal Species base on inputted value"
     )
     @PostMapping("v1/species")
-    public void createAnimalSpecies(@RequestBody AnimalSpecies animalSpecies){
-        animalSpeciesService.CreateAnimalSpecies(animalSpecies);
+    public void createAnimalSpecies(@RequestBody UnidentifiedAnimal unidentifiedAnimal){
+        animalSpeciesService.CreateAnimalSpecies(unidentifiedAnimal);
     }
 
     @Operation(
@@ -64,7 +63,7 @@ public class AnimalSpeciesController {
             description = "Input value to change Animal Species information"
     )
     @PutMapping("v1/species/{animalspecieID}")
-    public void updateAnimalSpecies(@PathVariable("animalspecieID") int animalSpecieID, @RequestBody AnimalSpecies request){
+    public void updateAnimalSpecies(@PathVariable("animalspecieID") int animalSpecieID, @RequestBody UnidentifiedAnimal request){
         animalSpeciesService.UpdateAnimalSpecies(animalSpecieID, request);
     }
 

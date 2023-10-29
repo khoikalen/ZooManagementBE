@@ -1,12 +1,14 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.dto.MealInCageResponse;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +33,9 @@ public class FoodService {
 
 
     public void addFood(Food food) {
-
+        if(food.getName()==null||food.getWeight()==0.0f){
+            throw new IllegalStateException("Value can not be blank");
+        }
         if(setFood==null){
             setFood=new HashSet<>();
         }
@@ -82,7 +86,7 @@ public class FoodService {
         List<Food>foodList = foodRepository.findFoodByMealId(mealId);
         FoodInMealResponse mealResponse = FoodInMealResponse.builder()
                 .id(mealId)
-                .name(animal.getName()+" meal")
+                .name(animal.getName()+" sick meal")
                 .cageId(animal.getId())
                 .haveFood(foodList)
                 .build();
@@ -90,16 +94,35 @@ public class FoodService {
     }
 
 
-//    public List<Food> getAllFoodInMealCage(int id){
-//        List<Food>foodList = getFoodInDailyMeal(id);
-//        List<Integer> animalId = animalRepository.findIdBycageId(id);
-//
-//
-//        return foodList;
-//    }
+    public MealInCageResponse getAllFoodInMealCage(int id){
+        Cage cage = cageRepository.findById(id).orElseThrow();
+        List<Meal> meals = mealRepository.findByCageId(id);
+
+        if(meals.isEmpty()){
+            throw new IllegalStateException("Not have food in this meal");
+        }
+
+        List<Food>foodList = new ArrayList<>();
+
+
+
+
+        MealInCageResponse cageResponse = MealInCageResponse.builder()
+                .id(cage.getId())
+                .cageName(cage.getName())
+
+                .build();
+
+        return cageResponse;
+
+    }
 
     @Transactional
     public void updateFood(String name, float weight) {
+        if(name==null||weight==0.0f){
+            throw new IllegalStateException("Value can not be blank");
+
+        }
         for (Food food:setFood
              ) {
             if(food.getName().equals(name)){

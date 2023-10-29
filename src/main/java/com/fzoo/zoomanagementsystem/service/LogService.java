@@ -2,19 +2,13 @@ package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.LogHealthResponse;
 import com.fzoo.zoomanagementsystem.dto.LogRequest;
-import com.fzoo.zoomanagementsystem.model.Animal;
-import com.fzoo.zoomanagementsystem.model.Cage;
-import com.fzoo.zoomanagementsystem.model.Log;
-import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
-import com.fzoo.zoomanagementsystem.repository.CageRepository;
-import com.fzoo.zoomanagementsystem.repository.LogRepository;
+import com.fzoo.zoomanagementsystem.model.*;
+import com.fzoo.zoomanagementsystem.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,49 +17,90 @@ public class LogService {
     private final LogRepository logRepository;
     private final CageRepository cageRepository;
     private final AnimalRepository animalRepository;
-
+    private final UnidentifiedAnimalLogRepository unidentifiedAnimalLogRepository;
+    private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
     public void add(int id, LogRequest request) {
-        Log log = Log.builder()
+        AnimalLog animalLog = AnimalLog.builder()
                 .type(request.getType())
                 .shortDescription(request.getShortDescription())
                 .dateTime(LocalDateTime.now())
                 .animalId(id)
                 .build();
-        logRepository.save(log);
+        logRepository.save(animalLog);
 
     }
 
-    public List<Log> showLogByAnimal(int id) {
+    public void addUnidentifiedAnimal(int id, LogRequest request) {
+        UnidentifiedAnimalLog unidentifiedAnimalLog = UnidentifiedAnimalLog.builder()
+                .type(request.getType())
+                .shortDescription(request.getShortDescription())
+                .dateTime(LocalDateTime.now())
+                .unidentifiedAnimalId(id)
+                .build();
+        unidentifiedAnimalLogRepository.save(unidentifiedAnimalLog);
+
+    }
+
+    public List<AnimalLog> showLogByAnimal(int id) {
         return logRepository.findLogByAnimalIdOrderByDateTimeDesc(id);
     }
+
+
+    public List<UnidentifiedAnimalLog> showLogByUnidentifiedAnimal(int id) {
+        return unidentifiedAnimalLogRepository.findLogByUnidentifiedAnimalIdOrderByDateTimeDesc(id);
+    }
+
 
     public List<LogHealthResponse> getLogByHealth(String email) {
         String type = "Health";
         List<Animal> animals = new ArrayList<>();
+        List<UnidentifiedAnimal> unidentifiedAnimals = new ArrayList<>();
         List<LogHealthResponse> responseList = new ArrayList<>();
-        List<Log> logs = new ArrayList<>();
+        List<AnimalLog> animalLogs = new ArrayList<>();
+        List<UnidentifiedAnimalLog>unidentifiedAnimalLogs=new ArrayList<>();
         List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
         LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
         for (Cage cage : cages
         ) {
-            animals.addAll(animalRepository.findBycageId(cage.getId()));
+            if(animalRepository.findBycageId(cage.getId()).isEmpty()){
+                unidentifiedAnimals.addAll(unidentifiedAnimalRepository.findByCageId(cage.getId()));
+            }else{
+                 animals.addAll(animalRepository.findBycageId(cage.getId()));
+            }
+        }
+        for (UnidentifiedAnimal uAnimals: unidentifiedAnimals
+             ) {
+            unidentifiedAnimalLogs.addAll(unidentifiedAnimalLogRepository.findByUnidentifiedAnimalIdAndTypeContaining(uAnimals.getId(),type));
         }
 
         for (Animal animal : animals
         ) {
-            logs.addAll(logRepository.findByAnimalIdAndTypeContaining(animal.getId(), type));
+            animalLogs.addAll(logRepository.findByAnimalIdAndTypeContaining(animal.getId(), type));
         }
 
-        for (Log log : logs
-        ) {
-
-            if (log.getDateTime().isAfter(oneDayAgo)) {
-                Animal animal = animalRepository.findById(log.getAnimalId()).orElseThrow(() -> new IllegalStateException("does not have animal"));
+        for (UnidentifiedAnimalLog uAnimalLog: unidentifiedAnimalLogs
+             ) {
+            if (uAnimalLog.getDateTime().isAfter(oneDayAgo)) {
+                UnidentifiedAnimal animal = unidentifiedAnimalRepository.findById(uAnimalLog.getUnidentifiedAnimalId()).orElseThrow();
                 LogHealthResponse logHealthResponse = LogHealthResponse.builder()
                         .name(animal.getName())
-                        .species(animal.getName())
-                        .shortDescription(log.getShortDescription())
-                        .LocalDateTime(log.getDateTime())
+                        .shortDescription(uAnimalLog.getShortDescription())
+                        .LocalDateTime(uAnimalLog.getDateTime())
+                        .build();
+                responseList.add(logHealthResponse);
+            }
+
+        }
+        for (AnimalLog animalLog : animalLogs
+        ) {
+
+            if (animalLog.getDateTime().isAfter(oneDayAgo)) {
+                Animal animal = animalRepository.findById(animalLog.getAnimalId()).orElseThrow(() -> new IllegalStateException("does not have animal"));
+                LogHealthResponse logHealthResponse = LogHealthResponse.builder()
+                        .name(animal.getName())
+                        .species(animal.getSpecie())
+                        .shortDescription(animalLog.getShortDescription())
+                        .LocalDateTime(animalLog.getDateTime())
                         .build();
                 responseList.add(logHealthResponse);
             }
@@ -73,4 +108,7 @@ public class LogService {
 
         return responseList;
     }
+
+
+
 }

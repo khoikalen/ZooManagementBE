@@ -21,9 +21,42 @@ public class FoodStorageController {
             description = "List all food by type from the database"
     )
     @GetMapping(path = "{type}")
-    public List<FoodStorage> getFoodInStorage(@PathVariable String type){
+    public List<FoodStorage> getFoodInStorage(@PathVariable("type") String type){
         return service.getListFoodInStorage(type);
     }
 
+
+    @Operation(
+            summary = "Add more food to storage",
+            description = ""
+    )
+    @PostMapping()
+    public void addFoodToStorage(
+                                @RequestBody FoodStorage foodStorage
+        ){
+         service.addMoreFoodToStorage(foodStorage);
+    }
+
+
+    @Operation(
+            summary = "Update food in storage",
+            description = ""
+    )
+    @PutMapping(path = "{foodID}")
+    public void UpdateFoodInStorage(@PathVariable("foodID") int id,
+                                 @RequestBody FoodStorage foodStorage
+    ){
+        service.updateFoodInStorage(id,foodStorage);
+    }
+
+    @Operation(
+            summary = "Delete food in storage",
+            description = ""
+    )
+    @DeleteMapping(path = "{foodID}")
+    public void DeleteFoodInStorage(@PathVariable("foodID") int id
+    ){
+        service.deleteFoodInStorage(id);
+    }
 
 }

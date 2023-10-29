@@ -19,4 +19,7 @@ public interface MealRepository extends JpaRepository<Meal,Integer> {
 
 
     List<Meal> findByCageId(int id);
+
+
+
 }

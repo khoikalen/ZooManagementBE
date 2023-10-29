@@ -2,7 +2,8 @@ package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.LogHealthResponse;
 import com.fzoo.zoomanagementsystem.dto.LogRequest;
-import com.fzoo.zoomanagementsystem.model.Log;
+import com.fzoo.zoomanagementsystem.model.AnimalLog;
+import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimalLog;
 import com.fzoo.zoomanagementsystem.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -46,9 +47,36 @@ public class LogController {
             description = "List a log by animalID"
     )
     @GetMapping(path = "/v1/log/{animalId}")
-    public List<Log> getLogByAnimal(@PathVariable("animalId") int id){
+    public List<AnimalLog> getLogByAnimal(@PathVariable("animalId") int id){
         return service.showLogByAnimal(id);
     }
+
+
+    @Operation(
+            summary = "Create a log",
+            description = "Create a log by unidentified animal id "
+    )
+    @PostMapping(path = "/v3/log/{unidentifiedAnimalId}")
+    public void creatUnidentifiedAnimalLog(
+            @PathVariable("unidentifiedAnimalId") int id,
+            @RequestBody LogRequest request
+    ){
+
+        service.addUnidentifiedAnimal(id,request);
+    }
+
+
+
+    @Operation(
+            summary = "List a log",
+            description = "List a log by unidentifiedAnimalID"
+    )
+    @GetMapping(path = "/v3/log/{unidentifiedAnimalID}")
+    public List<UnidentifiedAnimalLog> getLogByUnidentifiedAnimal(@PathVariable("unidentifiedAnimalID") int id){
+        return service.showLogByUnidentifiedAnimal(id);
+    }
+
+
 
 
 

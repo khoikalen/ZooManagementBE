@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.dto.MealInCageResponse;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.service.FoodService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,14 +56,14 @@ public class FoodController {
         return service.getFoodInSickMeal(id);
     }
 
-//    @Operation(
-//            summary = "List all foods",
-//            description = "List all  foods from the database"
-//    )
-//    @GetMapping(path = "/all/{cageID}")
-//    public List<Food> getAllFood(@PathVariable("cageID") int id){
-//        return service.getAllFoodInMealCage(id);
-//    }
+    @Operation(
+            summary = "List all foods",
+            description = "List all  foods from the database"
+    )
+    @GetMapping(path = "/all/{cageID}")
+    public MealInCageResponse getAllFood(@PathVariable("cageID") int id){
+        return service.getAllFoodInMealCage(id);
+    }
 
     @Operation(
             summary = "Update food",

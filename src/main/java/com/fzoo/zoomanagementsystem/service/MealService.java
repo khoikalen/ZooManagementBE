@@ -82,6 +82,9 @@ public class MealService {
                 new IllegalStateException("food with does not exits"));
         FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->
                 new IllegalStateException("foodStorage with "+ name+ " does not exits"));
+        if(name == null || weight == 0.0f){
+            throw new IllegalStateException("Value can not be blank");
+        }
         if(weight>foodStorage.getAvailable()){
             throw new IllegalStateException("Does not have enough food " +name);
         }if(weight < 0){
@@ -129,8 +132,9 @@ public class MealService {
         List<Food> listFood = foodRepository.findById(foodId);
         for (Food food:listFood
              ) {
-            update(food.getId(),food.getName(),food.getWeight());
             create =true;
+            update(food.getId(),food.getName(),food.getWeight());
+            create = false;
         }
     }
 
@@ -155,6 +159,9 @@ public class MealService {
     public void addMoreFood(int id, Food food) {
         FoodStorage foodStorage = foodStorageRepository.findByName(food.getName()).orElseThrow(() ->
                 new IllegalStateException("foodStorage with "+ food.getName()+ " does not exits"));
+        if(food.getName()==null||food.getWeight()==0.0f){
+            throw new IllegalStateException("Value can not be blank");
+        }
         if(food.getWeight()>foodStorage.getAvailable()){
             throw new IllegalStateException("Does not have enough "+food.getName());
         }if(food.getWeight() < 0){

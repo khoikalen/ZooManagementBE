@@ -2,22 +2,17 @@ package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
-import com.fzoo.zoomanagementsystem.model.AnimalSpecies;
 import com.fzoo.zoomanagementsystem.model.Cage;
-import com.fzoo.zoomanagementsystem.model.Log;
 import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
 import com.fzoo.zoomanagementsystem.repository.CageRepository;
 import com.fzoo.zoomanagementsystem.repository.LogRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
