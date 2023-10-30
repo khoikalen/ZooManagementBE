@@ -23,20 +23,14 @@ public class FoodController {
             summary = "Create food",
             description = "Create food temporary"
     )
-    @PostMapping
-    public void addFood(@RequestBody Food food){
-        service.addFood(food);
+    @PostMapping(path = "{mealId}")
+    public void addFood(@PathVariable("mealId")int id,
+                        @RequestBody Food food
+                        ){
+        service.addFood(id,food);
 
     }
 
-//    @Operation(
-//            summary = "List all foods",
-//            description = "List all foods from the collection"
-//    )
-//    @GetMapping()
-//    public ResponseEntity<Set<Food>> getListFood(){
-//        return ResponseEntity.ok(service.getSetFood());
-//    }
 
     @Operation(
             summary = "List all daily foods",
@@ -55,6 +49,18 @@ public class FoodController {
     public FoodInMealResponse getFoodInSickMeal(@PathVariable("animalID") int id){
         return service.getFoodInSickMeal(id);
     }
+
+
+
+
+//    @Operation(
+//            summary = "List all foods",
+//            description = "List all foods from the collection"
+//    )
+//    @GetMapping()
+//    public ResponseEntity<Set<Food>> getListFood(){
+//        return ResponseEntity.ok(service.getSetFood());
+//    }
 
 //    @Operation(
 //            summary = "List all foods",
