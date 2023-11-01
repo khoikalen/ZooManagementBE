@@ -3,14 +3,8 @@ package com.fzoo.zoomanagementsystem.service;
 import com.fzoo.zoomanagementsystem.dto.CageRequest;
 import com.fzoo.zoomanagementsystem.dto.CageViewDTO;
 import com.fzoo.zoomanagementsystem.exception.UserNotFoundException;
-import com.fzoo.zoomanagementsystem.model.Animal;
-import com.fzoo.zoomanagementsystem.model.Area;
-import com.fzoo.zoomanagementsystem.model.Cage;
-import com.fzoo.zoomanagementsystem.model.Staff;
-import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
-import com.fzoo.zoomanagementsystem.repository.AreaRepository;
-import com.fzoo.zoomanagementsystem.repository.CageRepository;
-import com.fzoo.zoomanagementsystem.repository.StaffRepository;
+import com.fzoo.zoomanagementsystem.model.*;
+import com.fzoo.zoomanagementsystem.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,6 +21,7 @@ public class CageService {
     private final AreaRepository areaRepository;
     private final StaffRepository staffRepository;
     private final AnimalRepository animalRepository;
+    private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
 
     public List<CageViewDTO> getAllCages() {
         List<Cage> cageList = cageRepository.findAll(Sort.by(Sort.Direction.ASC, "areaId"));
@@ -86,13 +81,13 @@ public class CageService {
             List<Animal> animalList = animalRepository.findBycageId(cageId);
             if (!animalList.isEmpty()) {
                 throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
-            } /*else {
-                List<AnimalSpecie> animalSpecieList = animalSpieceRepository.findBycageId(cageId);
+            } else {
+                List<UnidentifiedAnimal> animalSpecieList = unidentifiedAnimalRepository.findByCageId(cageId);
                 if (!animalSpecieList.isEmpty()) {
                     throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
                 }
             }
-            */
+
         }
         Staff staff;
         if (request.getStaffEmail().isBlank()) {
