@@ -1,16 +1,12 @@
 package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
-import com.fzoo.zoomanagementsystem.dto.MealInCageResponse;
+import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.service.FoodService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/api/v1/food")
@@ -51,7 +47,15 @@ public class FoodController {
     }
 
 
-
+    @Operation(
+            summary = "Get meal for staff",
+            description = ""
+    )
+    @GetMapping(path = "cage/{cageId}")
+    public StaffMealResponse getMealInStaff(@PathVariable("cageId") int id
+    ){
+        return service.staffMealResponses(id);
+    }
 
 //    @Operation(
 //            summary = "List all foods",

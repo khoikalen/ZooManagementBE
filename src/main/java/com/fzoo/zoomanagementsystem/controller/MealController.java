@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,6 +77,21 @@ public class MealController {
     ){
         service.createMeal(id);
     }
+
+
+//    @Operation(
+//            summary = "Get meal for staff",
+//            description = ""
+//    )
+//    @GetMapping(path = "cage/{cageId}")
+//    public StaffMealResponse getMealInStaff(@PathVariable("cageId") int id
+//    ){
+//        return service.staffMealResponses(id);
+//    }
+
+
+
+
 
 
     //    @Operation(

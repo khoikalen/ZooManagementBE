@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
@@ -27,7 +28,7 @@ public class MealService {
     private final FoodInMealRepository foodInMealRepository;
     private final AnimalRepository animalRepository;
     private final FoodRepository foodRepository;
-    public Meal currentMeal;
+
     boolean create = false;
 
 
@@ -87,9 +88,6 @@ public class MealService {
         }
 
         food.setWeight(weight);
-        if(create){
-            foodStorage.setAvailable(foodStorage.getAvailable()-food.getWeight());
-        }
         foodRepository.save(food);
     }
 
@@ -172,6 +170,28 @@ public class MealService {
 
         mealRepository.deleteById(id);
     }
+
+
+
+
+//    public StaffMealResponse staffMealResponses (int id){
+//        Cage cage = cageRepository.findById(id).orElseThrow();
+//        List<FoodInMealResponse> foodInMeal = new ArrayList<>();
+//        FoodInMealResponse meal = foodService.getFoodInDailyMeal(id);
+//        foodInMeal.add(meal);
+//        List<Animal>animals = animalRepository.findBycageId(id);
+//        for (Animal animal:animals
+//             ) {
+//            meal = foodService.getFoodInSickMeal(animal.getId());
+//            foodInMeal.add(meal);
+//        }
+//        StaffMealResponse staffMealResponse =StaffMealResponse.builder()
+//                .cageId(id)
+//                .name(cage.getName())
+//                .meal(foodInMeal)
+//                .build();
+//        return staffMealResponse;
+//    }
 
 
 

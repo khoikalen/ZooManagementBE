@@ -1,10 +1,9 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
-import com.fzoo.zoomanagementsystem.dto.MealInCageResponse;
+import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,24 +24,43 @@ public class FoodService {
 
 
 
-    public void addFood(int id,Food food) {
+    public void addFood(int id,Food foodRequest) {
 
-        if(food.getName()==null||food.getWeight()==0.0f){
+        if(foodRequest.getName()==null||foodRequest.getWeight()==0.0f){
             throw new IllegalStateException("Value can not be blank");
         }
-        FoodStorage foodStorage = foodStorageRepository.findByName(food.getName())
+        FoodStorage foodStorage = foodStorageRepository.findByName(foodRequest.getName())
                 .orElseThrow(()-> new IllegalStateException("Does not have food in food storage"));
-        if(food.getWeight()<0){
+        if(foodRequest.getWeight()<0){
             throw new IllegalStateException("Can not input negative value");
-        }else if(food.getWeight()>foodStorage.getAvailable()){
-            throw new IllegalStateException("Does not have enough "+food.getName());
+        }else if(foodRequest.getWeight()>foodStorage.getAvailable()){
+            throw new IllegalStateException("Does not have enough "+foodRequest.getName());
         }
-        foodRepository.save(food);
-        FoodInMeal foodInMeal = FoodInMeal.builder()
-                .foodId(food.getId())
-                .mealId(id)
-                .build();
-        foodInMealRepository.save(foodInMeal);
+        String exist = null;
+        int foodId = 0;
+        Set<Food>foodList = foodRepository.findFoodByMealId(id);
+        for (Food foodExist:foodList
+             ) {
+                if(foodRequest.getName().equals(foodExist.getName())){
+                     exist = foodExist.getName();
+                     foodId=foodExist.getId();
+                }
+        }
+        FoodInMeal foodInMeal = null;
+        if(exist== null){
+            foodRepository.save(foodRequest);
+            foodInMeal = FoodInMeal.builder()
+                    .foodId(foodRequest.getId())
+                    .mealId(id)
+                    .build();
+            foodInMealRepository.save(foodInMeal);
+        }else{
+             Food food = foodRepository.findById(foodId).orElseThrow();
+             food.setWeight(food.getWeight()+foodRequest.getWeight());
+             foodRepository.save(food);
+        }
+
+
     }
 
 
@@ -51,11 +69,13 @@ public class FoodService {
     public FoodInMealResponse getFoodInDailyMeal(int id) {
         Cage cage = cageRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have cage"));
         Optional<Meal> meal = mealRepository.findFirst1ByNameOrderByDateTimeDesc(cage.getName()+" meal");
+        FoodInMealResponse mealResponse = new FoodInMealResponse();
         if(meal.isEmpty()){
-            throw new IllegalStateException("Not have meal");
+            mealResponse = null;
+            return mealResponse;
         }
         Set<Food>foodList = foodRepository.findFoodByMealId(meal.get().getId());
-        FoodInMealResponse mealResponse = FoodInMealResponse.builder()
+             mealResponse = FoodInMealResponse.builder()
                 .id(meal.get().getId())
                 .name(cage.getName()+" meal")
                 .cageId(cage.getId())
@@ -68,12 +88,13 @@ public class FoodService {
     public FoodInMealResponse getFoodInSickMeal(int id) {
         Animal animal = animalRepository.findById(id).orElseThrow(()-> new IllegalStateException("does not have animal"));
         Optional<Meal> meal = mealRepository.findFirst1ByNameOrderByDateTimeDesc(animal.getName()+" sick meal");
-
+        FoodInMealResponse mealResponse = new FoodInMealResponse();
         if(meal.isEmpty()){
-            throw new IllegalStateException("Not have meal");
+            mealResponse = null;
+            return mealResponse;
         }
         Set<Food>foodList = foodRepository.findFoodByMealId(meal.get().getId());
-        FoodInMealResponse mealResponse = FoodInMealResponse.builder()
+         mealResponse = FoodInMealResponse.builder()
                 .id(meal.get().getId())
                 .name(animal.getName()+" sick meal")
                 .cageId(animal.getId())
@@ -85,7 +106,24 @@ public class FoodService {
 
 
 
-
+    public StaffMealResponse staffMealResponses (int id){
+        Cage cage = cageRepository.findById(id).orElseThrow();
+        List<FoodInMealResponse> foodInMeal = new ArrayList<>();
+        FoodInMealResponse meal = getFoodInDailyMeal(id);
+        foodInMeal.add(meal);
+        List<Animal>animals = animalRepository.findBycageId(id);
+        for (Animal animal:animals
+        ) {
+            meal = getFoodInSickMeal(animal.getId());
+            foodInMeal.add(meal);
+        }
+        StaffMealResponse staffMealResponse =StaffMealResponse.builder()
+                .cageId(id)
+                .name(cage.getName())
+                .meal(foodInMeal)
+                .build();
+        return staffMealResponse;
+    }
 
 
 
