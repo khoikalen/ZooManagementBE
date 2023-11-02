@@ -53,9 +53,9 @@ public class UnidentifiedAnimalController {
             summary = "Create Unidentified Animals",
             description = "Create Unidentified Animals base on inputted value"
     )
-    @PostMapping("v1/unidentified-animal")
-    public void createAnimalSpecies(@RequestBody UnidentifiedAnimal unidentifiedAnimal){
-        unidentifiedAnimalService.CreateAnimalSpecies(unidentifiedAnimal);
+    @PostMapping("v1/unidentified-animal/{cageID}")
+    public void createAnimalSpecies(@RequestBody UnidentifiedAnimal unidentifiedAnimal, @PathVariable("cageID") int cageID){
+        unidentifiedAnimalService.CreateAnimalSpecies(unidentifiedAnimal, cageID);
     }
 
     @Operation(
