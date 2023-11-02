@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -105,8 +107,9 @@ public class LogService {
                 responseList.add(logHealthResponse);
             }
         }
-
-        return responseList;
+        return responseList.stream().sorted(Comparator
+                        .comparing(LogHealthResponse::getLocalDateTime).reversed())
+                        .collect(Collectors.toList());
     }
 
 

@@ -1,16 +1,12 @@
 package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
-import com.fzoo.zoomanagementsystem.dto.MealInCageResponse;
+import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.service.FoodService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/api/v1/food")
@@ -23,20 +19,14 @@ public class FoodController {
             summary = "Create food",
             description = "Create food temporary"
     )
-    @PostMapping
-    public void addFood(@RequestBody Food food){
-        service.addFood(food);
+    @PostMapping(path = "{mealId}")
+    public void addFood(@PathVariable("mealId")int id,
+                        @RequestBody Food food
+                        ){
+        service.addFood(id,food);
 
     }
 
-    @Operation(
-            summary = "List all foods",
-            description = "List all foods from the collection"
-    )
-    @GetMapping()
-    public ResponseEntity<Set<Food>> getListFood(){
-        return ResponseEntity.ok(service.getSetFood());
-    }
 
     @Operation(
             summary = "List all daily foods",
@@ -56,32 +46,52 @@ public class FoodController {
         return service.getFoodInSickMeal(id);
     }
 
-    @Operation(
-            summary = "List all foods",
-            description = "List all  foods from the database"
-    )
-    @GetMapping(path = "/all/{cageID}")
-    public MealInCageResponse getAllFood(@PathVariable("cageID") int id){
-        return service.getAllFoodInMealCage(id);
-    }
 
     @Operation(
-            summary = "Update food",
-            description = "Update food from collection"
+            summary = "Get meal for staff",
+            description = ""
     )
-
-    @PutMapping()
-    public void updateFood(@RequestBody Food food){
-        service.updateFood(food.getName(),food.getWeight());
+    @GetMapping(path = "cage/{cageId}")
+    public StaffMealResponse getMealInStaff(@PathVariable("cageId") int id
+    ){
+        return service.staffMealResponses(id);
     }
 
-    @Operation(
-            summary = "Delete food",
-            description = "Delete food from collection"
-    )
-    @DeleteMapping()
-    public void deleteFood(@RequestBody Food food){
-        service.deleteFood(food.getName());
-    }
+//    @Operation(
+//            summary = "List all foods",
+//            description = "List all foods from the collection"
+//    )
+//    @GetMapping()
+//    public ResponseEntity<Set<Food>> getListFood(){
+//        return ResponseEntity.ok(service.getSetFood());
+//    }
+
+//    @Operation(
+//            summary = "List all foods",
+//            description = "List all foods from the database"
+//    )
+//    @GetMapping(path = "/all/{cageID}")
+//    public MealInCageResponse getAllFood(@PathVariable("cageID") int id){
+//        return service.getAllFoodInMealCage(id);
+//    }
+
+//    @Operation(
+//            summary = "Update food",
+//            description = "Update food from collection"
+//    )
+//
+//    @PutMapping()
+//    public void updateFood(@RequestBody Food food){
+//        service.updateFood(food.getName(),food.getWeight());
+//    }
+//
+//    @Operation(
+//            summary = "Delete food",
+//            description = "Delete food from collection"
+//    )
+//    @DeleteMapping()
+//    public void deleteFood(@RequestBody Food food){
+//        service.deleteFood(food.getName());
+//    }
 
 }

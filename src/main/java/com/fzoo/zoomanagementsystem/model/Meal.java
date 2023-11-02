@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -23,8 +24,10 @@ public class Meal {
     private String name;
     @Column(name = "cage_id")
     private int cageId;
-
-
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
+    @Column(name = "type")
+    private String type;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "food_in_meal",

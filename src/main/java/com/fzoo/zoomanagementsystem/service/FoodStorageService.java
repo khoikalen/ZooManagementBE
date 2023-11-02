@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FoodStorageService {
@@ -18,6 +19,10 @@ public class FoodStorageService {
     }
 
     public void addMoreFoodToStorage( FoodStorage foodStorage) {
+        Optional<FoodStorage> food = repository.findByName(foodStorage.getName().trim().toLowerCase());
+        if(food.isPresent()){
+            throw new IllegalStateException("Food was existed");
+        }
         repository.save(foodStorage);
     }
 

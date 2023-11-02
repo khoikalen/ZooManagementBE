@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +16,8 @@ public class MealController {
     private MealService service;
 
     @Operation(
-            summary = "Create a daily meal",
-            description = "Create a daily meal in collection"
+            summary = "Create daily meal",
+            description = "Create daily meal if animal does not have meal"
     )
     @PostMapping(path = "/daily/{cageID}")
     public void createDailyMeal(
@@ -24,22 +25,15 @@ public class MealController {
         service.createDailyMeal(id);
     }
     @Operation(
-            summary = "Create a sick meal",
-            description = "Create a sick meal in collection"
+            summary = "Create sick meal",
+            description = "Create sick meal if animal does not have meal"
     )
     @PostMapping(path = "/sick/{animalID}")
     public void createSickMeal(@PathVariable("animalID") int id){
         service.createSickMeal(id);
     }
 
-    @Operation(
-            summary = "Add meal",
-            description = "add meal to the database"
-    )
-    @GetMapping
-    public void saveMeal(){
-         service.saveMeal();
-    }
+
 
 
     @Operation(
@@ -73,29 +67,63 @@ public class MealController {
         service.deleteFood(id);
     }
 
+
     @Operation(
-            summary = "Create all daily meal",
-            description = "Create all daily meal in the same time"
+            summary = "Create meal",
+            description = "Create meal everyday"
     )
-    @PostMapping(path = "/all/{emailExpert}")
-    public void createAllMeal(@PathVariable("emailExpert") String email){
-        service.createAllMeal(email);
+    @PostMapping(path = "/{mealId}")
+    public void creatDailyFood(@PathVariable("mealId") int id
+    ){
+        service.createMeal(id);
     }
 
 
-
-    @Operation(
-            summary = "Add new food to meal",
-            description = "Add new food to meal "
-    )
-    @PostMapping(path = "/new/{mealId}")
-    public void addMoreFood(@PathVariable("mealId") int id,
-                            @RequestBody Food food
-                            ){
-        service.addMoreFood(id,food);
-    }
+//    @Operation(
+//            summary = "Get meal for staff",
+//            description = ""
+//    )
+//    @GetMapping(path = "cage/{cageId}")
+//    public StaffMealResponse getMealInStaff(@PathVariable("cageId") int id
+//    ){
+//        return service.staffMealResponses(id);
+//    }
 
 
+
+
+
+
+    //    @Operation(
+//            summary = "Add meal",
+//            description = "add meal to the database"
+//    )
+//    @GetMapping
+//    public void saveMeal(){
+//         service.saveMeal();
+//    }
+
+//    @Operation(
+//            summary = "Create all daily meal",
+//            description = "Create all daily meal in the same time"
+//    )
+//    @PostMapping(path = "/all/{emailExpert}")
+//    public void createAllMeal(@PathVariable("emailExpert") String email){
+//        service.createAllMeal(email);
+//    }
+
+
+
+//    @Operation(
+//            summary = "Add new food to meal",
+//            description = "Add new food to meal "
+//    )
+//    @PostMapping(path = "/new-food/{mealId}")
+//    public void addMoreFood(@PathVariable("mealId") int id,
+//                            @RequestBody Food food
+//                            ){
+//        service.addMoreFood(id,food);
+//    }
 
 
 }

@@ -18,8 +18,14 @@ public interface MealRepository extends JpaRepository<Meal,Integer> {
     Integer findIdByCageIdAndNameNotContaining(int id);
 
 
-    List<Meal> findByCageId(int id);
+//    List<Meal> findByCageId(int id);
 
 
+//    Integer findIdByNameOrderByDateTimeDesc(String name);
 
+//    Integer findTop1IdByNameOrderByDateTimeDesc(String name);
+
+//    Integer findFirstIdByNameOrderByDateTimeDesc(String name);
+
+    Optional<Meal> findFirst1ByNameOrderByDateTimeDesc(String name);
 }
