@@ -51,11 +51,12 @@ public class AnimalService {
         animalList = getAnimalCageName(animalList);
         return animalList;
     }
-    public void createNewAnimal(Animal animal) {
-        Cage cage = cageRepository.findCageById(animal.getCageId());
+    public void createNewAnimal(Animal animal, int cageID) {
+        Cage cage = cageRepository.findCageById(cageID);
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
         if (cage != null) {
+            animal.setCageId(cageID);
             animalRepository.save(animal);
             for (Animal animalInCage : animalRepository.findBycageId(animal.getCageId())) {
                 if (!animalInCage.getStatus().equals("Dead")) {
