@@ -110,12 +110,16 @@ public class FoodService {
         Cage cage = cageRepository.findById(id).orElseThrow();
         List<FoodInMealResponse> foodInMeal = new ArrayList<>();
         FoodInMealResponse meal = getFoodInDailyMeal(id);
-        foodInMeal.add(meal);
+        if(meal!=null){
+            foodInMeal.add(meal);
+        }
         List<Animal>animals = animalRepository.findBycageId(id);
         for (Animal animal:animals
         ) {
             meal = getFoodInSickMeal(animal.getId());
-            foodInMeal.add(meal);
+            if(meal!=null){
+                foodInMeal.add(meal);
+            }
         }
         StaffMealResponse staffMealResponse =StaffMealResponse.builder()
                 .cageId(id)
