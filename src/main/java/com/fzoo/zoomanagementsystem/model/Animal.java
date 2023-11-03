@@ -33,5 +33,6 @@ public class Animal {
     @JoinColumn(name = "cage_id", referencedColumnName = "id", updatable = false, insertable = false)
     @JsonBackReference
     private Cage cage;
+    private String cageName;
 }
 
