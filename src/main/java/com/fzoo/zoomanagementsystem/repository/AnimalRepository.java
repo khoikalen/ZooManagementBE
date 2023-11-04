@@ -30,4 +30,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Integer> {
     List<Animal> findByCageName(String cageName);
 
     Animal findByName(String name);
+
+
+    Animal findFirstAnimalByCageId(int cageID);
 }

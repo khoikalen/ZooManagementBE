@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,32 +33,38 @@ public class AnimalService {
         if (animalList.isEmpty()) throw new IllegalStateException("There are no animals");
         return animalList;
     }
-    public Animal searchAnimalByID(int animalID){
+
+    public Animal searchAnimalByID(int animalID) {
         Animal animal = animalRepository.findById(animalID).orElseThrow(() -> new IllegalStateException("This animal is not exists!"));
         return animal;
     }
+
     public List<Animal> searchAnimalByName(String animalName) {
         List<Animal> animalList = animalRepository.findByname(animalName);
         if (animalList.isEmpty()) throw new IllegalStateException("There are no animals");
         return animalList;
     }
+
     public void createNewAnimal(Animal animal, int cageID) {
         Cage cage = cageRepository.findCageById(cageID);
+        if (cage == null) throw new IllegalStateException("There some mismatch in finding cage !");
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
-        if (cage != null) {
+        Animal animalExistedInCage = animalRepository.findFirstAnimalByCageId(cageID);
+        if (cage.getCageType().equalsIgnoreCase("Close")) {
             animal.setCageId(cageID);
-            animalRepository.save(animal);
-            for (Animal animalInCage : animalRepository.findBycageId(animal.getCageId())) {
-                if (!animalInCage.getStatus().equals("Dead")) {
-                    cageQuantity++;
+            if (animalExistedInCage == null) {
+                animalRepository.save(animal);
+            } else if (animal.getSpecie().equalsIgnoreCase(animalExistedInCage.getSpecie())) {
+                animalRepository.save(animal);
+                for (Animal animalInCage : animalRepository.findBycageId(cageID)) {
+                    if (!animalInCage.getStatus().equalsIgnoreCase("Dead")) {
+                        cageQuantity++;
+                    }
                 }
-            }
-            cage.setQuantity(cageQuantity);
-        } else {
-            throw new IllegalStateException("Cage not found");
+            } else throw new IllegalStateException("Can not create this type of animal because difference in specie");
         }
-        animalRepository.save(animal);
+        cage.setQuantity(cageQuantity);
         cageRepository.save(cage);
     }
 
@@ -92,11 +99,10 @@ public class AnimalService {
     }
 
 
-
     public List<Animal> getSickAnimal(String email) {
         String type = "Health";
-        List<Animal>animals = new ArrayList<>();
-        List<Integer>animalId = new ArrayList<>();
+        List<Animal> animals = new ArrayList<>();
+        List<Integer> animalId = new ArrayList<>();
 
         List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
         for (Cage cage : cages
@@ -105,7 +111,7 @@ public class AnimalService {
         }
         for (Integer id : animalId
         ) {
-            if(!logRepository.findByAnimalIdAndTypeContaining(id, type).isEmpty()){
+            if (!logRepository.findByAnimalIdAndTypeContaining(id, type).isEmpty()) {
                 animals.add(animalRepository.findById(id).orElseThrow());
             }
         }
@@ -115,13 +121,13 @@ public class AnimalService {
 
     public List<Animal> searchAnimalByCageID(int cageID) {
         List<Animal> animalList = animalRepository.findBycageId(cageID);
-        if(animalList.isEmpty()) throw new IllegalStateException("Search result returns null values !");
+        if (animalList.isEmpty()) throw new IllegalStateException("Search result returns null values !");
         return animalList;
     }
 
     public List<Animal> searchAnimalByCageName(String cageName) {
         List<Animal> animalList = animalRepository.findByCageName(cageName);
-        if(animalList.isEmpty()) throw new IllegalStateException("Search result returns null values !");
+        if (animalList.isEmpty()) throw new IllegalStateException("Search result returns null values !");
         return animalList;
     }
 }
