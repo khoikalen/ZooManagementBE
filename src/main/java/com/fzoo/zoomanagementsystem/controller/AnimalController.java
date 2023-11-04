@@ -75,9 +75,9 @@ public class AnimalController {
             summary = "Create an Animal",
             description = "Create an new Animal with following Input values"
     )
-    @PostMapping("v1/animal")
-    public void createNewAnimal(@RequestBody Animal animal) {
-        animalService.createNewAnimal(animal);
+    @PostMapping("v1/animal/{CageID}")
+    public void createNewAnimal(@RequestBody Animal animal, @PathVariable("CageID") int cageID) {
+        animalService.createNewAnimal(animal, cageID);
     }
 
 

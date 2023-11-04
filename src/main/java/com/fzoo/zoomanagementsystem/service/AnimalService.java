@@ -24,6 +24,7 @@ public class AnimalService {
     public List<Animal> getAnimalCageName(List<Animal> animalList){
         for(Animal animal : animalList){
             animal.setCageName(cageRepository.findCageNameByCageId(animal.getCageId()));
+            animalRepository.save(animal);
         }
         return animalList;
     }
@@ -31,6 +32,7 @@ public class AnimalService {
         List<Animal> animalList = animalRepository.findAllAlive(Sort.by(Sort.Direction.ASC, "cageId"));
         if (animalList.isEmpty()) throw new IllegalStateException("There are no animals");
         animalList = getAnimalCageName(animalList);
+
         return animalList;
     }
 
@@ -51,11 +53,12 @@ public class AnimalService {
         animalList = getAnimalCageName(animalList);
         return animalList;
     }
-    public void createNewAnimal(Animal animal) {
-        Cage cage = cageRepository.findCageById(animal.getCageId());
+    public void createNewAnimal(Animal animal, int cageID) {
+        Cage cage = cageRepository.findCageById(cageID);
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
         if (cage != null) {
+            animal.setCageId(cageID);
             animalRepository.save(animal);
             for (Animal animalInCage : animalRepository.findBycageId(animal.getCageId())) {
                 if (!animalInCage.getStatus().equals("Dead")) {
@@ -66,6 +69,8 @@ public class AnimalService {
         } else {
             throw new IllegalStateException("Cage not found");
         }
+        animal.setCageName(cageRepository.findCageNameByCageId(animal.getCageId()));
+        animalRepository.save(animal);
         cageRepository.save(cage);
     }
 

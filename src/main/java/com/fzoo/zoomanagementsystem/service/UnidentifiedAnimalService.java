@@ -58,14 +58,15 @@ public class UnidentifiedAnimalService {
         updateCageQuantity(unidentifiedAnimal.getCageId());
     }
 
-    public void CreateAnimalSpecies(UnidentifiedAnimal unidentifiedAnimal) {
-        List<UnidentifiedAnimal> unidentifiedAnimalList = unidentifiedAnimalRepository.findByCageId(unidentifiedAnimal.getCageId());
-        Cage cage = cageRepository.findCageById(unidentifiedAnimal.getCageId());
+    public void CreateAnimalSpecies(UnidentifiedAnimal unidentifiedAnimal, int cageID) {
+        List<UnidentifiedAnimal> unidentifiedAnimalList = unidentifiedAnimalRepository.findByCageId(cageID);
+        Cage cage = cageRepository.findCageById(cageID);
         boolean isDuplicated = false;
         for (UnidentifiedAnimal species : unidentifiedAnimalList) {
             if (species.getName().equalsIgnoreCase(unidentifiedAnimal.getName())) isDuplicated = true;
         }
         if (cage != null && !isDuplicated) {
+            unidentifiedAnimal.setCageId(cageID);
             unidentifiedAnimalRepository.save(unidentifiedAnimal);
         } else if (cage != null && isDuplicated)
             throw new IllegalStateException("This Animal Species is already exists in the cage");
