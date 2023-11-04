@@ -41,4 +41,8 @@ public class FoodStorageService {
         FoodStorage foodStorage = repository.findById(id).orElseThrow();
         repository.delete(foodStorage);
     }
+
+    public List<FoodStorage> getAll() {
+        return repository.findAll();
+    }
 }

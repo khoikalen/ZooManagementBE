@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.dto.FoodStatisticResponse;
 import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
@@ -131,7 +132,12 @@ public class FoodService {
 
 
 
-
+//    public List<FoodStatisticResponse> foodStatisticResponses(){
+//        List<Integer> mealId = mealRepository.
+//
+//
+//        return null;
+//    }
 
 
 

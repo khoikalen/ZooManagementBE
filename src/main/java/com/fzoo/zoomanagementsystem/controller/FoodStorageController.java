@@ -59,4 +59,16 @@ public class FoodStorageController {
         service.deleteFoodInStorage(id);
     }
 
+
+    @Operation(
+            summary = "List all food by type",
+            description = "List all food by type from the database"
+    )
+    @GetMapping()
+    public List<FoodStorage> getAllFoodInStorage(){
+        return service.getAll();
+    }
+
+
 }
+
