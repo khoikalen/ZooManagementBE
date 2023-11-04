@@ -61,14 +61,14 @@ public class FoodController {
     }
 
 
-//    @Operation(
-//            summary = "Get all food",
-//            description = ""
-//    )
-//    @GetMapping()
-//    public List<FoodStatisticResponse> getAllFood(){
-//        return service.foodStatisticResponses();
-//    }
+    @Operation(
+            summary = "Get all food",
+            description = ""
+    )
+    @GetMapping()
+    public List<FoodStatisticResponse> getAllFood(){
+        return service.foodStatisticResponses();
+    }
 
 
 

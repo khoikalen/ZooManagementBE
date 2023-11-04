@@ -4,6 +4,8 @@ import com.fzoo.zoomanagementsystem.model.Meal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,4 +30,8 @@ public interface MealRepository extends JpaRepository<Meal,Integer> {
 //    Integer findFirstIdByNameOrderByDateTimeDesc(String name);
 
     Optional<Meal> findFirst1ByNameOrderByDateTimeDesc(String name);
+//    List<Integer> findIdByDate(LocalDate date);
+
+    @Query("SELECT id FROM Meal")
+    List<Integer> findIAllId();
 }

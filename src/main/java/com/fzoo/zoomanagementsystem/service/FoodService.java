@@ -2,13 +2,18 @@ package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.dto.FoodStatisticResponse;
+import com.fzoo.zoomanagementsystem.dto.ItemMapper;
 import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +28,8 @@ public class FoodService {
 
     private final FoodStorageRepository foodStorageRepository;
 
-
+@Autowired
+    ItemMapper itemMapper;
 
     public void addFood(int id,Food foodRequest) {
 
@@ -132,12 +138,20 @@ public class FoodService {
 
 
 
-//    public List<FoodStatisticResponse> foodStatisticResponses(){
-//        List<Integer> mealId = mealRepository.
-//
-//
-//        return null;
-//    }
+    public List<FoodStatisticResponse> foodStatisticResponses(){
+        List<Integer> mealId = mealRepository.findIAllId();
+        List<Food> foodList = foodRepository.findAllFoodByMealId(mealId);
+        Map<String, Food> groupedItems = foodList.stream()
+                .collect(Collectors.toMap(Food::getName, item -> item, (existing, replacement) -> {
+                    existing.setWeight(existing.getWeight() + replacement.getWeight());
+                    return existing;
+                }));
+        List<Food> distinctFood = new ArrayList<>(groupedItems.values());
+        List<FoodStatisticResponse> responses = distinctFood.stream()
+                .map(itemMapper::convertToDto)
+                .collect(Collectors.toList());
+        return responses;
+    }
 
 
 
