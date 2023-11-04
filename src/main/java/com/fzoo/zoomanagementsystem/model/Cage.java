@@ -40,9 +40,5 @@ public class Cage {
     @JoinColumn(name = "area_id", referencedColumnName = "id", updatable = false ,insertable = false)
     private Area area;
 
-    @OneToMany(mappedBy = "cage", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Set<Animal> animal;
-
 
 }

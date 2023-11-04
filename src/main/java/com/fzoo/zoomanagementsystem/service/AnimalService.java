@@ -47,7 +47,7 @@ public class AnimalService {
 
     public void createNewAnimal(Animal animal, int cageID) {
         Cage cage = cageRepository.findCageById(cageID);
-        if (cage == null) throw new IllegalStateException("There some mismatch in finding cage !");
+        if (cage == null) throw new IllegalStateException("There some mismatch in finding cage!");
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
         Animal animalExistedInCage = animalRepository.findFirstAnimalByCageId(cageID);
@@ -55,6 +55,7 @@ public class AnimalService {
             animal.setCageId(cageID);
             if (animalExistedInCage == null) {
                 animalRepository.save(animal);
+                cageQuantity++;
             } else if (animal.getSpecie().equalsIgnoreCase(animalExistedInCage.getSpecie())) {
                 animalRepository.save(animal);
                 for (Animal animalInCage : animalRepository.findBycageId(cageID)) {
@@ -63,7 +64,7 @@ public class AnimalService {
                     }
                 }
             } else throw new IllegalStateException("Can not create this type of animal because difference in specie");
-        }
+        } else throw new IllegalStateException("This animal is belong to 'Close' cage!");
         cage.setQuantity(cageQuantity);
         cageRepository.save(cage);
     }
@@ -71,17 +72,13 @@ public class AnimalService {
 
     public void updateAnimalInformation(int id, AnimalUpdatingDTO request) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new IllegalStateException("Animal with " + id + " is not found"));
-        Cage cage = cageRepository.findCageByName(request.getCageName());
+        Cage cage = cageRepository.findCageById(animal.getCageId());
         if (cage != null) {
-            animal.setCage(cage);
             if (request.getName() != null) animal.setName(request.getName());
             if (request.getDob() != null) animal.setDob(request.getDob());
             if (request.getDez() != null) animal.setDez(request.getDez());
             if (request.getGender() != null) animal.setGender(request.getGender());
-            if (request.getSpecie() != null && !request.getSpecie().equals("Dead"))
-                animal.setSpecie(request.getSpecie());
-            if (request.getStatus() != null) throw new IllegalStateException("Can not update Animal Status !");
-            animal.setCageId(cageRepository.findCageIdByCageName(request.getCageName()));
+            animal.setCageId(cage.getId());
         }
         animalRepository.save(animal);
     }
@@ -116,7 +113,6 @@ public class AnimalService {
             }
         }
         return animals;
-
     }
 
     public List<Animal> searchAnimalByCageID(int cageID) {

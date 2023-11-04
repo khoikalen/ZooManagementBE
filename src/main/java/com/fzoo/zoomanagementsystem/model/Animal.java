@@ -29,9 +29,6 @@ public class Animal {
     @Column(name = "cage_id")
     private int cageId;
 
-    @ManyToOne
-    @JoinColumn(name = "cage_id", referencedColumnName = "id", updatable = false, insertable = false)
-    @JsonBackReference
-    private Cage cage;
+
 }
 
