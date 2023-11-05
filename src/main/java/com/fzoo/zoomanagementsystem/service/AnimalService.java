@@ -95,7 +95,6 @@ public class AnimalService {
         }
     }
 
-
     public List<Animal> getSickAnimal(String email) {
         String type = "Health";
         List<Animal> animals = new ArrayList<>();
@@ -126,5 +125,7 @@ public class AnimalService {
         if (animalList.isEmpty()) throw new IllegalStateException("Search result returns null values !");
         return animalList;
     }
+
+    
 }
 

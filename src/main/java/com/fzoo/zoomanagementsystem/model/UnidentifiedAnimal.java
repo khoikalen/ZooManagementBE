@@ -14,7 +14,7 @@ public class UnidentifiedAnimal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String Name;
+    private String name;
     private int quantity;
     @Column(name = "cage_id")
     private int cageId;
