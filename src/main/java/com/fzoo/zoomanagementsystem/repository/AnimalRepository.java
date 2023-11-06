@@ -1,12 +1,14 @@
 package com.fzoo.zoomanagementsystem.repository;
 
 import com.fzoo.zoomanagementsystem.model.Animal;
+import com.fzoo.zoomanagementsystem.model.Cage;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface AnimalRepository extends JpaRepository<Animal, Integer> {
 
@@ -36,4 +38,9 @@ public interface AnimalRepository extends JpaRepository<Animal, Integer> {
 
     @Query("select a from Animal a join Cage c on a.cageId = c.id join Staff s on c.staffId = s.id where s.email = ?1")
     List<Animal> findByStaffEmail(String staffEmail);
+
+
+    Animal findByid(int animalID);
+
+    List<Animal> findAnimalByCageId(int cageID);
 }

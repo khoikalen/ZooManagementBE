@@ -1,8 +1,10 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.dto.AnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.Cage;
+import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
 import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
 import com.fzoo.zoomanagementsystem.repository.CageRepository;
 import com.fzoo.zoomanagementsystem.repository.LogRepository;
@@ -69,7 +71,6 @@ public class AnimalService {
         cageRepository.save(cage);
     }
 
-
     public void updateAnimalInformation(int id, AnimalUpdatingDTO request) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new IllegalStateException("Animal with " + id + " is not found"));
         Cage cage = cageRepository.findCageById(animal.getCageId());
@@ -126,10 +127,39 @@ public class AnimalService {
         return animalList;
     }
 
-    public List<Animal> searchAnimalByStaffEmail(String staffEmail){
+    public List<Animal> searchAnimalByStaffEmail(String staffEmail) {
         List<Animal> animalList = animalRepository.findByStaffEmail(staffEmail);
-        if(animalList.isEmpty()) throw new IllegalStateException("There are no animals under this staff control!");
+        if (animalList.isEmpty()) throw new IllegalStateException("There are no animals under this staff control!");
         return animalList;
+    }
+
+    public void UpdateCageQuantity(int cageID) {
+        List<Animal> animalList = animalRepository.findAnimalByCageId(cageID);
+        Cage cage = cageRepository.findCageById(cageID);
+        cage.setQuantity(animalList.size());
+        cageRepository.save(cage);
+    }
+
+    public void moveCageAnimal(int animalID, AnimalMovingCageDTO request) {
+        Animal animal = animalRepository.findByid(animalID); //Animal need to move
+        Cage animalCage = cageRepository.findCageById(animal.getCageId()); //Current cage of animal
+        Cage cageMoveTo = cageRepository.findCageById(request.getCageID()); //Cage need to move animal to
+
+        Animal animalExistedInCageMoveTo = animalRepository.findFirstAnimalByCageId(cageMoveTo.getId()); //animal in cage need to move to
+
+        if (cageMoveTo.getCageType().equalsIgnoreCase("Close")) {
+            animal.setCageId(cageMoveTo.getId());
+            if (cageMoveTo.getQuantity() == 0) {
+                cageMoveTo.setCageStatus("Owned");
+                cageMoveTo.setName(request.getCageName());
+            }
+            else if (!animalExistedInCageMoveTo.getSpecie().equalsIgnoreCase(animal.getSpecie())) {
+                throw new IllegalStateException("Can not move this animal because of difference in specie!");
+            }
+            animalRepository.save(animal);
+            UpdateCageQuantity(cageMoveTo.getId());
+            UpdateCageQuantity(animalCage.getId());
+        } else throw new IllegalStateException("Can not move this animal to 'Open' cage!");
     }
 }
 

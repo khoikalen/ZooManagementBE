@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.controller;
 
+import com.fzoo.zoomanagementsystem.dto.AnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.service.AnimalService;
@@ -117,5 +118,14 @@ public class AnimalController {
         animalService.deleteAnimal(id);
     }
 
+
+    @Operation(
+            summary = "Move caage for animal",
+            description = "Move cage for An animal base on animalID"
+    )
+    @PutMapping("v2/animal/{animalID}")
+    public void moveCageAnimal(@PathVariable("animalID") int animalID, @RequestBody AnimalMovingCageDTO request){
+        animalService.moveCageAnimal(animalID, request);
+    }
 }
 
