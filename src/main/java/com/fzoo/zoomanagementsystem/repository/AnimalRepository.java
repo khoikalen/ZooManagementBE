@@ -33,4 +33,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Integer> {
 
 
     Animal findFirstAnimalByCageId(int cageID);
+
+    @Query("select a from Animal a join Cage c on a.cageId = c.id join Staff s on c.staffId = s.id where s.email = ?1")
+    List<Animal> findByStaffEmail(String staffEmail);
 }

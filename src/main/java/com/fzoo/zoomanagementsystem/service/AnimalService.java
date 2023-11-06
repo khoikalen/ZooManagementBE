@@ -126,6 +126,9 @@ public class AnimalService {
         return animalList;
     }
 
-    
+    public List<Animal> searchAnimalByStaffEmail(String staffEmail){
+        List<Animal> animalList = animalRepository.findByStaffEmail(staffEmail);
+        return animalList;
+    }
 }
 
