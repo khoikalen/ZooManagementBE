@@ -146,7 +146,7 @@ public class AnimalService {
         Cage cageMoveTo = cageRepository.findCageById(request.getCageID()); //Cage need to move animal to
 
         Animal animalExistedInCageMoveTo = animalRepository.findFirstAnimalByCageId(cageMoveTo.getId()); //animal in cage need to move to
-
+        if(animal.getStatus().equalsIgnoreCase("Dead")) throw new IllegalStateException("Can not move Dead animal");
         if (cageMoveTo.getCageType().equalsIgnoreCase("Close")) {
             animal.setCageId(cageMoveTo.getId());
             if (cageMoveTo.getQuantity() == 0) {
