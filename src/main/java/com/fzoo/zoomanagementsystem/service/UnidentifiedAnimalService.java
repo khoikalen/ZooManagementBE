@@ -86,4 +86,10 @@ public class UnidentifiedAnimalService {
         unidentifiedAnimalRepository.deleteById(animalSpeicesID);
         updateCageQuantity(unidentifiedAnimal.getCageId());
     }
+
+    public List<UnidentifiedAnimal> searchUnidentifiedAnimalByStaffEmail(String staffEmail){
+        List<UnidentifiedAnimal> animalList = unidentifiedAnimalRepository.findByStaffEmail(staffEmail);
+        if(animalList.isEmpty()) throw new IllegalStateException("There are no animals under this staff control");
+        return animalList;
+    }
 }

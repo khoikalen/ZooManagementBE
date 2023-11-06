@@ -50,6 +50,15 @@ public class UnidentifiedAnimalController {
     }
 
     @Operation(
+            summary = "Get Unidentified Animal by Staff Email",
+            description = "List all Unidentified Animal under Staff control"
+    )
+    @GetMapping("v4/unidentified-animal/{staffEmail}")
+    public List<UnidentifiedAnimal> getUnidentifiedAnimalByStaffEmail(@PathVariable("staffEmail") String staffEmail){
+        return unidentifiedAnimalService.searchUnidentifiedAnimalByStaffEmail(staffEmail);
+    }
+
+    @Operation(
             summary = "Create Unidentified Animals",
             description = "Create Unidentified Animals base on inputted value"
     )

@@ -30,7 +30,7 @@ public class AnimalController {
             description = "Input staff email from login sesion and list all animals under their control"
     )
     @GetMapping("v6/animal/{staffEmail}")
-    public List<Animal> searchAnimalsByStaffEmail(@PathVariable String staffEmail){
+    public List<Animal> searchAnimalsByStaffEmail(@PathVariable("staffEmail") String staffEmail){
         return animalService.searchAnimalByStaffEmail(staffEmail);
     }
 

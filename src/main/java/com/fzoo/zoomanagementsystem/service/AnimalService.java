@@ -128,6 +128,7 @@ public class AnimalService {
 
     public List<Animal> searchAnimalByStaffEmail(String staffEmail){
         List<Animal> animalList = animalRepository.findByStaffEmail(staffEmail);
+        if(animalList.isEmpty()) throw new IllegalStateException("There are no animals under this staff control!");
         return animalList;
     }
 }
