@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final AccountRepository accountRepository;
     Duration duration = Duration.ofDays(7);
+
     public RefreshToken createRefreshToken(String email){
 
         RefreshToken refreshToken = RefreshToken

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class MealService {
     private final FoodRepository foodRepository;
 
     boolean create = false;
+    ZoneId zone = ZoneId.of("Asia/Ho_Chi_Minh");
 
 
     public void createDailyMeal(int id) {
@@ -45,7 +47,7 @@ public class MealService {
                     .name(cage.getName() + " meal")
                     .cageId(id)
                     .type("Daily")
-                    .dateTime(LocalDateTime.now())
+                    .dateTime(LocalDateTime.now(zone))
                     .build();
             mealRepository.save(meal);
             create=false;
@@ -64,7 +66,7 @@ public class MealService {
                 .builder()
                 .name(animal.getName() + " sick meal")
                 .cageId(id)
-                .dateTime(LocalDateTime.now())
+                .dateTime(LocalDateTime.now(zone))
                 .type("Sick")
                 .build();
         mealRepository.save(meal);
