@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.controller;
 
+import com.fzoo.zoomanagementsystem.dto.UnidentifiedAnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
 import com.fzoo.zoomanagementsystem.service.UnidentifiedAnimalService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,6 +77,10 @@ public class UnidentifiedAnimalController {
         unidentifiedAnimalService.UpdateAnimalSpecies(animalSpecieID, request);
     }
 
+    @PutMapping("v2/unidentified-animal/{unidentified-animalID}")
+    public void moveCageForUnidentifiedAnimal(@PathVariable("unidentified-animalID") int unidentifiedAnimalID, @RequestBody UnidentifiedAnimalMovingCageDTO request){
+        unidentifiedAnimalService.moveCageUnidentifiedAnimal(unidentifiedAnimalID, request);
+    }
     @Operation(
             summary = "Delete Unidentified Animal",
             description = "Delete Unidentified Animal using ID"

@@ -1,5 +1,6 @@
 package com.fzoo.zoomanagementsystem.repository;
 
+import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
 import jakarta.persistence.JoinColumn;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,8 @@ public interface UnidentifiedAnimalRepository extends JpaRepository<Unidentified
 
     @Query("Select u from UnidentifiedAnimal u join Cage c on u.cageId = c.id join Staff s on c.staffId = s.id where s.email = ?1")
     List<UnidentifiedAnimal> findByStaffEmail(String staffEmail);
+
+    UnidentifiedAnimal findAnimalById(int animalID);
+
+    List<UnidentifiedAnimal> findAnimalByCageId(int cageID);
 }

@@ -1,5 +1,8 @@
 package com.fzoo.zoomanagementsystem.service;
 
+import com.fzoo.zoomanagementsystem.dto.AnimalMovingCageDTO;
+import com.fzoo.zoomanagementsystem.dto.UnidentifiedAnimalMovingCageDTO;
+import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.repository.UnidentifiedAnimalRepository;
@@ -91,5 +94,32 @@ public class UnidentifiedAnimalService {
         List<UnidentifiedAnimal> animalList = unidentifiedAnimalRepository.findByStaffEmail(staffEmail);
         if(animalList.isEmpty()) throw new IllegalStateException("There are no animals under this staff control");
         return animalList;
+    }
+
+    public void UpdateCageQuantity(int cageID) {
+        List<UnidentifiedAnimal> animalList = unidentifiedAnimalRepository.findAnimalByCageId(cageID);
+        Cage cage = cageRepository.findCageById(cageID);
+        int totalQuantity = 0;
+        for(UnidentifiedAnimal animal : animalList){
+            totalQuantity += animal.getQuantity();
+        }
+        cage.setQuantity(totalQuantity);
+        cageRepository.save(cage);
+    }
+    public void moveCageUnidentifiedAnimal(int animalID, UnidentifiedAnimalMovingCageDTO request) {
+        UnidentifiedAnimal animal = unidentifiedAnimalRepository.findAnimalById(animalID); //Animal need to move
+        Cage animalCage = cageRepository.findCageById(animal.getCageId()); //Current cage of animal
+        Cage cageMoveTo = cageRepository.findCageById(request.getCageID()); //Cage need to move animal to
+
+        if (cageMoveTo.getCageType().equalsIgnoreCase("Open")) {
+            animal.setCageId(cageMoveTo.getId());
+            if (cageMoveTo.getQuantity() == 0) {
+                cageMoveTo.setCageStatus("Owned");
+                cageMoveTo.setName(request.getCageName());
+            }
+            unidentifiedAnimalRepository.save(animal);
+            UpdateCageQuantity(cageMoveTo.getId());
+            UpdateCageQuantity(animalCage.getId());
+        } else throw new IllegalStateException("Can not move this animal to 'Close' cage!");
     }
 }
