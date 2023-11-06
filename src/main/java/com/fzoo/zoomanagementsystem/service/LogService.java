@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,11 +22,12 @@ public class LogService {
     private final AnimalRepository animalRepository;
     private final UnidentifiedAnimalLogRepository unidentifiedAnimalLogRepository;
     private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
+    ZoneId zone = ZoneId.of("Asia/Ho_Chi_Minh");
     public void add(int id, LogRequest request) {
         AnimalLog animalLog = AnimalLog.builder()
                 .type(request.getType())
                 .shortDescription(request.getShortDescription())
-                .dateTime(LocalDateTime.now())
+                .dateTime(LocalDateTime.now(zone))
                 .animalId(id)
                 .build();
         logRepository.save(animalLog);
@@ -36,7 +38,7 @@ public class LogService {
         UnidentifiedAnimalLog unidentifiedAnimalLog = UnidentifiedAnimalLog.builder()
                 .type(request.getType())
                 .shortDescription(request.getShortDescription())
-                .dateTime(LocalDateTime.now())
+                .dateTime(LocalDateTime.now(zone))
                 .unidentifiedAnimalId(id)
                 .build();
         unidentifiedAnimalLogRepository.save(unidentifiedAnimalLog);
@@ -61,7 +63,7 @@ public class LogService {
         List<AnimalLog> animalLogs = new ArrayList<>();
         List<UnidentifiedAnimalLog>unidentifiedAnimalLogs=new ArrayList<>();
         List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
-        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        LocalDateTime oneDayAgo = LocalDateTime.now(zone).minusDays(1);
         for (Cage cage : cages
         ) {
             if(animalRepository.findBycageId(cage.getId()).isEmpty()){
