@@ -84,9 +84,10 @@ public class UnidentifiedAnimalService {
         } else throw new IllegalStateException("This type of animal belong to Open cage!");
     }
 
-    public void deleteAnimalSpecies(int animalSpeicesID) {
-        UnidentifiedAnimal unidentifiedAnimal = unidentifiedAnimalRepository.findById(animalSpeicesID).orElseThrow(() -> new IllegalStateException("Can not find Animal Species to delete"));
-        unidentifiedAnimalRepository.deleteById(animalSpeicesID);
+    public void deleteAnimalSpecies(int unidentifiedAnimalID) {
+        UnidentifiedAnimal unidentifiedAnimal = unidentifiedAnimalRepository.findAnimalById(unidentifiedAnimalID);
+        if(unidentifiedAnimal == null) throw new IllegalStateException("Can not find this animal!");
+        unidentifiedAnimalRepository.delete(unidentifiedAnimal);
         updateCageQuantity(unidentifiedAnimal.getCageId());
     }
 
