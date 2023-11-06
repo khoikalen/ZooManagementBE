@@ -3,6 +3,7 @@ package com.fzoo.zoomanagementsystem.service;
 import com.fzoo.zoomanagementsystem.dto.AnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.model.Animal;
+import com.fzoo.zoomanagementsystem.model.AnimalLog;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
 import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -133,11 +135,17 @@ public class AnimalService {
         return animalList;
     }
 
-    public void UpdateCageQuantity(int cageID) {
+    public void updateCageQuantity(int cageID) {
         List<Animal> animalList = animalRepository.findAnimalByCageId(cageID);
         Cage cage = cageRepository.findCageById(cageID);
         cage.setQuantity(animalList.size());
         cageRepository.save(cage);
+    }
+
+    public void createAnimalMoveCageLog(Animal animal, Cage cageMoveTo, Cage animalCage) {
+        logRepository.save(new AnimalLog(1, "Move cage", LocalDateTime.now(),
+                "Move animal '" + animal.getName() + "' from cage '" +
+                        animalCage.getName() + "' to cage '" + cageMoveTo.getName() + "'", animal.getId()));
     }
 
     public void moveCageAnimal(int animalID, AnimalMovingCageDTO request) {
@@ -146,19 +154,21 @@ public class AnimalService {
         Cage cageMoveTo = cageRepository.findCageById(request.getCageID()); //Cage need to move animal to
 
         Animal animalExistedInCageMoveTo = animalRepository.findFirstAnimalByCageId(cageMoveTo.getId()); //animal in cage need to move to
-        if(animal.getStatus().equalsIgnoreCase("Dead")) throw new IllegalStateException("Can not move Dead animal");
+        if (animal.getStatus().equalsIgnoreCase("Dead")) throw new IllegalStateException("Can not move Dead animal");
         if (cageMoveTo.getCageType().equalsIgnoreCase("Close")) {
             animal.setCageId(cageMoveTo.getId());
             if (cageMoveTo.getQuantity() == 0) {
                 cageMoveTo.setCageStatus("Owned");
                 cageMoveTo.setName(request.getCageName());
-            }
-            else if (!animalExistedInCageMoveTo.getSpecie().equalsIgnoreCase(animal.getSpecie())) {
+            } else if (!animalExistedInCageMoveTo.getSpecie().equalsIgnoreCase(animal.getSpecie())) {
                 throw new IllegalStateException("Can not move this animal because of difference in specie!");
             }
             animalRepository.save(animal);
-            UpdateCageQuantity(cageMoveTo.getId());
-            UpdateCageQuantity(animalCage.getId());
+            updateCageQuantity(cageMoveTo.getId());
+            updateCageQuantity(animalCage.getId());
+            if (!animalCage.equals(cageMoveTo)) {
+                createAnimalMoveCageLog(animal, cageMoveTo, animalCage);
+            }
         } else throw new IllegalStateException("Can not move this animal to 'Open' cage!");
     }
 }

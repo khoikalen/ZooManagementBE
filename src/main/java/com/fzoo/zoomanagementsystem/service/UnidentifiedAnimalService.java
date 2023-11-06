@@ -2,15 +2,15 @@ package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.AnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.dto.UnidentifiedAnimalMovingCageDTO;
-import com.fzoo.zoomanagementsystem.model.Animal;
-import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
-import com.fzoo.zoomanagementsystem.model.Cage;
+import com.fzoo.zoomanagementsystem.model.*;
+import com.fzoo.zoomanagementsystem.repository.UnidentifiedAnimalLogRepository;
 import com.fzoo.zoomanagementsystem.repository.UnidentifiedAnimalRepository;
 import com.fzoo.zoomanagementsystem.repository.CageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,7 +18,7 @@ import java.util.List;
 public class UnidentifiedAnimalService {
     private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
     private final CageRepository cageRepository;
-
+    private final UnidentifiedAnimalLogRepository unidentifiedAnimalLogRepository;
     public List<UnidentifiedAnimal> getAllAnimalSpecies() {
         List<UnidentifiedAnimal> unidentifiedAnimalList = unidentifiedAnimalRepository.findAll(Sort.by(Sort.Direction.ASC, "cageId"));
         if (unidentifiedAnimalList.isEmpty()) throw new IllegalStateException("There are no Animal Species");
@@ -107,6 +107,12 @@ public class UnidentifiedAnimalService {
         cage.setQuantity(totalQuantity);
         cageRepository.save(cage);
     }
+
+    public void createUnidentifiedAnimalMoveCageLog(UnidentifiedAnimal animal, Cage cageMoveTo, Cage animalCage) {
+        unidentifiedAnimalLogRepository.save(new UnidentifiedAnimalLog(1, "Move cage", LocalDateTime.now(),
+                "Move species '" + animal.getName() + "' from cage '" +
+                        animalCage.getName() + "' to cage '" + cageMoveTo.getName() + "'", animal.getId()));
+    }
     public void moveCageUnidentifiedAnimal(int animalID, UnidentifiedAnimalMovingCageDTO request) {
         UnidentifiedAnimal animal = unidentifiedAnimalRepository.findAnimalById(animalID); //Animal need to move
         Cage animalCage = cageRepository.findCageById(animal.getCageId()); //Current cage of animal
@@ -121,6 +127,9 @@ public class UnidentifiedAnimalService {
             unidentifiedAnimalRepository.save(animal);
             UpdateCageQuantity(cageMoveTo.getId());
             UpdateCageQuantity(animalCage.getId());
+            if(!animalCage.equals(cageMoveTo)){
+                createUnidentifiedAnimalMoveCageLog(animal, cageMoveTo, animalCage);
+            }
         } else throw new IllegalStateException("Can not move this animal to 'Close' cage!");
     }
 }
