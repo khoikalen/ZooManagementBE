@@ -76,11 +76,15 @@ public class UnidentifiedAnimalController {
     public void updateAnimalSpecies(@PathVariable("unidentified-animalID") int animalSpecieID, @RequestBody UnidentifiedAnimal request){
         unidentifiedAnimalService.UpdateAnimalSpecies(animalSpecieID, request);
     }
-
+    @Operation(
+            summary = "Move cage for unidentified-animal",
+            description = "Move cage for unidentified-animal based on unidentified-animalID"
+    )
     @PutMapping("v2/unidentified-animal/{unidentified-animalID}")
     public void moveCageForUnidentifiedAnimal(@PathVariable("unidentified-animalID") int unidentifiedAnimalID, @RequestBody UnidentifiedAnimalMovingCageDTO request){
         unidentifiedAnimalService.moveCageUnidentifiedAnimal(unidentifiedAnimalID, request);
     }
+
     @Operation(
             summary = "Delete Unidentified Animal",
             description = "Delete Unidentified Animal using ID"
