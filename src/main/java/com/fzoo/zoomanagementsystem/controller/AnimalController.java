@@ -26,6 +26,15 @@ public class AnimalController {
     }
 
     @Operation(
+            summary = "Search Animals by staff email",
+            description = "Input staff email from login sesion and list all animals under their control"
+    )
+    @GetMapping("v6/animal/{staffEmail}")
+    public List<Animal> searchAnimalsByStaffEmail(@PathVariable("staffEmail") String staffEmail){
+        return animalService.searchAnimalByStaffEmail(staffEmail);
+    }
+
+    @Operation(
             summary = "List all dead Animals",
             description = "List all dead Animals exists in database"
     )

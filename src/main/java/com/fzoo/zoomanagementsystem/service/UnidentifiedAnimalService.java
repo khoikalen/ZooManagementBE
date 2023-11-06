@@ -27,7 +27,7 @@ public class UnidentifiedAnimalService {
     }
 
     public List<UnidentifiedAnimal> getAnimalSpeciesByName(String animalSpecieName) {
-        List<UnidentifiedAnimal> unidentifiedAnimalList = unidentifiedAnimalRepository.findByName(animalSpecieName);
+        List<UnidentifiedAnimal> unidentifiedAnimalList = unidentifiedAnimalRepository.findByNameContains(animalSpecieName);
         if (unidentifiedAnimalList.isEmpty()) throw new IllegalStateException("No result for Animal Species searching");
         return unidentifiedAnimalList;
     }
@@ -62,21 +62,34 @@ public class UnidentifiedAnimalService {
         List<UnidentifiedAnimal> unidentifiedAnimalList = unidentifiedAnimalRepository.findByCageId(cageID);
         Cage cage = cageRepository.findCageById(cageID);
         boolean isDuplicated = false;
-        for (UnidentifiedAnimal species : unidentifiedAnimalList) {
-            if (species.getName().equalsIgnoreCase(unidentifiedAnimal.getName())) isDuplicated = true;
-        }
-        if (cage != null && !isDuplicated) {
+        if (cage == null) throw new IllegalStateException("There some mismatch in finding cage!");
+        if (cage.getCageType().equalsIgnoreCase("Open")) {
             unidentifiedAnimal.setCageId(cageID);
-            unidentifiedAnimalRepository.save(unidentifiedAnimal);
-        } else if (cage != null && isDuplicated)
-            throw new IllegalStateException("This Animal Species is already exists in the cage");
-        else throw new IllegalStateException("Cage not found");
-        updateCageQuantity(unidentifiedAnimal.getCageId());
+            if (!unidentifiedAnimalList.isEmpty()) {
+                for (UnidentifiedAnimal species : unidentifiedAnimalList) {
+                    if (species.getName().equalsIgnoreCase(unidentifiedAnimal.getName())) {
+                        species.setQuantity(species.getQuantity() + unidentifiedAnimal.getQuantity());
+                        unidentifiedAnimalRepository.save(species);
+                        isDuplicated = true;
+                    }
+                }
+            }
+            if (!isDuplicated) {
+                unidentifiedAnimalRepository.save(unidentifiedAnimal);
+            }
+            updateCageQuantity(unidentifiedAnimal.getCageId());
+        } else throw new IllegalStateException("This type of animal belong to Open cage!");
     }
 
     public void deleteAnimalSpecies(int animalSpeicesID) {
         UnidentifiedAnimal unidentifiedAnimal = unidentifiedAnimalRepository.findById(animalSpeicesID).orElseThrow(() -> new IllegalStateException("Can not find Animal Species to delete"));
         unidentifiedAnimalRepository.deleteById(animalSpeicesID);
         updateCageQuantity(unidentifiedAnimal.getCageId());
+    }
+
+    public List<UnidentifiedAnimal> searchUnidentifiedAnimalByStaffEmail(String staffEmail){
+        List<UnidentifiedAnimal> animalList = unidentifiedAnimalRepository.findByStaffEmail(staffEmail);
+        if(animalList.isEmpty()) throw new IllegalStateException("There are no animals under this staff control");
+        return animalList;
     }
 }

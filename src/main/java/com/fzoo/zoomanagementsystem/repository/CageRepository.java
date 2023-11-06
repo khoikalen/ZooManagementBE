@@ -36,4 +36,5 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
 
     @Query("select c from Cage c where c.areaId = ?1 and c.cageStatus = 'Empty'")
     List<Cage> findEmptyCageByAreaId(int areaId);
+
 }
