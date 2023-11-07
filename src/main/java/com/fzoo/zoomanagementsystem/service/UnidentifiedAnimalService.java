@@ -109,7 +109,7 @@ public class UnidentifiedAnimalService {
     }
 
     public void createUnidentifiedAnimalMoveCageLog(UnidentifiedAnimal animal, Cage cageMoveTo, Cage animalCage) {
-        unidentifiedAnimalLogRepository.save(new UnidentifiedAnimalLog(1, "Move cage", LocalDateTime.now(),
+        unidentifiedAnimalLogRepository.save(new UnidentifiedAnimalLog(0, "Move cage", LocalDateTime.now(),
                 "Move species '" + animal.getName() + "' from cage '" +
                         animalCage.getName() + "' to cage '" + cageMoveTo.getName() + "'", animal.getId()));
     }

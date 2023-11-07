@@ -143,7 +143,7 @@ public class AnimalService {
     }
 
     public void createAnimalMoveCageLog(Animal animal, Cage cageMoveTo, Cage animalCage) {
-        logRepository.save(new AnimalLog(1, "Move cage", LocalDateTime.now(),
+        logRepository.save(new AnimalLog(0, "Move cage", LocalDateTime.now(),
                 "Move animal '" + animal.getName() + "' from cage '" +
                         animalCage.getName() + "' to cage '" + cageMoveTo.getName() + "'", animal.getId()));
     }
