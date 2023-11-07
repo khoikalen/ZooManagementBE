@@ -2,6 +2,8 @@ package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.AnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
+import com.fzoo.zoomanagementsystem.exception.EmptyStringException;
+import com.fzoo.zoomanagementsystem.exception.MultipleExceptions;
 import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.model.AnimalLog;
 import com.fzoo.zoomanagementsystem.model.Cage;
@@ -53,7 +55,38 @@ public class AnimalService {
         return animalList;
     }
 
-    public void createNewAnimal(Animal animal, int cageID) {
+    public String validateString(String stringValue) {
+        return stringValue.replaceAll("\\s{2,}", " ");
+    }
+
+    public void validateAnimalInput(Animal animal) throws EmptyStringException {
+        List<RuntimeException> exceptions = new ArrayList<>();
+        animal.setName(animal.getName().trim());
+        animal.setName(validateString(animal.getName()));
+
+        animal.setGender(animal.getGender().trim().toLowerCase());
+        animal.setGender(validateString(animal.getGender()));
+
+        animal.setSpecie(animal.getSpecie().trim());
+        animal.setSpecie(validateString(animal.getSpecie()));
+
+        animal.setStatus(animal.getStatus().trim());
+        animal.setStatus(validateString(animal.getStatus()));
+
+        if (animal.getName().isBlank()) exceptions.add(new EmptyStringException("Can not let animal name null!"));
+        if(animal.getDob() == null) exceptions.add(new EmptyStringException("Can not let animal DOB null!"));
+        else if (animal.getDob().isAfter(LocalDate.now()))
+            exceptions.add(new IllegalStateException("Date of Birth exceeds current date!"));
+        if (animal.getGender().isBlank()) exceptions.add(new EmptyStringException("Can not let animal gender null!"));
+        else if (!animal.getGender().equalsIgnoreCase("male") && !animal.getGender().equalsIgnoreCase("female"))
+            exceptions.add(new IllegalStateException("There are only 2 types of gender: male / female"));
+        if (animal.getSpecie().isBlank()) exceptions.add(new EmptyStringException("Can not let animal specie null!"));
+        if (animal.getStatus().isBlank()) exceptions.add(new EmptyStringException("Can not let animal status null!"));
+        if (!exceptions.isEmpty()) throw new MultipleExceptions(exceptions);
+    }
+
+    public void createNewAnimal(Animal animal, int cageID) throws EmptyStringException {
+        validateAnimalInput(animal);
         Cage cage = cageRepository.findCageById(cageID);
         if (cage == null) throw new IllegalStateException("There some mismatch in finding cage!");
         int cageQuantity = 0;
@@ -77,7 +110,30 @@ public class AnimalService {
         cageRepository.save(cage);
     }
 
+    public void validateAnimalUpdate(AnimalUpdatingDTO animal) throws EmptyStringException {
+        List<RuntimeException> exceptions = new ArrayList<>();
+        animal.setName(animal.getName().trim());
+        animal.setName(validateString(animal.getName()));
+
+        animal.setGender(animal.getGender().trim().toLowerCase());
+        animal.setGender(validateString(animal.getGender()));
+
+
+        if (animal.getName().isBlank()) exceptions.add(new EmptyStringException("Can not let animal name null!"));
+        if(animal.getDob() == null) exceptions.add(new EmptyStringException("Can not let animal Date of birth null!"));
+        else if (animal.getDob().isAfter(LocalDate.now()))
+            exceptions.add(new IllegalStateException("Date of birth exceeds current date!"));
+        if(animal.getDez() == null) exceptions.add(new EmptyStringException("Can not let animal Date enter zoo null!"));
+        else if (animal.getDez().isAfter(LocalDate.now()))
+            exceptions.add(new IllegalStateException("Date enter zoo exceeds current date!"));
+        if (animal.getGender().isBlank()) exceptions.add(new EmptyStringException("Can not let animal gender null!"));
+        else if (!animal.getGender().equalsIgnoreCase("male") && !animal.getGender().equalsIgnoreCase("female"))
+            exceptions.add(new IllegalStateException("There are only 2 types of gender: male / female"));
+
+        if (!exceptions.isEmpty()) throw new MultipleExceptions(exceptions);
+    }
     public void updateAnimalInformation(int id, AnimalUpdatingDTO request) {
+        validateAnimalUpdate(request);
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new IllegalStateException("Animal with " + id + " is not found"));
         Cage cage = cageRepository.findCageById(animal.getCageId());
         if (cage != null) {
