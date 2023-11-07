@@ -10,11 +10,14 @@ import com.fzoo.zoomanagementsystem.repository.AnimalRepository;
 import com.fzoo.zoomanagementsystem.repository.CageRepository;
 import com.fzoo.zoomanagementsystem.repository.LogRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +28,7 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final CageRepository cageRepository;
     private final LogRepository logRepository;
+    private final ZoneId zone = ZoneId.of("Asia/Ho_Chi_Minh");
 
     public List<Animal> getAllAnimals() {
         List<Animal> animalList = animalRepository.findAllAlive(Sort.by(Sort.Direction.ASC, "cageId"));
@@ -143,7 +147,7 @@ public class AnimalService {
     }
 
     public void createAnimalMoveCageLog(Animal animal, Cage cageMoveTo, Cage animalCage) {
-        logRepository.save(new AnimalLog(0, "Move cage", LocalDateTime.now(),
+        logRepository.save(new AnimalLog(0, "Move cage", LocalDateTime.now(zone),
                 "Move animal '" + animal.getName() + "' from cage '" +
                         animalCage.getName() + "' to cage '" + cageMoveTo.getName() + "'", animal.getId()));
     }

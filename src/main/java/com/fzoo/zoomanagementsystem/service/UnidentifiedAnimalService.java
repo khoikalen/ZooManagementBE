@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -19,6 +20,8 @@ public class UnidentifiedAnimalService {
     private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
     private final CageRepository cageRepository;
     private final UnidentifiedAnimalLogRepository unidentifiedAnimalLogRepository;
+    private final ZoneId zone = ZoneId.of("Asia/Ho_Chi_Minh");
+
     public List<UnidentifiedAnimal> getAllAnimalSpecies() {
         List<UnidentifiedAnimal> unidentifiedAnimalList = unidentifiedAnimalRepository.findAll(Sort.by(Sort.Direction.ASC, "cageId"));
         if (unidentifiedAnimalList.isEmpty()) throw new IllegalStateException("There are no Animal Species");
@@ -109,7 +112,7 @@ public class UnidentifiedAnimalService {
     }
 
     public void createUnidentifiedAnimalMoveCageLog(UnidentifiedAnimal animal, Cage cageMoveTo, Cage animalCage) {
-        unidentifiedAnimalLogRepository.save(new UnidentifiedAnimalLog(0, "Move cage", LocalDateTime.now(),
+        unidentifiedAnimalLogRepository.save(new UnidentifiedAnimalLog(0, "Move cage", LocalDateTime.now(zone),
                 "Move species '" + animal.getName() + "' from cage '" +
                         animalCage.getName() + "' to cage '" + cageMoveTo.getName() + "'", animal.getId()));
     }
