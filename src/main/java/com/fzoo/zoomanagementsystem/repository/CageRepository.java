@@ -3,6 +3,8 @@ package com.fzoo.zoomanagementsystem.repository;
 import com.fzoo.zoomanagementsystem.dto.CageViewDTO;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,8 +18,8 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
     @Query("SELECT c FROM Cage c WHERE c.staffId = ?1")
     List<Cage> findByStaffId(int staffId);
 
-    @Query("select c from Cage c join Area a on c.areaId = a.id join Expert e on a.id = e.areaId where e.email = ?1")
-    List<Cage> findCagesByExpertEmail(String expertEmail);
+//    @Query("select c from Cage c join Area a on c.areaId = a.id join Expert e on a.id = e.areaId where e.email = ?1")
+//    List<Cage> findCagesByExpertEmail(String expertEmail);
 
     @Query("select c from Cage c join Staff s on c.staffId = s.id where s.email = ?1")
     List<Cage> findCagesByStaffEmail(String staffEmail);
@@ -36,5 +38,10 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
 
     @Query("select c from Cage c where c.areaId = ?1 and c.cageStatus = 'Empty'")
     List<Cage> findEmptyCageByAreaId(int areaId);
+
+    int countByCageStatusLikeAndStatus(String owned, int i);
+
+//    Page<Cage> findCageStatusLikeAndStatus(String owned, int i, Pageable pageable);
+    Page<Cage> findByCageStatusLikeAndStatus(String owned, int i, Pageable pageable);
 
 }

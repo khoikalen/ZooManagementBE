@@ -21,61 +21,38 @@ public class MealController {
     )
     @PostMapping(path = "/daily/{cageID}")
     public void createDailyMeal(
-            @PathVariable("cageID") int id){
-        service.createDailyMeal(id);
-    }
-    @Operation(
-            summary = "Create sick meal",
-            description = "Create sick meal if animal does not have meal"
-    )
-    @PostMapping(path = "/sick/{animalID}")
-    public void createSickMeal(@PathVariable("animalID") int id){
-        service.createSickMeal(id);
+            @PathVariable("cageID") int id,
+            @RequestParam String email){
+        service.createDailyMeal(id, email);
     }
 
 
 
 
-    @Operation(
-            summary = "Update food ",
-            description = "Update food in meal"
-    )
-    @PutMapping(path = "{foodID}")
-    public void updateMeal(
-            @PathVariable("foodID") int id,
-            @RequestBody Food food){
-        service.update(id,food.getName(),food.getWeight());
-    }
 
-    @Operation(
-            summary = "Delete meal ",
-            description = "Delete meal in database"
-    )
-    @DeleteMapping(path = "{mealID}")
-    public void deleteMeal(@PathVariable ("mealID") int id){
-        service.deleteMeal(id);
-    }
 
-    @Operation(
-            summary = "Delete food in meal",
-            description = "Delete food in meal in database"
-    )
-    @DeleteMapping("/food/{foodID}")
-    public void deleteFoodInMeal(
-            @PathVariable("foodID") int id
-    ){
-        service.deleteFood(id);
-    }
+
+//    @Operation(
+//            summary = "Delete meal ",
+//            description = "Delete meal in database"
+//    )
+//    @DeleteMapping(path = "{mealID}")
+//    public void deleteMeal(@PathVariable ("mealID") int id){
+//        service.deleteMeal(id);
+//    }
+
+
 
 
     @Operation(
-            summary = "Create meal",
-            description = "Create meal everyday"
+            summary = "Confirm meal everyday",
+            description = ""
     )
     @PostMapping(path = "/{mealId}")
-    public void creatDailyFood(@PathVariable("mealId") int id
+    public void confirmMeal(@PathVariable("mealId") int id,
+                            @RequestParam String email
     ){
-        service.createMeal(id);
+        service.confirmMeal(id,email);
     }
 
 

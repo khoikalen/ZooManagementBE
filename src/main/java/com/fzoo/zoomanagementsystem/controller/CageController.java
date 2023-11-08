@@ -8,6 +8,7 @@ import com.fzoo.zoomanagementsystem.service.CageService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,12 +38,13 @@ public class CageController {
         return cageService.getCageById(cageId);
     }
 
+
     @Operation(
             summary = "Get all cages by expert email",
             description = "Get all cages that the specific expert manage"
     )
     @GetMapping("/v2/cage/{expertEmail}")
-    public List<CageViewDTO> getCagesOfExpert(@PathVariable("expertEmail") String expertEmail) {
+    public Page<Cage> getCagesOfExpert(@PathVariable("expertEmail") String expertEmail) {
         return cageService.getCagesByExpertEmail(expertEmail);
     }
 

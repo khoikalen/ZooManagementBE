@@ -34,11 +34,6 @@ public class ExpertRequest {
     @NotNull(message = "Start day should not be empty")
     private LocalDate startDay;
 
-    @Email(message = "Email is invalid")
-    private String email;
-
     @Pattern(regexp = "^\\d{10}$", message = "Phone number is invalid")
     private String phoneNumber;
-
-    private String areaName;
 }

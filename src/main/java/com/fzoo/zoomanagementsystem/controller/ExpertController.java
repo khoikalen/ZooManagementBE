@@ -27,7 +27,7 @@ public class ExpertController {
             description = "List all the experts from the database"
     )
     @GetMapping("/v1/expert")
-    public List<ExpertRequest> getAllExperts() {
+    public List<Expert> getAllExperts() {
         return expertService.getAllExperts();
     }
 

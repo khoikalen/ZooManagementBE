@@ -28,7 +28,7 @@ public class FoodStorageService {
 
     @Transactional
     public void updateFoodInStorage(int id, FoodStorage foodStorage) {
-        if(foodStorage.getName()==null || foodStorage.getAvailable()==0.0f){
+        if(foodStorage.getName()==null || foodStorage.getAvailable().floatValue()==0.0f){
             throw new IllegalStateException("Value can not be blank");
         }
         FoodStorage food =repository.findById(id).orElseThrow();

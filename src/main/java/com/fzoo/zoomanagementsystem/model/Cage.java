@@ -21,7 +21,7 @@ public class Cage {
     private String name;
 
     private int quantity;
-
+    @Column(name = "cage_status")
     private String cageStatus;
 
     private String cageType;
@@ -32,12 +32,14 @@ public class Cage {
     @Column(name = "staff_id")
     private int staffId;
 
+    private int status;
+
     @ManyToOne
-    @JoinColumn(name = "staff_id",referencedColumnName = "id", updatable = false ,insertable = false)
+    @JoinColumn(name = "staff_id", referencedColumnName = "id", updatable = false, insertable = false)
     private Staff staff;
 
     @ManyToOne
-    @JoinColumn(name = "area_id", referencedColumnName = "id", updatable = false ,insertable = false)
+    @JoinColumn(name = "area_id", referencedColumnName = "id", updatable = false, insertable = false)
     private Area area;
 
 

@@ -5,12 +5,11 @@ import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
 import com.fzoo.zoomanagementsystem.exception.EmptyStringException;
 import com.fzoo.zoomanagementsystem.exception.MultipleExceptions;
 import com.fzoo.zoomanagementsystem.model.Animal;
-import com.fzoo.zoomanagementsystem.response.ErrorRespone;
+import com.fzoo.zoomanagementsystem.dto.ErrorRespone;
 import com.fzoo.zoomanagementsystem.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -129,14 +128,14 @@ public class AnimalController {
         }
     }
 
-    @Operation(
-            summary = "List sick animal",
-            description = "List sick animal that expert manage "
-    )
-    @GetMapping("v3/animal/{expertEmail}")
-    public List<Animal> getSickAnimal(@PathVariable("expertEmail") String email) {
-        return animalService.getSickAnimal(email);
-    }
+//    @Operation(
+//            summary = "List sick animal",
+//            description = "List sick animal that expert manage "
+//    )
+//    @GetMapping("v3/animal/{expertEmail}")
+//    public List<Animal> getSickAnimal(@PathVariable("expertEmail") String email) {
+//        return animalService.getSickAnimal(email);
+//    }
 
     @Operation(
             summary = "Delete Animal information",

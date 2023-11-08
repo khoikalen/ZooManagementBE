@@ -15,10 +15,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class FoodInMealResponse {
-    private int id;
-    private String name;
-    private int cageId;
+    private  int id;
     private LocalDateTime dateTime;
+    private String cageName;
+    private String expertEmail;
     private Set<Food> haveFood;
-
 }

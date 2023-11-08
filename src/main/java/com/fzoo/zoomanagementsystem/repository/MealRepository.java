@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface MealRepository extends JpaRepository<Meal,Integer> {
+public interface MealRepository extends JpaRepository<Meal, Integer> {
     @Query(value = "SELECT m FROM Meal m WHERE m.name LIKE %:name% ")
     Optional<Meal> findByName(String name);
 
@@ -20,7 +20,15 @@ public interface MealRepository extends JpaRepository<Meal,Integer> {
     Integer findIdByCageIdAndNameNotContaining(int id);
 
 
-//    List<Meal> findByCageId(int id);
+
+    @Query("SELECT id FROM Meal")
+    List<Integer> findIAllId();
+
+    Optional<Meal> findFirst1ByCageIdOrderByDateTimeDesc(int id);
+
+
+    //    List<Integer> findIdByDate(LocalDate date);
+    //    List<Meal> findByCageId(int id);
 
 
 //    Integer findIdByNameOrderByDateTimeDesc(String name);
@@ -28,10 +36,4 @@ public interface MealRepository extends JpaRepository<Meal,Integer> {
 //    Integer findTop1IdByNameOrderByDateTimeDesc(String name);
 
 //    Integer findFirstIdByNameOrderByDateTimeDesc(String name);
-
-    Optional<Meal> findFirst1ByNameOrderByDateTimeDesc(String name);
-//    List<Integer> findIdByDate(LocalDate date);
-
-    @Query("SELECT id FROM Meal")
-    List<Integer> findIAllId();
 }
