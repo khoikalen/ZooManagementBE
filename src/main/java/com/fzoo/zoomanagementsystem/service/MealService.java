@@ -68,15 +68,15 @@ public class MealService {
         ) {
             Optional<FoodStorage> foodStorage = foodStorageRepository.findAvailableById(food.getFoodStorageId());
             if (food.getMeasure().equals("gram") || food.getMeasure().equals("g")) {
-                float exchange = (float) (food.getQuantity() / 1000);
+                float exchange = (float) (food.getQuantity().floatValue() / 1000);
                 if (exchange > foodStorage.get().getAvailable().floatValue()) {
-                    if (food.getQuantity() > foodStorage.get().getAvailable().floatValue()) {
+                    if (food.getQuantity().floatValue() > foodStorage.get().getAvailable().floatValue()) {
                         check = false;
                         checkName += food.getName() + " and ";
                     }
                 }
             } else {
-                if (food.getQuantity() > foodStorage.get().getAvailable().floatValue()) {
+                if (food.getQuantity().floatValue() > foodStorage.get().getAvailable().floatValue()) {
                     check = false;
                     checkName += food.getName() + " and ";
                 }
@@ -89,12 +89,10 @@ public class MealService {
         ) {
             FoodStorage foodStorage = foodStorageRepository.findAvailableById(food.getFoodStorageId()).orElseThrow(() -> (new IllegalStateException("Can not find that food in storage")));
             if (food.getMeasure().equals("gram") || food.getMeasure().equals("g")) {
-                BigDecimal exchange = new BigDecimal((float) (food.getQuantity() / 1000));
-
+                BigDecimal exchange = new BigDecimal((float) (food.getQuantity().floatValue() / 1000));
                 foodStorage.setAvailable(foodStorage.getAvailable().subtract(exchange));
             } else {
-                foodStorage.setAvailable(foodStorage.getAvailable().subtract(new BigDecimal(food.getQuantity())));
-
+                foodStorage.setAvailable(foodStorage.getAvailable().subtract(new BigDecimal(food.getQuantity().floatValue())));
             }
             FoodInMealResponse foodInMealResponse = foodService.getFoodInDailyMeal(meal.getCageId());
             foodService.addFood(foodInMealResponse.getId(), food);

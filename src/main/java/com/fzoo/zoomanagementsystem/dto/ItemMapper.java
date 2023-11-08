@@ -16,10 +16,9 @@ public class ItemMapper {
     public FoodStatisticResponse convertToFoodStatisticResponse(Food food){
         FoodStatisticResponse f = new FoodStatisticResponse();
         f.setName(food.getName());
-        f.setQuantity(food.getQuantity());
+        f.setQuantity(food.getQuantity().floatValue());
         return  f;
     }
-
 
 
 }

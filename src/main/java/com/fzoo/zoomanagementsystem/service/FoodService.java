@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -36,14 +37,14 @@ public class FoodService {
     ItemMapper itemMapper;
 
     public void addFood(int id, Food foodRequest) throws NegativeValueException,WrongMeasureException{
-        if (foodRequest.getName() == null || foodRequest.getQuantity() == 0.0f) {
+        if (foodRequest.getName() == null || foodRequest.getQuantity().floatValue() == 0.0f) {
             throw new IllegalStateException("Value can not be blank");
         }
         FoodStorage foodStorage = foodStorageRepository.findById(foodRequest.getFoodStorageId())
                 .orElseThrow(() -> new IllegalStateException("Does not have food in food storage"));
-        if (foodRequest.getQuantity() < 0) {
+        if (foodRequest.getQuantity().floatValue() < 0) {
             throw new NegativeValueException();
-        } else if (foodRequest.getQuantity() > foodStorage.getAvailable().floatValue()) {
+        } else if (foodRequest.getQuantity().floatValue() > foodStorage.getAvailable().floatValue()) {
             throw new IllegalStateException("Does not have enough " + foodRequest.getName());
         }
         if(!foodStorage.getMeasure().contains(foodRequest.getMeasure())){
@@ -70,8 +71,24 @@ public class FoodService {
             foodInMealRepository.save(foodInMeal);
         } else {
             Food food = foodRepository.findById(foodId).orElseThrow();
-            food.setQuantity(food.getQuantity() + foodRequest.getQuantity());
-            foodRepository.save(food);
+            if (foodRequest.getMeasure().contains("gram") || foodRequest.getMeasure().equals("g")){
+                if(foodRequest.getMeasure().equals(food.getMeasure())){
+                    food.setQuantity(new BigDecimal(food.getQuantity().floatValue() + foodRequest.getQuantity().floatValue()) );
+                }else if(foodRequest.getMeasure().equals("gram")){
+                    float exchange = (float) (foodRequest.getQuantity().floatValue() / 1000);
+                    food.setQuantity(new BigDecimal(food.getQuantity().floatValue() + exchange)  );
+                }else if(foodRequest.getMeasure().equals("kilogram")){
+                    food.setMeasure("kilogram");
+                    float exchange = (float) (foodRequest.getQuantity().floatValue() / 1000);
+                    food.setQuantity(new BigDecimal(food.getQuantity().floatValue() + exchange) );
+                }
+
+                foodRepository.save(food);
+            }else{
+                food.setQuantity(new BigDecimal(food.getQuantity().floatValue() + foodRequest.getQuantity().floatValue()) );
+                foodRepository.save(food);
+            }
+
         }
 
     }
@@ -117,7 +134,7 @@ public class FoodService {
         List<Food> foodList = foodRepository.findAllFoodByMealId(mealId);
         Map<String, Food> groupedItems = foodList.stream()
                 .collect(Collectors.toMap(Food::getName, item -> item, (existing, replacement) -> {
-                    existing.setQuantity(existing.getQuantity() + replacement.getQuantity());
+                    existing.setQuantity(new BigDecimal(existing.getQuantity().floatValue() + replacement.getQuantity().floatValue()) );
                     return existing;
                 }));
         List<Food> distinctFood = new ArrayList<>(groupedItems.values());
@@ -144,7 +161,7 @@ public class FoodService {
             throw new NegativeValueException();
         }
 
-        food.setQuantity(quantity);
+        food.setQuantity(new BigDecimal(quantity));
         foodRepository.save(food);
     }
 

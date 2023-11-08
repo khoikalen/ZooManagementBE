@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -20,7 +21,7 @@ public class Food {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private float quantity;
+    private BigDecimal quantity;
     private String measure;
     private String description;
     @Column(name = "food_storage_id")
