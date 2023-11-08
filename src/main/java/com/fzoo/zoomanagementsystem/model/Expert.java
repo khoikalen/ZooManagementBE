@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -24,12 +25,13 @@ public class Expert {
 
     private String gender;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDay;
 
     private String email;
 
     private String phoneNumber;
+
     private int status;
 
 }

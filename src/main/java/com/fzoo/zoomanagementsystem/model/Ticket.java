@@ -24,4 +24,5 @@ public class Ticket {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     private float total;
+    private int account_id;
 }

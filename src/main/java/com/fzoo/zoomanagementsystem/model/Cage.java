@@ -26,14 +26,13 @@ public class Cage {
 
     private String cageType;
 
-    @Column(name = "status")
-    private int status;
-
     @Column(name = "area_id")
     private int areaId;
 
     @Column(name = "staff_id")
     private int staffId;
+
+    private int status;
 
     @ManyToOne
     @JoinColumn(name = "staff_id", referencedColumnName = "id", updatable = false, insertable = false)

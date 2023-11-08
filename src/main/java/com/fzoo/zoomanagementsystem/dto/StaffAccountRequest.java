@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -34,9 +35,9 @@ public class StaffAccountRequest {
     @Pattern(regexp = "^[a-z A-Z]{2,15}$", message = "Gender should be word only and from 2 to 15 characters")
     private String gender;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Start day should not be empty")
-    private Date startDay;
+    private LocalDate startDay;
 
     @Email(message = "Email is invalid")
     private String email;

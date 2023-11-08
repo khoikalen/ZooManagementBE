@@ -28,7 +28,7 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(DateTimeParseException.class)
     public Map<String, String> handleInvalidDateException(DateTimeParseException ex) {
         Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("errorMessage", "The format should be MM/dd/yyyy and the day should be valid");
+        errorMap.put("errorMessage", "The format should be yyyy-MM-dd and the day should be valid");
         return errorMap;
     }
 

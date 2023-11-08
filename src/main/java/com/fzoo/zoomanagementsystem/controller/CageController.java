@@ -38,6 +38,7 @@ public class CageController {
         return cageService.getCageById(cageId);
     }
 
+
     @Operation(
             summary = "Get all cages by expert email",
             description = "Get all cages that the specific expert manage"

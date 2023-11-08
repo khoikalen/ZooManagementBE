@@ -32,14 +32,14 @@ public class LogController {
     }
 
 
-    @Operation(
-            summary = "List all Health Log",
-            description = "List all Health Log of animal that expert manage"
-    )
-    @GetMapping("/v2/log/{emailExpert}")
-    public List<LogHealthResponse> getLogByHealth(@PathVariable("emailExpert")String email){
-       return service.getLogByHealth(email);
-    }
+//    @Operation(
+//            summary = "List all Health Log",
+//            description = "List all Health Log of animal that expert manage"
+//    )
+//    @GetMapping("/v2/log/{emailExpert}")
+//    public List<LogHealthResponse> getLogByHealth(@PathVariable("emailExpert")String email){
+//       return service.getLogByHealth(email);
+//    }
 
 
     @Operation(

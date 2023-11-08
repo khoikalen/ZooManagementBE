@@ -10,6 +10,5 @@ import java.util.Optional;
 @Repository
 public interface AreaRepository extends JpaRepository<Area, Integer> {
 
-//    Area findAreaByExpert(Expert expert);
     Area findAreaByName(String name);
 }

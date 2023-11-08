@@ -20,5 +20,8 @@ public class Area {
 
     private String name;
 
+    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<Cage> cage;
 
 }

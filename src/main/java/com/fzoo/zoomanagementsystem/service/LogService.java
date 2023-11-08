@@ -56,7 +56,6 @@ public class LogService {
         return unidentifiedAnimalLogRepository.findLogByUnidentifiedAnimalIdOrderByDateTimeDesc(id);
     }
 
-
     public List<LogHealthResponse> getLogByHealth(String email) {
         String type = "Health";
         List<Animal> animals = new ArrayList<>();
@@ -115,6 +114,7 @@ public class LogService {
                         .comparing(LogHealthResponse::getLocalDateTime).reversed())
                         .collect(Collectors.toList());
     }
+
 
 
 
