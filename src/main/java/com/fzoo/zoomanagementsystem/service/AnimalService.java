@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -73,15 +74,15 @@ public class AnimalService {
         animal.setStatus(animal.getStatus().trim());
         animal.setStatus(validateString(animal.getStatus()));
 
-        if (animal.getName().isBlank()) exceptions.add(new EmptyStringException("Can not let animal name null!"));
-        if(animal.getDob() == null) exceptions.add(new EmptyStringException("Can not let animal DOB null!"));
-        else if (animal.getDob().isAfter(LocalDate.now()))
+//        if (animal.getName().isBlank()) exceptions.add(new EmptyStringException("Can not let animal name null!"));
+//        if(animal.getDob() == null) exceptions.add(new EmptyStringException("Can not let animal DOB null!"));
+        if (animal.getDob().isAfter(LocalDate.now()))
             exceptions.add(new IllegalStateException("Date of Birth exceeds current date!"));
-        if (animal.getGender().isBlank()) exceptions.add(new EmptyStringException("Can not let animal gender null!"));
-        else if (!animal.getGender().equalsIgnoreCase("male") && !animal.getGender().equalsIgnoreCase("female"))
+//        if (animal.getGender().isBlank()) exceptions.add(new EmptyStringException("Can not let animal gender null!"));
+        if (!animal.getGender().equalsIgnoreCase("male") && !animal.getGender().equalsIgnoreCase("female"))
             exceptions.add(new IllegalStateException("There are only 2 types of gender: male / female"));
-        if (animal.getSpecie().isBlank()) exceptions.add(new EmptyStringException("Can not let animal specie null!"));
-        if (animal.getStatus().isBlank()) exceptions.add(new EmptyStringException("Can not let animal status null!"));
+//        if (animal.getSpecie().isBlank()) exceptions.add(new EmptyStringException("Can not let animal specie null!"));
+//        if (animal.getStatus().isBlank()) exceptions.add(new EmptyStringException("Can not let animal status null!"));
         if (!exceptions.isEmpty()) throw new MultipleExceptions(exceptions);
     }
 

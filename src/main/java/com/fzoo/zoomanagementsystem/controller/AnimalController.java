@@ -8,6 +8,7 @@ import com.fzoo.zoomanagementsystem.model.Animal;
 import com.fzoo.zoomanagementsystem.response.ErrorRespone;
 import com.fzoo.zoomanagementsystem.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
@@ -91,7 +92,7 @@ public class AnimalController {
             description = "Create an new Animal with following Input values"
     )
     @PostMapping("v1/animal/{CageID}")
-    public ResponseEntity<Object> createNewAnimal(@RequestBody Animal animal, @PathVariable("CageID") int cageID) throws EmptyStringException {
+    public ResponseEntity<Object> createNewAnimal(@RequestBody @Valid Animal animal, @PathVariable("CageID") int cageID) throws EmptyStringException {
         try {
             animalService.createNewAnimal(animal, cageID);
             return ResponseEntity.ok("Add successfully!");
