@@ -166,10 +166,10 @@ public class CageService {
                 page = i;
             }
         }
-        double result = (double)cageRepository.countByCageStatusLike("Owned") / experts.size();
+        double result = (double)cageRepository.countByCageStatusLikeAndStatus("Owned",1) / experts.size();
         int pageSize = (int) Math.ceil(result);
         Pageable pageable = PageRequest.of(page,pageSize);
-        Page<Cage> cage = cageRepository.findAll(pageable);
+        Page<Cage> cage = cageRepository.findByCageStatusLikeAndStatus("Owned",1,pageable);
         return cage;
 
     }

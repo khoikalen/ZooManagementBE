@@ -105,22 +105,22 @@ public class MealService {
     }
 
 
-    public void deleteMeal(int id) {
-        boolean exist = mealRepository.existsById(id);
-        if (!exist) {
-            throw new IllegalStateException("does not have food");
-        }
-        List<Integer> listFoodId = foodInMealRepository.findIdByMealId(id);
-        foodInMealRepository.deleteByMealId(id);
-
-        for (int foodId : listFoodId
-        ) {
-            foodInMealRepository.deleteByFoodId(foodId);
-            foodRepository.deleteById(id);
-        }
-
-        mealRepository.deleteById(id);
-    }
+//    public void deleteMeal(int id) {
+//        boolean exist = mealRepository.existsById(id);
+//        if (!exist) {
+//            throw new IllegalStateException("does not have food");
+//        }
+//        List<Integer> listFoodId = foodInMealRepository.findIdByMealId(id);
+//        foodInMealRepository.deleteByMealId(id);
+//
+//        for (int foodId : listFoodId
+//        ) {
+//            foodInMealRepository.deleteByFoodId(foodId);
+//            foodRepository.deleteById(id);
+//        }
+//
+//        mealRepository.deleteById(id);
+//    }
 
 
 //    public void createSickMeal(int id) {

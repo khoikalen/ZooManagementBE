@@ -3,6 +3,8 @@ package com.fzoo.zoomanagementsystem.repository;
 import com.fzoo.zoomanagementsystem.dto.CageViewDTO;
 import com.fzoo.zoomanagementsystem.model.Cage;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -37,5 +39,9 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
     @Query("select c from Cage c where c.areaId = ?1 and c.cageStatus = 'Empty'")
     List<Cage> findEmptyCageByAreaId(int areaId);
 
-    int countByCageStatusLike(String owned);
+    int countByCageStatusLikeAndStatus(String owned, int i);
+
+//    Page<Cage> findCageStatusLikeAndStatus(String owned, int i, Pageable pageable);
+    Page<Cage> findByCageStatusLikeAndStatus(String owned, int i, Pageable pageable);
+
 }

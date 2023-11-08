@@ -32,14 +32,14 @@ public class MealController {
 
 
 
-    @Operation(
-            summary = "Delete meal ",
-            description = "Delete meal in database"
-    )
-    @DeleteMapping(path = "{mealID}")
-    public void deleteMeal(@PathVariable ("mealID") int id){
-        service.deleteMeal(id);
-    }
+//    @Operation(
+//            summary = "Delete meal ",
+//            description = "Delete meal in database"
+//    )
+//    @DeleteMapping(path = "{mealID}")
+//    public void deleteMeal(@PathVariable ("mealID") int id){
+//        service.deleteMeal(id);
+//    }
 
 
 

@@ -1,4 +1,4 @@
-package com.fzoo.zoomanagementsystem.response;
+package com.fzoo.zoomanagementsystem.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -26,6 +26,9 @@ public class Cage {
 
     private String cageType;
 
+    @Column(name = "status")
+    private int status;
+
     @Column(name = "area_id")
     private int areaId;
 
