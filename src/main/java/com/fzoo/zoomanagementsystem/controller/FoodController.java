@@ -40,24 +40,16 @@ public class FoodController {
         return service.getFoodInDailyMeal(id);
     }
 
-    @Operation(
-            summary = "List all sick foods",
-            description = "List all sick foods from the database"
-    )
-    @GetMapping(path = "/sick-meal/{animalID}")
-    public FoodInMealResponse getFoodInSickMeal(@PathVariable("animalID") int id){
-        return service.getFoodInSickMeal(id);
-    }
-
 
     @Operation(
-            summary = "Get meal for staff",
-            description = ""
+            summary = "Delete food in meal",
+            description = "Delete food in meal in database"
     )
-    @GetMapping(path = "cage/{cageId}")
-    public StaffMealResponse getMealInStaff(@PathVariable("cageId") int id
+    @DeleteMapping("/food/{foodID}")
+    public void deleteFoodInMeal(
+            @PathVariable("foodID") int id
     ){
-        return service.staffMealResponses(id);
+        service.deleteFood(id);
     }
 
 
@@ -72,6 +64,17 @@ public class FoodController {
 
 
 
+
+    @Operation(
+            summary = "Update food ",
+            description = "Update food in meal"
+    )
+    @PutMapping(path = "{foodID}")
+    public void updateFood(
+            @PathVariable("foodID") int id,
+            @RequestBody Food food){
+        service.update(id,food.getName(),food.getQuantity());
+    }
 
 
 

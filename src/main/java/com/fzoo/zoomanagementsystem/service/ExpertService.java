@@ -37,8 +37,7 @@ public class ExpertService {
                     expert.getGender(),
                     expert.getStartDay(),
                     expert.getEmail(),
-                    expert.getPhoneNumber(),
-                    expert.getArea().getName()));
+                    expert.getPhoneNumber()));
         }
         return expertView;
     }
@@ -61,8 +60,7 @@ public class ExpertService {
 
     public void setNoOne(int expertId) {
         Expert expert = expertRepository.findExpertById(expertId);
-        Area area = areaRepository.findAreaByExpert(expert);
-        area.setExpert(null);
+//        Area area = areaRepository.findAreaByExpert(expert);
     }
 
     public void deleteExpertAccount(int expertId) {
@@ -78,25 +76,21 @@ public class ExpertService {
 
     public void updateExpert(int expertId, ExpertRequest request) {
         Expert expert = expertRepository.findExpertById(expertId);
-        Area area = areaRepository.findAreaByName(request.getAreaName());
+
         boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(request.getPhoneNumber());
         boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(request.getPhoneNumber());
-        if (area.getExpert() == null || area.getExpert().getId() == expertId) {
+
             if ((!checkPhoneNumberInExpert && !checkPhoneNumberInStaff) || expert.getPhoneNumber().equals(request.getPhoneNumber())) {
                 expert.setFirstName(request.getFirstName());
                 expert.setLastName(request.getLastName());
                 expert.setGender(request.getGender());
                 expert.setStartDay(request.getStartDay());
                 expert.setPhoneNumber(request.getPhoneNumber());
-                expert.setArea(area);
-                expert.setAreaId(area.getId());
+
                 expertRepository.save(expert);
             } else {
                 throw new IllegalStateException("Phone number " + request.getPhoneNumber() + " is already existed!");
             }
-        } else {
-            throw new IllegalStateException(request.getAreaName() + " is already had expert to manage");
-        }
 
     }
 }

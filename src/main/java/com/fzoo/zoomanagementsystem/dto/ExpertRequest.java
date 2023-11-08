@@ -40,5 +40,4 @@ public class ExpertRequest {
     @Pattern(regexp = "^\\d{10}$", message = "Phone number is invalid")
     private String phoneNumber;
 
-    private String areaName;
 }

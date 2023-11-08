@@ -22,6 +22,8 @@ public class LogService {
     private final AnimalRepository animalRepository;
     private final UnidentifiedAnimalLogRepository unidentifiedAnimalLogRepository;
     private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
+    private final CageService cageService;
+
     ZoneId zone = ZoneId.of("Asia/Ho_Chi_Minh");
     public void add(int id, LogRequest request) {
         AnimalLog animalLog = AnimalLog.builder()
@@ -62,7 +64,7 @@ public class LogService {
         List<LogHealthResponse> responseList = new ArrayList<>();
         List<AnimalLog> animalLogs = new ArrayList<>();
         List<UnidentifiedAnimalLog>unidentifiedAnimalLogs=new ArrayList<>();
-        List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
+        List<Cage> cages = cageService.getCagesByExpertEmail(email).getContent();
         LocalDateTime oneDayAgo = LocalDateTime.now(zone).minusDays(1);
         for (Cage cage : cages
         ) {

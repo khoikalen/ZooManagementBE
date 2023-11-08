@@ -96,24 +96,24 @@ public class AnimalService {
         }
     }
 
-    public List<Animal> getSickAnimal(String email) {
-        String type = "Health";
-        List<Animal> animals = new ArrayList<>();
-        List<Integer> animalId = new ArrayList<>();
-
-        List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
-        for (Cage cage : cages
-        ) {
-            animalId.addAll(animalRepository.findIdByCageId(cage.getId()));
-        }
-        for (Integer id : animalId
-        ) {
-            if (!logRepository.findByAnimalIdAndTypeContaining(id, type).isEmpty()) {
-                animals.add(animalRepository.findById(id).orElseThrow());
-            }
-        }
-        return animals;
-    }
+//    public List<Animal> getSickAnimal(String email) {
+//        String type = "Health";
+//        List<Animal> animals = new ArrayList<>();
+//        List<Integer> animalId = new ArrayList<>();
+//
+//        List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
+//        for (Cage cage : cages
+//        ) {
+//            animalId.addAll(animalRepository.findIdByCageId(cage.getId()));
+//        }
+//        for (Integer id : animalId
+//        ) {
+//            if (!logRepository.findByAnimalIdAndTypeContaining(id, type).isEmpty()) {
+//                animals.add(animalRepository.findById(id).orElseThrow());
+//            }
+//        }
+//        return animals;
+//    }
 
     public List<Animal> searchAnimalByCageID(int cageID) {
         List<Animal> animalList = animalRepository.findBycageId(cageID);

@@ -30,12 +30,6 @@ public class Expert {
     private String email;
 
     private String phoneNumber;
+    private int status;
 
-    @Column(name = "area_id")
-    private int areaId;
-
-    @OneToOne
-    @JoinColumn(name = "area_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonBackReference
-    private Area area;
 }

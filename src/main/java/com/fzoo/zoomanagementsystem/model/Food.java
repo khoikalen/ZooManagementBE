@@ -20,11 +20,13 @@ public class Food {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private float weight;
+    private float quantity;
+    private String measure;
+    private String description;
+    @Column(name = "food_storage_id")
+    private int foodStorageId;
 
-    @ManyToMany(mappedBy = "haveFood")
-    @JsonBackReference
-    private Set<Meal> meals;
+
 
 
 }

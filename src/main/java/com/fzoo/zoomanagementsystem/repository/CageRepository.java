@@ -16,8 +16,8 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
     @Query("SELECT c FROM Cage c WHERE c.staffId = ?1")
     List<Cage> findByStaffId(int staffId);
 
-    @Query("select c from Cage c join Area a on c.areaId = a.id join Expert e on a.id = e.areaId where e.email = ?1")
-    List<Cage> findCagesByExpertEmail(String expertEmail);
+//    @Query("select c from Cage c join Area a on c.areaId = a.id join Expert e on a.id = e.areaId where e.email = ?1")
+//    List<Cage> findCagesByExpertEmail(String expertEmail);
 
     @Query("select c from Cage c join Staff s on c.staffId = s.id where s.email = ?1")
     List<Cage> findCagesByStaffEmail(String staffEmail);
@@ -37,4 +37,5 @@ public interface CageRepository extends JpaRepository<Cage, Integer> {
     @Query("select c from Cage c where c.areaId = ?1 and c.cageStatus = 'Empty'")
     List<Cage> findEmptyCageByAreaId(int areaId);
 
+    int countByCageStatusLike(String owned);
 }
