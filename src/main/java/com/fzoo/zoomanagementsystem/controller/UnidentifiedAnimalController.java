@@ -74,7 +74,7 @@ public class UnidentifiedAnimalController {
             description = "Input value to change Unidentified Animal information"
     )
     @PutMapping("v1/unidentified-animal/{unidentified-animalID}")
-    public void updateAnimalSpecies(@PathVariable("unidentified-animalID") int animalSpecieID, @RequestBody UnidentifiedAnimal request){
+    public void updateAnimalSpecies(@PathVariable("unidentified-animalID") int animalSpecieID, @RequestBody @Valid UnidentifiedAnimal request){
         unidentifiedAnimalService.UpdateAnimalSpecies(animalSpecieID, request);
     }
     @Operation(

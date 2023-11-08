@@ -90,6 +90,8 @@ public class AnimalService {
         validateAnimalInput(animal);
         Cage cage = cageRepository.findCageById(cageID);
         if (cage == null) throw new IllegalStateException("There some mismatch in finding cage!");
+        if(cage.getStatus() == 0) throw new IllegalStateException("This cage is not ready to use, please contact admin!");
+        if(animal.getStatus().equalsIgnoreCase("Dead")) throw new IllegalStateException("Can not add dead animal to the cage!");
         int cageQuantity = 0;
         animal.setDez(LocalDate.now());
         Animal animalExistedInCage = animalRepository.findFirstAnimalByCageId(cageID);
@@ -120,15 +122,15 @@ public class AnimalService {
         animal.setGender(validateString(animal.getGender()));
 
 
-        if (animal.getName().isBlank()) exceptions.add(new EmptyStringException("Can not let animal name null!"));
-        if(animal.getDob() == null) exceptions.add(new EmptyStringException("Can not let animal Date of birth null!"));
-        else if (animal.getDob().isAfter(LocalDate.now()))
+//        if (animal.getName().isBlank()) exceptions.add(new EmptyStringException("Can not let animal name null!"));
+//        if(animal.getDob() == null) exceptions.add(new EmptyStringException("Can not let animal Date of birth null!"));
+        if (animal.getDob().isAfter(LocalDate.now()))
             exceptions.add(new IllegalStateException("Date of birth exceeds current date!"));
         if(animal.getDez() == null) exceptions.add(new EmptyStringException("Can not let animal Date enter zoo null!"));
         else if (animal.getDez().isAfter(LocalDate.now()))
             exceptions.add(new IllegalStateException("Date enter zoo exceeds current date!"));
-        if (animal.getGender().isBlank()) exceptions.add(new EmptyStringException("Can not let animal gender null!"));
-        else if (!animal.getGender().equalsIgnoreCase("male") && !animal.getGender().equalsIgnoreCase("female"))
+//        if (animal.getGender().isBlank()) exceptions.add(new EmptyStringException("Can not let animal gender null!"));
+        if (!animal.getGender().equalsIgnoreCase("male") && !animal.getGender().equalsIgnoreCase("female"))
             exceptions.add(new IllegalStateException("There are only 2 types of gender: male / female"));
 
         if (!exceptions.isEmpty()) throw new MultipleExceptions(exceptions);

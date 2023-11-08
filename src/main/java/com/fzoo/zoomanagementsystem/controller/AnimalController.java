@@ -112,7 +112,7 @@ public class AnimalController {
             description = "Input AnimalID and values to update an existed Animal"
     )
     @PutMapping("v1/animal/{animalID}")
-    public ResponseEntity<Object> updateAnimalInfomation(@PathVariable("animalID") int id, @RequestBody AnimalUpdatingDTO request) {
+    public ResponseEntity<Object> updateAnimalInfomation(@PathVariable("animalID") int id, @RequestBody @Valid AnimalUpdatingDTO request) throws EmptyStringException{
         try {
             animalService.updateAnimalInformation(id, request);
             return ResponseEntity.ok("Update successfully!");
