@@ -4,6 +4,8 @@ import com.fzoo.zoomanagementsystem.model.Expert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ExpertRepository extends JpaRepository<Expert, Integer> {
 
@@ -14,4 +16,7 @@ public interface ExpertRepository extends JpaRepository<Expert, Integer> {
     Expert findExpertById(int expertId);
 
 
+    Expert findExpertByEmail(String email);
+
+    List<Expert> findByStatus(int i);
 }

@@ -23,4 +23,5 @@ public class Area {
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Cage> cage;
+
 }

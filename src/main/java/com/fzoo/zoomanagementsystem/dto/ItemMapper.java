@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.dto;
 
 import com.fzoo.zoomanagementsystem.model.Food;
+import com.fzoo.zoomanagementsystem.model.Meal;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 @Component
@@ -12,13 +13,13 @@ public class ItemMapper {
     }
 
 
-    public FoodStatisticResponse convertToDto(Food food){
+    public FoodStatisticResponse convertToFoodStatisticResponse(Food food){
         FoodStatisticResponse f = new FoodStatisticResponse();
         f.setName(food.getName());
-        f.setQuantity(food.getWeight());
+        f.setQuantity(food.getQuantity());
         return  f;
     }
-/*    public FoodStatisticResponse convertToDto(Food food) {
-        return modelMapper.map(food, FoodStatisticResponse.class);
-    }*/
+
+
+
 }

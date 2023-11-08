@@ -21,5 +21,5 @@ public class CageViewDTO {
 
     private String areaName;
 
-    private String staffEmail;
+    private String email;
 }

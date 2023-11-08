@@ -6,9 +6,14 @@ import com.fzoo.zoomanagementsystem.exception.UserNotFoundException;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +25,7 @@ public class CageService {
     private final CageRepository cageRepository;
     private final AreaRepository areaRepository;
     private final StaffRepository staffRepository;
+    private final ExpertRepository expertRepository;
     private final AnimalRepository animalRepository;
     private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
 
@@ -170,4 +176,22 @@ public class CageService {
         }
         return cageListView;
     }
+
+
+    public Page<Cage> getCagesByExpertEmail(String expertEmail) {
+        int page = 0;
+        List<Expert> experts = expertRepository.findByStatus(1);
+        for (int i = 0; i < experts.size(); i++) {
+            if (experts.get(i).getEmail().equals(expertEmail)) {
+                page = i;
+            }
+        }
+        double result = (double)cageRepository.countByCageStatusLikeAndStatus("Owned",1) / experts.size();
+        int pageSize = (int) Math.ceil(result);
+        Pageable pageable = PageRequest.of(page,pageSize);
+        Page<Cage> cage = cageRepository.findByCageStatusLikeAndStatus("Owned",1,pageable);
+        return cage;
+
+    }
+
 }
