@@ -4,6 +4,7 @@ import com.fzoo.zoomanagementsystem.dto.UnidentifiedAnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.model.UnidentifiedAnimal;
 import com.fzoo.zoomanagementsystem.service.UnidentifiedAnimalService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +65,7 @@ public class UnidentifiedAnimalController {
             description = "Create Unidentified Animals base on inputted value"
     )
     @PostMapping("v1/unidentified-animal/{cageID}")
-    public void createAnimalSpecies(@RequestBody UnidentifiedAnimal unidentifiedAnimal, @PathVariable("cageID") int cageID){
+    public void createAnimalSpecies(@RequestBody @Valid UnidentifiedAnimal unidentifiedAnimal, @PathVariable("cageID") int cageID){
         unidentifiedAnimalService.CreateAnimalSpecies(unidentifiedAnimal, cageID);
     }
 
@@ -73,7 +74,7 @@ public class UnidentifiedAnimalController {
             description = "Input value to change Unidentified Animal information"
     )
     @PutMapping("v1/unidentified-animal/{unidentified-animalID}")
-    public void updateAnimalSpecies(@PathVariable("unidentified-animalID") int animalSpecieID, @RequestBody UnidentifiedAnimal request){
+    public void updateAnimalSpecies(@PathVariable("unidentified-animalID") int animalSpecieID, @RequestBody @Valid UnidentifiedAnimal request){
         unidentifiedAnimalService.UpdateAnimalSpecies(animalSpecieID, request);
     }
     @Operation(

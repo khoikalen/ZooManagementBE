@@ -4,7 +4,9 @@ import com.fzoo.zoomanagementsystem.dto.TicketRequestDTO;
 import com.fzoo.zoomanagementsystem.model.Ticket;
 import com.fzoo.zoomanagementsystem.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -40,7 +42,8 @@ public class TicketController {
     }
 
     @PostMapping("v3/ticket")
-    public void checkoutTicketV3(@RequestBody TicketRequestDTO request){
+    public ResponseEntity<String> checkoutTicketV3(@RequestBody @Valid TicketRequestDTO request){
         ticketService.ticketCheckoutV3(request);
+        return ResponseEntity.ok("");
     }
 }
