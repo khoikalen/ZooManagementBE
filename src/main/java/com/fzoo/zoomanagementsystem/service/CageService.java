@@ -171,7 +171,6 @@ public class CageService {
         Pageable pageable = PageRequest.of(page,pageSize);
         Page<Cage> cage = cageRepository.findByCageStatusLikeAndStatus("Owned",1,pageable);
         return cage;
-
     }
 
 }

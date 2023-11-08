@@ -2,6 +2,7 @@ package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
+import com.fzoo.zoomanagementsystem.exception.NegativeValueException;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,7 +52,7 @@ public class MealController {
     @PostMapping(path = "/{mealId}")
     public void confirmMeal(@PathVariable("mealId") int id,
                             @RequestParam String email
-    ){
+    ) throws NegativeValueException {
         service.confirmMeal(id,email);
     }
 

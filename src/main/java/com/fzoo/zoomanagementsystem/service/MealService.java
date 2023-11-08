@@ -1,6 +1,7 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.exception.NegativeValueException;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
@@ -54,7 +55,7 @@ public class MealService {
         create = false;
     }
 
-    public void confirmMeal(int id, String email) {
+    public void confirmMeal(int id, String email) throws NegativeValueException {
         boolean check = true;
         String checkName = "";
         create = true;
@@ -72,14 +73,12 @@ public class MealService {
                         checkName += food.getName() + " and ";
                     }
                 }
-
             } else {
                 if (food.getQuantity() > foodStorage.get().getAvailable().floatValue()) {
                     check = false;
                     checkName += food.getName() + " and ";
                 }
             }
-
             if (!check) {
                 throw new IllegalStateException("Does not have enough " + checkName);
             }
@@ -95,13 +94,10 @@ public class MealService {
                 foodStorage.setAvailable(foodStorage.getAvailable().subtract(new BigDecimal(food.getQuantity())));
 
             }
-//          foodStorageRepository.save(foodStorage);
             FoodInMealResponse foodInMealResponse = foodService.getFoodInDailyMeal(meal.getCageId());
             foodService.addFood(foodInMealResponse.getId(), food);
-
         }
         create = false;
-
     }
 
 
