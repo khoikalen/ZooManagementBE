@@ -1,7 +1,11 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.TicketRequestDTO;
+import com.fzoo.zoomanagementsystem.exception.EmptyStringException;
+import com.fzoo.zoomanagementsystem.model.Account;
+import com.fzoo.zoomanagementsystem.model.Role;
 import com.fzoo.zoomanagementsystem.model.Ticket;
+import com.fzoo.zoomanagementsystem.repository.AccountRepository;
 import com.fzoo.zoomanagementsystem.repository.TicketRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -15,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TicketService {
     private final TicketRepository ticketRepository;
+    private final AccountRepository accountRepository;
     private final String SUNDAY = "SUNDAY";
     private final String SATURDAY = "SATURDAY";
     private final String ADULT = "ADULT";
@@ -67,10 +72,12 @@ public class TicketService {
     public void ticketCheckoutV3(TicketRequestDTO request) {
         Ticket ticketTypeChild = ticketRepository.findByTypeAndDate(CHILD, request.getDate());
         Ticket ticketTypeAdult = ticketRepository.findByTypeAndDate(ADULT, request.getDate());
+        Account account = accountRepository.findAccountByRole(Role.ADMIN);
         LocalDate date = LocalDate.now();
         String ticketDate = request.getDate().getDayOfWeek().toString();
+        if(request.getQuantityOfChild() == 0 && request.getQuantityOfAdult() == 0) throw new IllegalStateException("You have not purchased any ticket, please input quantity in the field!");
         if (request.getDate().isBefore(date)) {
-            throw new IllegalStateException("There are some mismatch, please contact admin!");
+            throw new IllegalStateException("Can not buy ticket previous of current day");
         }
 
         if (ticketDate.equals(SATURDAY) || ticketDate.equals(SUNDAY)) {
@@ -86,7 +93,7 @@ public class TicketService {
             ticketTypeAdult.setTotal(ticketTypeAdult.getPrice() * ticketTypeAdult.getQuantity());
             ticketRepository.save(ticketTypeAdult);
         } else {
-            ticketTypeAdult = new Ticket(1, ADULT, request.getPriceOfAdult(), request.getQuantityOfAdult(), request.getDate(), request.getQuantityOfAdult() * request.getPriceOfAdult());
+            ticketTypeAdult = new Ticket(0, ADULT, request.getPriceOfAdult(), request.getQuantityOfAdult(), request.getDate(), request.getQuantityOfAdult() * request.getPriceOfAdult(), account.getId());
             ticketRepository.save(ticketTypeAdult);
         }
 
@@ -95,7 +102,7 @@ public class TicketService {
             ticketTypeChild.setTotal(ticketTypeChild.getPrice() * ticketTypeChild.getQuantity());
             ticketRepository.save(ticketTypeChild);
         } else {
-            ticketTypeChild = new Ticket(1, CHILD, request.getPriceOfChild(), request.getQuantityOfChild(), request.getDate(), request.getQuantityOfChild() * request.getPriceOfChild());
+            ticketTypeChild = new Ticket(1, CHILD, request.getPriceOfChild(), request.getQuantityOfChild(), request.getDate(), request.getQuantityOfChild() * request.getPriceOfChild(), account.getId());
             ticketRepository.save(ticketTypeChild);
         }
     }
