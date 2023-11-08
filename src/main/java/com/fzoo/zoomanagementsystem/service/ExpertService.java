@@ -1,12 +1,11 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.ExpertRequest;
+import com.fzoo.zoomanagementsystem.model.Account;
 import com.fzoo.zoomanagementsystem.model.Area;
 import com.fzoo.zoomanagementsystem.model.Expert;
-import com.fzoo.zoomanagementsystem.repository.AccountRepository;
-import com.fzoo.zoomanagementsystem.repository.AreaRepository;
-import com.fzoo.zoomanagementsystem.repository.ExpertRepository;
-import com.fzoo.zoomanagementsystem.repository.StaffRepository;
+import com.fzoo.zoomanagementsystem.model.RefreshToken;
+import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,47 +23,34 @@ public class ExpertService {
 
     private final ExpertRepository expertRepository;
     private final AccountRepository accountRepository;
-    private final AreaRepository areaRepository;
     private final StaffRepository staffRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public List<ExpertRequest> getAllExperts() {
-         List<Expert> expertList = expertRepository.findAll();
-         List<ExpertRequest> expertView = new ArrayList<>();
-        for (Expert expert: expertList) {
-            expertView.add(new ExpertRequest(
-                    expert.getId(),
-                    expert.getFirstName(),
-                    expert.getLastName(),
-                    expert.getGender(),
-                    expert.getStartDay(),
-                    expert.getEmail(),
-                    expert.getPhoneNumber(),
-                    expert.getArea().getName()));
-        }
-        return expertView;
+    public List<Expert> getAllExperts() {
+        return expertRepository.findAll().stream().filter(expert -> expert.getStatus() != 0).toList();
     }
 
     public Expert getExpertById(int expertId) {
-        return expertRepository.findExpertById(expertId);
+        Expert expert = expertRepository.findExpertById(expertId);
+        if (expert.getStatus() == 0) {
+            throw new IllegalStateException("This expert was no longer existed");
+        }
+        return expert;
     }
 
     @Transactional
     public void deleteExpertById(int expertId) {
         boolean checkExist = expertRepository.existsById(expertId);
         if (checkExist) {
-            setNoOne(expertId);
             deleteExpertAccount(expertId);
-            expertRepository.deleteById(expertId);
+            Expert expertToDelete = expertRepository.findExpertById(expertId);
+            expertToDelete.setStatus(0);
+            expertRepository.save(expertToDelete);
         } else {
             throw new IllegalStateException("Expert with id " + expertId + " does not exist");
         }
     }
 
-    public void setNoOne(int expertId) {
-        Expert expert = expertRepository.findExpertById(expertId);
-        Area area = areaRepository.findAreaByExpert(expert);
-        area.setExpert(null);
-    }
 
     public void deleteExpertAccount(int expertId) {
         Optional<Expert> expert = expertRepository.findById(expertId);
@@ -73,30 +60,35 @@ public class ExpertService {
         } else {
             throw new IllegalStateException("Expert with id " + expertId + " does not exist");
         }
+        Account account = accountRepository.findAccountByEmail(email);
+        RefreshToken refreshToken = refreshTokenRepository.findByAccountInfo_Id(account.getId());
+        if (refreshToken != null) {
+            refreshTokenRepository.delete(refreshToken);
+        }
         accountRepository.deleteAccountByEmail(email);
     }
 
     public void updateExpert(int expertId, ExpertRequest request) {
         Expert expert = expertRepository.findExpertById(expertId);
-        Area area = areaRepository.findAreaByName(request.getAreaName());
-        boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(request.getPhoneNumber());
-        boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(request.getPhoneNumber());
-        if (area.getExpert() == null || area.getExpert().getId() == expertId) {
-            if ((!checkPhoneNumberInExpert && !checkPhoneNumberInStaff) || expert.getPhoneNumber().equals(request.getPhoneNumber())) {
-                expert.setFirstName(request.getFirstName());
-                expert.setLastName(request.getLastName());
-                expert.setGender(request.getGender());
-                expert.setStartDay(request.getStartDay());
-                expert.setPhoneNumber(request.getPhoneNumber());
-                expert.setArea(area);
-                expert.setAreaId(area.getId());
-                expertRepository.save(expert);
+        if (expert.getStatus() == 1) {
+            boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(request.getPhoneNumber());
+            boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(request.getPhoneNumber());
+            if (expert != null) {
+                if ((!checkPhoneNumberInExpert && !checkPhoneNumberInStaff) || expert.getPhoneNumber().equals(request.getPhoneNumber())) {
+                    expert.setFirstName(request.getFirstName());
+                    expert.setLastName(request.getLastName());
+                    expert.setGender(request.getGender());
+                    expert.setStartDay(request.getStartDay());
+                    expert.setPhoneNumber(request.getPhoneNumber());
+                    expertRepository.save(expert);
+                } else {
+                    throw new IllegalStateException("Phone number " + request.getPhoneNumber() + " is already existed!");
+                }
             } else {
-                throw new IllegalStateException("Phone number " + request.getPhoneNumber() + " is already existed!");
+                throw new IllegalStateException("Expert with ID " + expertId + " does not exist!");
             }
         } else {
-            throw new IllegalStateException(request.getAreaName() + " is already had expert to manage");
+            throw new IllegalStateException("This expert was no longer existed");
         }
-
     }
 }

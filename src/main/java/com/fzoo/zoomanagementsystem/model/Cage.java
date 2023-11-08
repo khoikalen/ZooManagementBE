@@ -32,6 +32,8 @@ public class Cage {
     @Column(name = "staff_id")
     private int staffId;
 
+    private int status;
+
     @ManyToOne
     @JoinColumn(name = "staff_id",referencedColumnName = "id", updatable = false ,insertable = false)
     private Staff staff;

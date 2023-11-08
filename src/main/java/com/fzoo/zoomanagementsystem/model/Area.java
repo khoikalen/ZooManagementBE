@@ -20,9 +20,6 @@ public class Area {
 
     private String name;
 
-    @OneToOne(mappedBy = "area")
-    private Expert expert;
-
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Cage> cage;

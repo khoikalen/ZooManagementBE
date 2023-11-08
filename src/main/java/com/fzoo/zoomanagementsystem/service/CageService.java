@@ -24,7 +24,7 @@ public class CageService {
     private final UnidentifiedAnimalRepository unidentifiedAnimalRepository;
 
     public List<CageViewDTO> getAllCages() {
-        List<Cage> cageList = cageRepository.findAll(Sort.by(Sort.Direction.ASC, "areaId"));
+        List<Cage> cageList = cageRepository.findAll(Sort.by(Sort.Direction.ASC, "areaId")).stream().filter(cage -> cage.getStatus() != 0).toList();
         List<CageViewDTO> listCageView = new ArrayList<>();
         for (Cage cage : cageList) {
             listCageView.add(new CageViewDTO(
@@ -62,12 +62,16 @@ public class CageService {
         cage.setAreaId(area.getId());
         cage.setStaffId(staff.getId());
         cage.setArea(area);
+        cage.setStatus(1);
         cage.setStaff(staff);
         cageRepository.save(cage);
     }
 
     public Cage getCageById(int cageId) throws UserNotFoundException {
         Cage cage = cageRepository.findCageById(cageId);
+        if (cage.getStatus() == 0) {
+            throw new IllegalStateException("This cage was no longer existed");
+        }
         if (cage == null) {
             throw new UserNotFoundException("Cage with id " + cageId + " does not exist");
         }
@@ -87,7 +91,6 @@ public class CageService {
                     throw new IllegalStateException("Can not update Cage Status to empty because there are animals in cage");
                 }
             }
-
         }
         Staff staff;
         if (request.getStaffEmail().isBlank()) {
@@ -108,28 +111,29 @@ public class CageService {
     public void deleteCage(int cageId) {
         Cage cage = cageRepository.findCageById(cageId);
         if (cage.getQuantity() == 0) {
-            cageRepository.deleteById(cageId);
+            cage.setStatus(0);
+            cageRepository.save(cage);
         } else {
             throw new IllegalStateException("Can not delete Cage because there are animals in cage");
         }
     }
 
-    public List<CageViewDTO> getCagesByExpertEmail(String expertEmail) {
-        List<Cage> cageList = cageRepository.findCagesByExpertEmail(expertEmail);
-        List<CageViewDTO> cageListView = new ArrayList<>();
-        for (Cage cage : cageList) {
-            cageListView.add(new CageViewDTO(
-                    cage.getId(),
-                    cage.getName(),
-                    cage.getQuantity(),
-                    cage.getCageStatus(),
-                    cage.getCageType(),
-                    cage.getArea().getName(),
-                    cage.getStaff().getEmail()
-            ));
-        }
-        return cageListView;
-    }
+//    public List<CageViewDTO> getCagesByExpertEmail(String expertEmail) {
+//        List<Cage> cageList = cageRepository.findCagesByExpertEmail(expertEmail);
+//        List<CageViewDTO> cageListView = new ArrayList<>();
+//        for (Cage cage : cageList) {
+//            cageListView.add(new CageViewDTO(
+//                    cage.getId(),
+//                    cage.getName(),
+//                    cage.getQuantity(),
+//                    cage.getCageStatus(),
+//                    cage.getCageType(),
+//                    cage.getArea().getName(),
+//                    cage.getStaff().getEmail()
+//            ));
+//        }
+//        return cageListView;
+//    }
 
     public List<CageViewDTO> getCagesByStaffEmail(String staffEmail) {
         List<Cage> cageList = cageRepository.findCagesByStaffEmail(staffEmail);

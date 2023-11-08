@@ -32,9 +32,10 @@ public class AuthenticationService {
     public AuthenticationResponse registerNewStaff(StaffAccountRequest request) {
             boolean checkEmailInAccount = accountRepository.existsByEmail(request.getEmail());
             boolean checkEmailInStaff = staffRepository.existsByEmail(request.getEmail());
+            boolean checkEmailInExpert = expertRepository.existsByEmail(request.getEmail());
             boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(request.getPhoneNumber());
             boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(request.getPhoneNumber());
-            if (!checkEmailInStaff && !checkEmailInAccount) {
+            if (!checkEmailInStaff && !checkEmailInAccount && !checkEmailInExpert) {
                 if (!checkPhoneNumberInStaff  && !checkPhoneNumberInExpert) {
                     var staff = Staff.builder()
                             .firstName(request.getFirstName())
@@ -43,6 +44,7 @@ public class AuthenticationService {
                             .startDay(request.getStartDay())
                             .email(request.getEmail())
                             .phoneNumber(request.getPhoneNumber())
+                            .status(1)
                             .build();
                     staffRepository.save(staff);
                     var account = Account.builder()
@@ -62,13 +64,12 @@ public class AuthenticationService {
 
     public AuthenticationResponse registerNewExpert(ExpertAccountRequest request) {
         boolean checkEmailInAccount = accountRepository.existsByEmail(request.getEmail());
+        boolean checkEmailInStaff = staffRepository.existsByEmail(request.getEmail());
         boolean checkEmailInExpert = expertRepository.existsByEmail(request.getEmail());
         boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(request.getPhoneNumber());
         boolean checkPhoneNumberInExpert = expertRepository.existsByPhoneNumber(request.getPhoneNumber());
-        if (!checkEmailInAccount && !checkEmailInExpert) {
+        if (!checkEmailInAccount && !checkEmailInExpert && !checkEmailInStaff) {
             if (!checkPhoneNumberInStaff && !checkPhoneNumberInExpert) {
-                Area area = areaRepository.findAreaByName(request.getAreaName());
-                if (area.getExpert() == null) {
                     var expert = Expert.builder()
                             .firstName(request.getFirstName())
                             .lastName(request.getLastName())
@@ -76,8 +77,7 @@ public class AuthenticationService {
                             .startDay(request.getStartDay())
                             .email(request.getEmail())
                             .phoneNumber(request.getPhoneNumber())
-                            .areaId(area.getId())
-                            .area(area)
+                            .status(1)
                             .build();
                     expertRepository.save(expert);
                     var account = Account.builder()
@@ -86,9 +86,6 @@ public class AuthenticationService {
                             .role(Role.EXPERT)
                             .build();
                     accountRepository.save(account);
-                } else {
-                    throw new IllegalStateException("Area " + request.getAreaName() + " have already had expert to manage");
-                }
             } else {
                 throw new IllegalStateException("Phone number " + request.getPhoneNumber() + " is already existed!");
             }

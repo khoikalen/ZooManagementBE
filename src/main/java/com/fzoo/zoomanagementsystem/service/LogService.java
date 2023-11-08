@@ -55,64 +55,64 @@ public class LogService {
     }
 
 
-    public List<LogHealthResponse> getLogByHealth(String email) {
-        String type = "Health";
-        List<Animal> animals = new ArrayList<>();
-        List<UnidentifiedAnimal> unidentifiedAnimals = new ArrayList<>();
-        List<LogHealthResponse> responseList = new ArrayList<>();
-        List<AnimalLog> animalLogs = new ArrayList<>();
-        List<UnidentifiedAnimalLog>unidentifiedAnimalLogs=new ArrayList<>();
-        List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
-        LocalDateTime oneDayAgo = LocalDateTime.now(zone).minusDays(1);
-        for (Cage cage : cages
-        ) {
-            if(animalRepository.findBycageId(cage.getId()).isEmpty()){
-                unidentifiedAnimals.addAll(unidentifiedAnimalRepository.findByCageId(cage.getId()));
-            }else{
-                 animals.addAll(animalRepository.findBycageId(cage.getId()));
-            }
-        }
-        for (UnidentifiedAnimal uAnimals: unidentifiedAnimals
-             ) {
-            unidentifiedAnimalLogs.addAll(unidentifiedAnimalLogRepository.findByUnidentifiedAnimalIdAndTypeContaining(uAnimals.getId(),type));
-        }
-
-        for (Animal animal : animals
-        ) {
-            animalLogs.addAll(logRepository.findByAnimalIdAndTypeContaining(animal.getId(), type));
-        }
-
-        for (UnidentifiedAnimalLog uAnimalLog: unidentifiedAnimalLogs
-             ) {
-            if (uAnimalLog.getDateTime().isAfter(oneDayAgo)) {
-                UnidentifiedAnimal animal = unidentifiedAnimalRepository.findById(uAnimalLog.getUnidentifiedAnimalId()).orElseThrow();
-                LogHealthResponse logHealthResponse = LogHealthResponse.builder()
-                        .name(animal.getName())
-                        .shortDescription(uAnimalLog.getShortDescription())
-                        .LocalDateTime(uAnimalLog.getDateTime())
-                        .build();
-                responseList.add(logHealthResponse);
-            }
-
-        }
-        for (AnimalLog animalLog : animalLogs
-        ) {
-
-            if (animalLog.getDateTime().isAfter(oneDayAgo)) {
-                Animal animal = animalRepository.findById(animalLog.getAnimalId()).orElseThrow(() -> new IllegalStateException("does not have animal"));
-                LogHealthResponse logHealthResponse = LogHealthResponse.builder()
-                        .name(animal.getName())
-                        .species(animal.getSpecie())
-                        .shortDescription(animalLog.getShortDescription())
-                        .LocalDateTime(animalLog.getDateTime())
-                        .build();
-                responseList.add(logHealthResponse);
-            }
-        }
-        return responseList.stream().sorted(Comparator
-                        .comparing(LogHealthResponse::getLocalDateTime).reversed())
-                        .collect(Collectors.toList());
-    }
+//    public List<LogHealthResponse> getLogByHealth(String email) {
+//        String type = "Health";
+//        List<Animal> animals = new ArrayList<>();
+//        List<UnidentifiedAnimal> unidentifiedAnimals = new ArrayList<>();
+//        List<LogHealthResponse> responseList = new ArrayList<>();
+//        List<AnimalLog> animalLogs = new ArrayList<>();
+//        List<UnidentifiedAnimalLog>unidentifiedAnimalLogs=new ArrayList<>();
+//        List<Cage> cages = cageRepository.findCagesByExpertEmail(email);
+//        LocalDateTime oneDayAgo = LocalDateTime.now(zone).minusDays(1);
+//        for (Cage cage : cages
+//        ) {
+//            if(animalRepository.findBycageId(cage.getId()).isEmpty()){
+//                unidentifiedAnimals.addAll(unidentifiedAnimalRepository.findByCageId(cage.getId()));
+//            }else{
+//                 animals.addAll(animalRepository.findBycageId(cage.getId()));
+//            }
+//        }
+//        for (UnidentifiedAnimal uAnimals: unidentifiedAnimals
+//             ) {
+//            unidentifiedAnimalLogs.addAll(unidentifiedAnimalLogRepository.findByUnidentifiedAnimalIdAndTypeContaining(uAnimals.getId(),type));
+//        }
+//
+//        for (Animal animal : animals
+//        ) {
+//            animalLogs.addAll(logRepository.findByAnimalIdAndTypeContaining(animal.getId(), type));
+//        }
+//
+//        for (UnidentifiedAnimalLog uAnimalLog: unidentifiedAnimalLogs
+//             ) {
+//            if (uAnimalLog.getDateTime().isAfter(oneDayAgo)) {
+//                UnidentifiedAnimal animal = unidentifiedAnimalRepository.findById(uAnimalLog.getUnidentifiedAnimalId()).orElseThrow();
+//                LogHealthResponse logHealthResponse = LogHealthResponse.builder()
+//                        .name(animal.getName())
+//                        .shortDescription(uAnimalLog.getShortDescription())
+//                        .LocalDateTime(uAnimalLog.getDateTime())
+//                        .build();
+//                responseList.add(logHealthResponse);
+//            }
+//
+//        }
+//        for (AnimalLog animalLog : animalLogs
+//        ) {
+//
+//            if (animalLog.getDateTime().isAfter(oneDayAgo)) {
+//                Animal animal = animalRepository.findById(animalLog.getAnimalId()).orElseThrow(() -> new IllegalStateException("does not have animal"));
+//                LogHealthResponse logHealthResponse = LogHealthResponse.builder()
+//                        .name(animal.getName())
+//                        .species(animal.getSpecie())
+//                        .shortDescription(animalLog.getShortDescription())
+//                        .LocalDateTime(animalLog.getDateTime())
+//                        .build();
+//                responseList.add(logHealthResponse);
+//            }
+//        }
+//        return responseList.stream().sorted(Comparator
+//                        .comparing(LogHealthResponse::getLocalDateTime).reversed())
+//                        .collect(Collectors.toList());
+//    }
 
 
 

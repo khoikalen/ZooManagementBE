@@ -128,14 +128,14 @@ public class AnimalController {
         }
     }
 
-    @Operation(
-            summary = "List sick animal",
-            description = "List sick animal that expert manage "
-    )
-    @GetMapping("v3/animal/{expertEmail}")
-    public List<Animal> getSickAnimal(@PathVariable("expertEmail") String email) {
-        return animalService.getSickAnimal(email);
-    }
+//    @Operation(
+//            summary = "List sick animal",
+//            description = "List sick animal that expert manage "
+//    )
+//    @GetMapping("v3/animal/{expertEmail}")
+//    public List<Animal> getSickAnimal(@PathVariable("expertEmail") String email) {
+//        return animalService.getSickAnimal(email);
+//    }
 
     @Operation(
             summary = "Delete Animal information",
