@@ -2,11 +2,16 @@ package com.fzoo.zoomanagementsystem.controller;
 
 import com.fzoo.zoomanagementsystem.dto.AnimalMovingCageDTO;
 import com.fzoo.zoomanagementsystem.dto.AnimalUpdatingDTO;
+import com.fzoo.zoomanagementsystem.exception.EmptyStringException;
+import com.fzoo.zoomanagementsystem.exception.MultipleExceptions;
 import com.fzoo.zoomanagementsystem.model.Animal;
+import com.fzoo.zoomanagementsystem.response.ErrorRespone;
 import com.fzoo.zoomanagementsystem.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -86,18 +91,41 @@ public class AnimalController {
             description = "Create an new Animal with following Input values"
     )
     @PostMapping("v1/animal/{CageID}")
-    public void createNewAnimal(@RequestBody Animal animal, @PathVariable("CageID") int cageID) {
-        animalService.createNewAnimal(animal, cageID);
+    public ResponseEntity<Object> createNewAnimal(@RequestBody Animal animal, @PathVariable("CageID") int cageID) throws EmptyStringException {
+        try {
+            animalService.createNewAnimal(animal, cageID);
+            return ResponseEntity.ok("Add successfully!");
+        } catch (MultipleExceptions ex){
+            List<RuntimeException> exceptions = ex.getExceptions();
+            StringBuilder errorMessage = new StringBuilder();
+            for (RuntimeException exception : exceptions) {
+                errorMessage.append(exception.getMessage()).append(" ");
+            }
+            return ResponseEntity.
+                    status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorRespone(errorMessage));
+        }
     }
-
 
     @Operation(
             summary = "Update Animal information",
             description = "Input AnimalID and values to update an existed Animal"
     )
     @PutMapping("v1/animal/{animalID}")
-    public void updateAnimalInfomation(@PathVariable("animalID") int id, @RequestBody AnimalUpdatingDTO request) {
-        animalService.updateAnimalInformation(id, request);
+    public ResponseEntity<Object> updateAnimalInfomation(@PathVariable("animalID") int id, @RequestBody AnimalUpdatingDTO request) {
+        try {
+            animalService.updateAnimalInformation(id, request);
+            return ResponseEntity.ok("Update successfully!");
+        } catch (MultipleExceptions ex){
+            List<RuntimeException> exceptions = ex.getExceptions();
+            StringBuilder errorMessage = new StringBuilder();
+            for (RuntimeException exception : exceptions) {
+                errorMessage.append(exception.getMessage()).append(" ");
+            }
+            return ResponseEntity.
+                    status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorRespone(errorMessage));
+        }
     }
 
 //    @Operation(
