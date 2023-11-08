@@ -1,7 +1,9 @@
 package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
+import com.fzoo.zoomanagementsystem.exception.MealCreatedException;
 import com.fzoo.zoomanagementsystem.exception.NegativeValueException;
+import com.fzoo.zoomanagementsystem.exception.WrongMeasureException;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
@@ -35,13 +37,13 @@ public class MealService {
     ZoneId zone = ZoneId.of("Asia/Ho_Chi_Minh");
 
 
-    public void createDailyMeal(int id, String email) {
+    public void createDailyMeal(int id, String email) throws MealCreatedException {
         Cage cage = cageRepository.findById(id).orElseThrow(() -> new IllegalStateException("does not have cage"));
         Expert expert = expertRepository.findExpertByEmail(email);
         Optional<Meal> optionalMeal = mealRepository.findFirst1ByCageIdOrderByDateTimeDesc(id);
         if (!create) {
             if (optionalMeal.isPresent()) {
-                throw new IllegalStateException("Meal was created");
+                throw new MealCreatedException();
             }
         }
         Meal meal = Meal
@@ -55,7 +57,7 @@ public class MealService {
         create = false;
     }
 
-    public void confirmMeal(int id, String email) throws NegativeValueException {
+    public void confirmMeal(int id, String email) throws NegativeValueException, MealCreatedException, WrongMeasureException {
         boolean check = true;
         String checkName = "";
         create = true;

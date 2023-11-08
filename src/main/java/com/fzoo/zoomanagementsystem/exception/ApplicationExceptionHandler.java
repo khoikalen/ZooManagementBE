@@ -56,4 +56,21 @@ public class ApplicationExceptionHandler {
         errorMap.put("errorMessage", "Can not input negative value");
         return errorMap;
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MealCreatedException.class)
+    public Map<String, String> handleMealCreatedException(MealCreatedException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", "Meal was created");
+        return errorMap;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(WrongMeasureException.class)
+    public Map<String, String> handleWrongMeasureException(WrongMeasureException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", "This measure does not support this type");
+        return errorMap;
+    }
+
 }

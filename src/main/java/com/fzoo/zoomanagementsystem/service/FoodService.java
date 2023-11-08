@@ -5,6 +5,7 @@ import com.fzoo.zoomanagementsystem.dto.FoodStatisticResponse;
 import com.fzoo.zoomanagementsystem.dto.ItemMapper;
 import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.exception.NegativeValueException;
+import com.fzoo.zoomanagementsystem.exception.WrongMeasureException;
 import com.fzoo.zoomanagementsystem.model.*;
 import com.fzoo.zoomanagementsystem.repository.*;
 import jakarta.transaction.Transactional;
@@ -34,17 +35,19 @@ public class FoodService {
     @Autowired
     ItemMapper itemMapper;
 
-    public void addFood(int id, Food foodRequest) throws NegativeValueException{
-
+    public void addFood(int id, Food foodRequest) throws NegativeValueException,WrongMeasureException{
         if (foodRequest.getName() == null || foodRequest.getQuantity() == 0.0f) {
             throw new IllegalStateException("Value can not be blank");
         }
-        FoodStorage foodStorage = foodStorageRepository.findByName(foodRequest.getName())
+        FoodStorage foodStorage = foodStorageRepository.findById(foodRequest.getFoodStorageId())
                 .orElseThrow(() -> new IllegalStateException("Does not have food in food storage"));
         if (foodRequest.getQuantity() < 0) {
             throw new NegativeValueException();
         } else if (foodRequest.getQuantity() > foodStorage.getAvailable().floatValue()) {
             throw new IllegalStateException("Does not have enough " + foodRequest.getName());
+        }
+        if(!foodStorage.getMeasure().contains(foodRequest.getMeasure())){
+            throw  new WrongMeasureException();
         }
         String exist = null;
         int foodId = 0;

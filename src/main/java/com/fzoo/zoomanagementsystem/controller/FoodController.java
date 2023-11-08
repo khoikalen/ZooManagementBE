@@ -4,6 +4,7 @@ import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.dto.FoodStatisticResponse;
 import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.exception.NegativeValueException;
+import com.fzoo.zoomanagementsystem.exception.WrongMeasureException;
 import com.fzoo.zoomanagementsystem.model.Food;
 import com.fzoo.zoomanagementsystem.service.FoodService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class FoodController {
     @PostMapping(path = "{mealId}")
     public void addFood(@PathVariable("mealId")int id,
                         @RequestBody Food food
-                        ) throws NegativeValueException {
+                        ) throws NegativeValueException, WrongMeasureException {
         service.addFood(id,food);
 
     }
