@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,7 @@ public class StaffService {
     }
 
 
-    public void updateStaff(int staffId, String firstName, String lastName, String sex, Date startDay, String phoneNumber) {
+    public void updateStaff(int staffId, String firstName, String lastName, String sex, LocalDate startDay, String phoneNumber) {
         Staff staff = staffRepository.findStaffById(staffId);
         if (staff.getStatus() == 1) {
         boolean checkPhoneNumberInStaff = staffRepository.existsByPhoneNumber(phoneNumber);
