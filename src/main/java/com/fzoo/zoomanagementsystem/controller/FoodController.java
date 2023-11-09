@@ -22,7 +22,7 @@ public class FoodController {
 
     @Operation(
             summary = "Create food",
-            description = "Create food temporary"
+            description = ""
     )
     @PostMapping(path = "{mealId}")
     public void addFood(@PathVariable("mealId")int id,

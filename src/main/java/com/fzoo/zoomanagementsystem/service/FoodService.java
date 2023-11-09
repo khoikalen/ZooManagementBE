@@ -37,7 +37,7 @@ public class FoodService {
     ItemMapper itemMapper;
 
     public void addFood(int id, Food foodRequest) throws NegativeValueException,WrongMeasureException{
-        if (foodRequest.getName() == null || foodRequest.getQuantity().floatValue() == 0.0f) {
+        if (foodRequest.getName() == null || foodRequest.getQuantity() == null) {
             throw new IllegalStateException("Value can not be blank");
         }
         FoodStorage foodStorage = foodStorageRepository.findById(foodRequest.getFoodStorageId())
