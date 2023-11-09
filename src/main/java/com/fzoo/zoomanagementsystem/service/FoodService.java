@@ -146,22 +146,22 @@ public class FoodService {
 
 
     @Transactional
-    public void update(int id, String name, float quantity)throws NegativeValueException {
+    public void update(int id, String name, BigDecimal quantity)throws NegativeValueException {
         Food food = foodRepository.findById(id).orElseThrow(() ->
                 new IllegalStateException("food with does not exits"));
         FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->
                 new IllegalStateException("foodStorage with " + name + " does not exits"));
-        if (name == null || quantity == 0.0f) {
+        if (name == null || quantity == null) {
             throw new IllegalStateException("Value can not be blank");
         }
-        if (quantity > foodStorage.getAvailable().floatValue()) {
+        if (quantity.floatValue() > foodStorage.getAvailable().floatValue()) {
             throw new IllegalStateException("Does not have enough food " + name);
         }
-        if (quantity < 0) {
+        if (quantity.floatValue() < 0) {
             throw new NegativeValueException();
         }
 
-        food.setQuantity(new BigDecimal(quantity));
+        food.setQuantity(new BigDecimal(quantity.floatValue()));
         foodRepository.save(food);
     }
 
