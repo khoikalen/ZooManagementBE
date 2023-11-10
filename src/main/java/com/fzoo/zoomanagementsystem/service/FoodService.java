@@ -59,7 +59,6 @@ public class FoodService {
                 exist = foodExist.getName();
                 foodId = foodExist.getId();
             }
-
         }
         FoodInMeal foodInMeal = null;
         if (exist == null) {
@@ -71,7 +70,7 @@ public class FoodService {
             foodInMealRepository.save(foodInMeal);
         } else {
             Food food = foodRepository.findById(foodId).orElseThrow();
-            if (foodRequest.getMeasure().contains("gram") || foodRequest.getMeasure().equals("g")){
+            if (foodRequest.getMeasure().contains("gram")){
                 if(foodRequest.getMeasure().equals(food.getMeasure())){
                     food.setQuantity(new BigDecimal(food.getQuantity().floatValue() + foodRequest.getQuantity().floatValue()) );
                 }else if(foodRequest.getMeasure().equals("gram")){
@@ -79,8 +78,8 @@ public class FoodService {
                     food.setQuantity(new BigDecimal(food.getQuantity().floatValue() + exchange)  );
                 }else if(foodRequest.getMeasure().equals("kilogram")){
                     food.setMeasure("kilogram");
-                    float exchange = (float) (foodRequest.getQuantity().floatValue() / 1000);
-                    food.setQuantity(new BigDecimal(food.getQuantity().floatValue() + exchange) );
+                    float exchange = (float) (food.getQuantity().floatValue() / 1000);
+                    food.setQuantity(new BigDecimal(foodRequest.getQuantity().floatValue() + exchange) );
                 }
 
                 foodRepository.save(food);
