@@ -37,6 +37,10 @@ public class FoodService {
     ItemMapper itemMapper;
 
     public void addFood(int id, Food foodRequest) throws NegativeValueException,WrongMeasureException{
+        float check =0;
+        if(foodRequest.getMeasure().equals("gram")){
+            check = foodRequest.getQuantity().floatValue()/1000;
+        }
         if (foodRequest.getName() == null || foodRequest.getQuantity() == null) {
             throw new IllegalStateException("Value can not be blank");
         }
@@ -44,7 +48,12 @@ public class FoodService {
                 .orElseThrow(() -> new IllegalStateException("Does not have food in food storage"));
         if (foodRequest.getQuantity().floatValue() < 0) {
             throw new NegativeValueException();
-        } else if (foodRequest.getQuantity().floatValue() > foodStorage.getAvailable().floatValue()) {
+        }
+        if(check !=0){
+            if(check > foodStorage.getAvailable().floatValue()){
+                throw new IllegalStateException("Does not have enough " + foodRequest.getName());
+            }
+        }else if (foodRequest.getQuantity().floatValue() > foodStorage.getAvailable().floatValue()) {
             throw new IllegalStateException("Does not have enough " + foodRequest.getName());
         }
         if(!foodStorage.getMeasure().contains(foodRequest.getMeasure())){
@@ -148,6 +157,7 @@ public class FoodService {
 
     @Transactional
     public void update(int id, String name, BigDecimal quantity)throws NegativeValueException {
+
         Food food = foodRepository.findById(id).orElseThrow(() ->
                 new IllegalStateException("food with does not exits"));
         FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->
