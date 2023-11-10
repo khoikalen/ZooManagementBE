@@ -56,8 +56,10 @@ public class FoodService {
         for (Food foodExist : foodList
         ) {
             if (foodRequest.getName().equals(foodExist.getName())) {
-                exist = foodExist.getName();
-                foodId = foodExist.getId();
+                if(foodRequest.getDescription().equals(foodExist.getDescription())){
+                    exist = foodExist.getName();
+                    foodId = foodExist.getId();
+                }
             }
         }
         FoodInMeal foodInMeal = null;
