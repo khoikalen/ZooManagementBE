@@ -75,7 +75,7 @@ public class FoodController {
     public void updateFood(
             @PathVariable("foodID") int id,
             @RequestBody Food food) throws NegativeValueException{
-        service.update(id,food.getName(),food.getQuantity());
+        service.update(id,food.getName(),food.getQuantity(), food.getMeasure());
     }
 
 

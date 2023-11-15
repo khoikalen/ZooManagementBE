@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FoodStatisticResponse {
     private String name;
-    private float quantity;
+    private long price;
 }

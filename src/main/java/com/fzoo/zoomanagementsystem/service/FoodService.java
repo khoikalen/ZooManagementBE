@@ -2,8 +2,6 @@ package com.fzoo.zoomanagementsystem.service;
 
 import com.fzoo.zoomanagementsystem.dto.FoodInMealResponse;
 import com.fzoo.zoomanagementsystem.dto.FoodStatisticResponse;
-import com.fzoo.zoomanagementsystem.dto.ItemMapper;
-import com.fzoo.zoomanagementsystem.dto.StaffMealResponse;
 import com.fzoo.zoomanagementsystem.exception.NegativeValueException;
 import com.fzoo.zoomanagementsystem.exception.WrongMeasureException;
 import com.fzoo.zoomanagementsystem.model.*;
@@ -14,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,7 +137,7 @@ public class FoodService {
 
 
     public List<FoodStatisticResponse> foodStatisticResponses() {
-        List<Integer> mealId = mealRepository.findIAllId();
+        List<Integer> mealId = mealRepository.findMealsByYear(Year.now().getValue());
         List<Food> foodList = foodRepository.findAllFoodByMealId(mealId);
         Map<String, Food> groupedItems = foodList.stream()
                 .collect(Collectors.toMap(Food::getName, item -> item, (existing, replacement) -> {
@@ -156,8 +153,11 @@ public class FoodService {
 
 
     @Transactional
-    public void update(int id, String name, BigDecimal quantity)throws NegativeValueException {
-
+    public void update(int id, String name, BigDecimal quantity, String measure)throws NegativeValueException {
+        float check =0;
+        if(measure.equals("gram")){
+            check = quantity.floatValue()/1000;
+        }
         Food food = foodRepository.findById(id).orElseThrow(() ->
                 new IllegalStateException("food with does not exits"));
         FoodStorage foodStorage = foodStorageRepository.findByName(name).orElseThrow(() ->
@@ -165,14 +165,19 @@ public class FoodService {
         if (name == null || quantity == null) {
             throw new IllegalStateException("Value can not be blank");
         }
-        if (quantity.floatValue() > foodStorage.getAvailable().floatValue()) {
-            throw new IllegalStateException("Does not have enough food " + name);
+        if(check !=0){
+            if(check > foodStorage.getAvailable().floatValue()){
+                throw new IllegalStateException("Does not have enough " + name);
+            }
+        }else if (quantity.floatValue() > foodStorage.getAvailable().floatValue()) {
+            throw new IllegalStateException("Does not have enough " + name);
         }
         if (quantity.floatValue() < 0) {
             throw new NegativeValueException();
         }
 
-        food.setQuantity(new BigDecimal(quantity.floatValue()));
+        food.setQuantity(BigDecimal.valueOf(quantity.floatValue()));
+        food.setMeasure(measure);
         foodRepository.save(food);
     }
 

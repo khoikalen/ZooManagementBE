@@ -3,9 +3,12 @@ package com.fzoo.zoomanagementsystem.repository;
 import com.fzoo.zoomanagementsystem.model.Meal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +24,12 @@ public interface MealRepository extends JpaRepository<Meal, Integer> {
 
 
 
-    @Query("SELECT id FROM Meal")
-    List<Integer> findIAllId();
+
+
+
+
+    @Query("SELECT m.id FROM Meal m WHERE YEAR(m.dateTime) = :year")
+    List<Integer> findMealsByYear(@Param("year") int year);
 
     Optional<Meal> findFirst1ByCageIdOrderByDateTimeDesc(int id);
 

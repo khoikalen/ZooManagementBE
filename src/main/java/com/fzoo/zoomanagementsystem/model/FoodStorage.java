@@ -22,6 +22,7 @@ public class FoodStorage {
     private String name;
     private String type;
     private BigDecimal available;
+    private int price;
 
 
 }

@@ -63,7 +63,7 @@ public class MealService {
         create = true;
         Meal meal = mealRepository.findById(id).orElseThrow();
         Set<Food> foods = foodRepository.findFoodByMealId(id);
-        createDailyMeal(id, email);
+        createDailyMeal(meal.getCageId(), email);
         for (Food food : foods
         ) {
             Optional<FoodStorage> foodStorage = foodStorageRepository.findAvailableById(food.getFoodStorageId());
