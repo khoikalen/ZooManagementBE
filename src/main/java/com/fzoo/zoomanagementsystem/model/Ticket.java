@@ -23,6 +23,6 @@ public class Ticket {
     private int quantity;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    private double total;
+    private long total;
     private int account_id;
 }
