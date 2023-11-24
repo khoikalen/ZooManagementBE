@@ -1,0 +1,61 @@
+name: Build an Deploy Zoo Management System
+
+on:
+  push:
+    branches:
+      - testing
+
+jobs:
+  buildx:
+    name: build and deploy spring boot app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup JDK 20
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 20
+
+      - name: build the application
+        run: |
+          mvn clean
+          mvn -B package --file pom.xml
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}
+
+      - name: Login to docker hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Push to docker hub
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: true
+          tags: kanatsumi2003/zoomanagement:latest
+
+  deploy:
+    needs: buildx
+    runs-on: auto-deploy
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull kanatsumi2003/zoomanagement:latest
+      - name: Delete old container
+        run: docker rm -f zoomanagement-container
+      - name: Run docker container
+        run: docker run -d -p 8082:8080 --name zoomanagement-container kanatsumi2003/zoomanagement
+

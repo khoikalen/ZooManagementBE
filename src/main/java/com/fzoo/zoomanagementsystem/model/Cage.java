@@ -1,9 +1,12 @@
 package com.fzoo.zoomanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,15 +21,26 @@ public class Cage {
     private String name;
 
     private int quantity;
-
-    @Lob
-    private byte[] image;
-
+    @Column(name = "cage_status")
     private String cageStatus;
 
     private String cageType;
 
+    @Column(name = "area_id")
     private int areaId;
 
+    @Column(name = "staff_id")
     private int staffId;
+
+    private int status;
+
+    @ManyToOne
+    @JoinColumn(name = "staff_id", referencedColumnName = "id", updatable = false, insertable = false)
+    private Staff staff;
+
+    @ManyToOne
+    @JoinColumn(name = "area_id", referencedColumnName = "id", updatable = false, insertable = false)
+    private Area area;
+
+
 }
